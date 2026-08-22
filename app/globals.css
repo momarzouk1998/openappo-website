@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-cyber-bg: #05070B;
+  --color-cyber-cyan: #00F0FF;
+  --color-cyber-purple: #7000FF;
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cyber-bg);
+  color: #F1F5F9;
+  font-family: 'Tajawal', 'Inter', sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #00F0FF;
+  selection-color: #05070B;
+}
+
+/* Custom Cyber Grid Background */
+.cyber-grid {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(112, 0, 255, 0.04) 1px, transparent 1px);
+}
+
+/* Radial Glow Gradient */
+.cyber-glow-bg {
+  background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.12) 0%, rgba(112, 0, 255, 0.08) 40%, rgba(5, 7, 11, 0) 70%);
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(13, 18, 28, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(112, 0, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Glowing Neon Text */
+.neon-text-cyan {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.neon-text-purple {
+  text-shadow: 0 0 10px rgba(112, 0, 255, 0.7), 0 0 20px rgba(112, 0, 255, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #05070B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00F0FF, #7000FF);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00F0FF;
+}
+
+/* Conic Border Animation */
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.conic-border {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  padding: 1px;
+}
+
+.conic-border::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent, #00F0FF, transparent 30%, #7000FF, transparent 60%);
+  animation: rotateGradient 6s linear infinite;
+}
+
+.conic-border-inner {
+  position: relative;
+  background: #0B0F17;
+  border-radius: 1rem;
+  z-index: 1;
+}
