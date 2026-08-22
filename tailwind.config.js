@@ -8,14 +8,13 @@ module.exports = {
     extend: {
       colors: {
         cyber: {
-          bg: "#05070B",
-          card: "rgba(13, 18, 28, 0.75)",
-          border: "rgba(0, 240, 255, 0.2)",
-          cyan: "#00F0FF",
+          bg: "#060B1E",
+          card: "rgba(10, 15, 36, 0.75)",
+          border: "rgba(0, 210, 246, 0.2)",
+          cyan: "#00D2F6",
+          pink: "#FF6B8B",
           purple: "#7000FF",
-          pink: "#FF007A",
-          blue: "#0070F3",
-          light: "#E2E8F0",
+          light: "#F1F5F9",
         },
       },
       fontFamily: {
@@ -30,16 +29,13 @@ module.exports = {
       },
       keyframes: {
         glow: {
-          '0%': { boxShadow: '0 0 15px rgba(0, 240, 255, 0.3)' },
-          '100%': { boxShadow: '0 0 35px rgba(112, 0, 255, 0.6)' },
+          '0%': { boxShadow: '0 0 15px rgba(0, 210, 246, 0.3)' },
+          '100%': { boxShadow: '0 0 35px rgba(255, 107, 139, 0.6)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-12px)' },
         },
-      },
-      backdropBlur: {
-        xs: '2px',
       },
     },
   },

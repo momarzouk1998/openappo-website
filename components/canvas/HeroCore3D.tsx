@@ -2,106 +2,115 @@
 
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Float, Box, RoundedBox, Cylinder } from "@react-three/drei";
+import { Float, RoundedBox, Torus, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 
 export default function HeroCore3D() {
   const groupRef = useRef<THREE.Group>(null);
-  const serverNode1Ref = useRef<THREE.Mesh>(null);
-  const serverNode2Ref = useRef<THREE.Mesh>(null);
-  const serverNode3Ref = useRef<THREE.Mesh>(null);
+  const leftBracketRef = useRef<THREE.Mesh>(null);
+  const rightBracketRef = useRef<THREE.Mesh>(null);
+  const centerNodeRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    // Smooth Mouse Interaction
     if (groupRef.current) {
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
         groupRef.current.rotation.y,
-        (state.pointer.x * Math.PI) / 8,
+        (state.pointer.x * Math.PI) / 6,
         0.05
       );
       groupRef.current.rotation.x = THREE.MathUtils.lerp(
         groupRef.current.rotation.x,
-        (-state.pointer.y * Math.PI) / 8,
+        (-state.pointer.y * Math.PI) / 6,
         0.05
       );
     }
 
-    if (serverNode1Ref.current) {
-      serverNode1Ref.current.rotation.y = t * 0.4;
+    if (leftBracketRef.current) {
+      leftBracketRef.current.rotation.z = Math.sin(t * 1.2) * 0.15;
     }
-    if (serverNode2Ref.current) {
-      serverNode2Ref.current.rotation.y = -t * 0.5;
+    if (rightBracketRef.current) {
+      rightBracketRef.current.rotation.z = -Math.sin(t * 1.2) * 0.15;
     }
-    if (serverNode3Ref.current) {
-      serverNode3Ref.current.rotation.y = t * 0.3;
+    if (centerNodeRef.current) {
+      centerNodeRef.current.rotation.y = t * 0.8;
     }
   });
 
   return (
     <group ref={groupRef}>
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.8}>
-        {/* Central System Server Blade Matrix */}
+      <Float speed={2.5} rotationIntensity={0.6} floatIntensity={1.2}>
         <group position={[0, 0, 0]}>
-          {/* Main Central Server Hub */}
-          <RoundedBox
-            ref={serverNode1Ref}
-            args={[2.2, 1.4, 0.4]}
-            radius={0.08}
-            smoothness={4}
-          >
-            <meshStandardMaterial
-              color="#0D1527"
-              emissive="#0070F3"
-              emissiveIntensity={0.4}
-              roughness={0.2}
-              metalness={0.8}
-            />
-          </RoundedBox>
-
-          {/* Floating Glass Dashboard Window */}
-          <RoundedBox
-            ref={serverNode2Ref}
-            args={[2.8, 1.8, 0.1]}
-            radius={0.05}
-            smoothness={4}
-            position={[0, 0, 0.4]}
+          {/* Left Coral Pink Bracket '(' */}
+          <Torus
+            ref={leftBracketRef}
+            args={[1.8, 0.22, 32, 64, Math.PI * 0.8]}
+            position={[-1.8, 0, 0]}
+            rotation={[0, 0, Math.PI * 0.6]}
           >
             <meshPhysicalMaterial
-              color="#00F0FF"
+              color="#FF6B8B"
+              emissive="#FF6B8B"
+              emissiveIntensity={0.8}
+              transmission={0.8}
+              opacity={0.95}
+              transparent
+              roughness={0.1}
+              metalness={0.2}
+              ior={1.5}
+            />
+          </Torus>
+
+          {/* Right Coral Pink Bracket ')' */}
+          <Torus
+            ref={rightBracketRef}
+            args={[1.8, 0.22, 32, 64, Math.PI * 0.8]}
+            position={[1.8, 0, 0]}
+            rotation={[0, 0, -Math.PI * 0.4]}
+          >
+            <meshPhysicalMaterial
+              color="#FF6B8B"
+              emissive="#FF6B8B"
+              emissiveIntensity={0.8}
+              transmission={0.8}
+              opacity={0.95}
+              transparent
+              roughness={0.1}
+              metalness={0.2}
+              ior={1.5}
+            />
+          </Torus>
+
+          {/* Central Cyan Connected Node Core */}
+          <Sphere ref={centerNodeRef} args={[1.1, 64, 64]} position={[0, 0, 0]}>
+            <meshPhysicalMaterial
+              color="#00D2F6"
+              emissive="#00D2F6"
+              emissiveIntensity={0.9}
               transmission={0.85}
               opacity={0.9}
               transparent
-              roughness={0.1}
-              ior={1.5}
-              thickness={0.2}
+              roughness={0.05}
+              ior={1.6}
             />
-          </RoundedBox>
+          </Sphere>
 
-          {/* Subsystem Microservice Nodes */}
+          {/* Floating Glass Dashboard Display */}
           <RoundedBox
-            ref={serverNode3Ref}
-            args={[1.8, 1.0, 0.3]}
-            radius={0.06}
-            position={[0, 0, -0.4]}
+            args={[3.4, 2.2, 0.08]}
+            radius={0.08}
+            smoothness={4}
+            position={[0, 0, -0.6]}
           >
-            <meshStandardMaterial
-              color="#0F172A"
-              emissive="#7000FF"
-              emissiveIntensity={0.5}
-              roughness={0.3}
-              metalness={0.7}
+            <meshPhysicalMaterial
+              color="#0A0F24"
+              transmission={0.9}
+              opacity={0.7}
+              transparent
+              roughness={0.2}
             />
           </RoundedBox>
-
-          {/* Data Laser Pipelines Connecting System Nodes */}
-          <Cylinder args={[0.02, 0.02, 3.5]} position={[0, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
-            <meshBasicMaterial color="#00F0FF" wireframe />
-          </Cylinder>
-          <Cylinder args={[0.02, 0.02, 3.5]} position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
-            <meshBasicMaterial color="#7000FF" wireframe />
-          </Cylinder>
         </group>
       </Float>
     </group>
