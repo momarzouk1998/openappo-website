@@ -19,8 +19,8 @@ export default function GlassCard({ children, className = "" }: GlassCardProps) 
     const centerX = box.width / 2;
     const centerY = box.height / 2;
 
-    const rotX = ((y - centerY) / centerY) * -10;
-    const rotY = ((x - centerX) / centerX) * 10;
+    const rotX = ((y - centerY) / centerY) * -6;
+    const rotY = ((x - centerX) / centerX) * 6;
 
     setRotateX(rotX);
     setRotateY(rotY);
@@ -38,7 +38,7 @@ export default function GlassCard({ children, className = "" }: GlassCardProps) 
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className={`glass-panel glass-panel-hover rounded-2xl p-6 transition-transform duration-200 ease-out ${className}`}
+        className={`glass-panel glass-panel-hover p-6 border border-white/10 ${className}`}
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transformStyle: "preserve-3d",

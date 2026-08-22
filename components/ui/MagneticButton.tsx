@@ -23,7 +23,7 @@ export default function MagneticButton({
     const { left, top, width, height } = buttonRef.current.getBoundingClientRect();
     const x = e.clientX - (left + width / 2);
     const y = e.clientY - (top + height / 2);
-    setPosition({ x: x * 0.25, y: y * 0.25 });
+    setPosition({ x: x * 0.2, y: y * 0.2 });
   };
 
   const handleMouseLeave = () => {
@@ -37,9 +37,9 @@ export default function MagneticButton({
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
       style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
-      className={`relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00F0FF] to-[#7000FF] p-[1px] transition-transform duration-200 ease-out cursor-pointer hover:shadow-[0_0_25px_rgba(0,240,255,0.5)] ${className}`}
+      className={`relative inline-flex items-center justify-center gap-2 rounded-xl bg-slate-800 p-[1px] transition-all duration-200 cursor-pointer border border-white/10 hover:border-[#00D2F6]/60 ${className}`}
     >
-      <div className="flex h-full w-full items-center justify-center rounded-[11px] bg-[#0A0E17] px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-transparent hover:text-white">
+      <div className="flex h-full w-full items-center justify-center rounded-[11px] bg-[#0D121D] px-6 py-3 text-sm font-medium text-slate-200 transition-colors duration-200 hover:text-white">
         {children}
       </div>
     </div>

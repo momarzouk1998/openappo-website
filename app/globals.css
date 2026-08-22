@@ -1,13 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Tajawal:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-cyber-bg: #05070B;
-  --color-cyber-cyan: #00F0FF;
-  --color-cyber-purple: #7000FF;
+  --bg-dark: #080B11;
+  --panel-dark: #0D121D;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #00D2F6;
+  --accent-coral: #FF6B8B;
 }
 
 * {
@@ -16,100 +18,73 @@
 }
 
 body {
-  background-color: var(--color-cyber-bg);
-  color: #F1F5F9;
-  font-family: 'Tajawal', 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: #E2E8F0;
+  font-family: 'Tajawal', 'Outfit', sans-serif;
   overflow-x: hidden;
-  selection-background-color: #00F0FF;
-  selection-color: #05070B;
+  selection-background-color: #00D2F6;
+  selection-color: #080B11;
 }
 
-/* Custom Cyber Grid Background */
+/* Subtle Technical Grid Lines */
 .cyber-grid {
-  background-size: 50px 50px;
+  background-size: 60px 60px;
   background-image: 
-    linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(112, 0, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
-/* Radial Glow Gradient */
-.cyber-glow-bg {
-  background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.12) 0%, rgba(112, 0, 255, 0.08) 40%, rgba(5, 7, 11, 0) 70%);
+/* Deep Matte Background */
+.matte-bg {
+  background: #080B11;
 }
 
-/* Glassmorphism Styles */
+/* Crisp Clean Glass Panel (No High Glow) */
 .glass-panel {
-  background: rgba(13, 18, 28, 0.65);
+  background: rgba(13, 18, 29, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 240, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
 }
 
 .glass-panel-hover {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(0, 240, 255, 0.5);
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(112, 0, 255, 0.15);
-  transform: translateY(-4px);
+  border-color: rgba(0, 210, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
 }
 
-/* Glowing Neon Text */
-.neon-text-cyan {
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.4);
+/* Sleek Matte Text Gradient */
+.text-gradient-matte {
+  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.neon-text-purple {
-  text-shadow: 0 0 10px rgba(112, 0, 255, 0.7), 0 0 20px rgba(112, 0, 255, 0.4);
+.text-gradient-brand {
+  background: linear-gradient(135deg, #00D2F6 0%, #38BDF8 50%, #FF6B8B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Custom Scrollbar */
+/* Clean Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #05070B;
+  background: #080B11;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00F0FF, #7000FF);
-  border-radius: 4px;
+  background: #1E293B;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00F0FF;
-}
-
-/* Conic Border Animation */
-@keyframes rotateGradient {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.conic-border {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1rem;
-  padding: 1px;
-}
-
-.conic-border::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(transparent, #00F0FF, transparent 30%, #7000FF, transparent 60%);
-  animation: rotateGradient 6s linear infinite;
-}
-
-.conic-border-inner {
-  position: relative;
-  background: #0B0F17;
-  border-radius: 1rem;
-  z-index: 1;
+  background: #00D2F6;
 }
