@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['three'],
+  output: 'standalone',
+  reactStrictMode: true,
   images: {
     unoptimized: true,
   },
-  reactStrictMode: true,
 };
 
 module.exports = nextConfig;

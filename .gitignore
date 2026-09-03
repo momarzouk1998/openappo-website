@@ -28,3 +28,6 @@ lerna-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source image sequence (exported to public/frames)
+/images

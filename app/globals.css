@@ -1,90 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --bg-dark: #080B11;
-  --panel-dark: #0D121D;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --accent-cyan: #00D2F6;
-  --accent-coral: #FF6B8B;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-* {
-  box-sizing: border-box;
-  scroll-behavior: smooth;
+html,
+body {
+  background: #000;
+  color: #fff;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: #E2E8F0;
-  font-family: 'Tajawal', 'Outfit', sans-serif;
-  overflow-x: hidden;
-  selection-background-color: #00D2F6;
-  selection-color: #080B11;
-}
-
-/* Subtle Technical Grid Lines */
-.cyber-grid {
-  background-size: 60px 60px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-}
-
-/* Deep Matte Background */
-.matte-bg {
-  background: #080B11;
-}
-
-/* Crisp Clean Glass Panel (No High Glow) */
-.glass-panel {
-  background: rgba(13, 18, 29, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-}
-
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glass-panel-hover:hover {
-  border-color: rgba(0, 210, 246, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
-}
-
-/* Sleek Matte Text Gradient */
-.text-gradient-matte {
-  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-brand {
-  background: linear-gradient(135deg, #00D2F6 0%, #38BDF8 50%, #FF6B8B 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Clean Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #080B11;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #00D2F6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
