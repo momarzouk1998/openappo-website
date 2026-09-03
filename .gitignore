@@ -31,3 +31,6 @@ next-env.d.ts
 
 # source image sequence (exported to public/frames)
 /images
+/new images
+/new images.zip
+*.zip
