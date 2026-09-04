@@ -46,7 +46,7 @@ const ITEMS = [
   { label: "المميزات", icon: "features", href: "#" },
   { label: "الحلول", icon: "solutions", href: "#" },
   { label: "الأسعار", icon: "pricing", href: "#" },
-  { label: "تواصل معنا", icon: "contact", href: "#" },
+  { label: "تواصل معنا", icon: "contact", href: "/contact" },
 ];
 
 function DockItem({ mouseX, children, href }) {

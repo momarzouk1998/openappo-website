@@ -102,3 +102,126 @@ body {
     transition: none;
   }
 }
+
+/* ---------- Brand badge (top-left) ---------- */
+.brand-badge {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 6;
+  display: block;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.5);
+}
+
+.brand-badge img {
+  display: block;
+  height: 22px;
+  width: auto;
+}
+
+@media (max-width: 560px) {
+  .brand-badge {
+    top: 12px;
+    left: 12px;
+    padding: 6px 11px;
+    border-radius: 12px;
+  }
+  .brand-badge img {
+    height: 18px;
+  }
+}
+
+/* ---------- End-of-scroll CTA ---------- */
+.scroll-end-cta {
+  position: fixed;
+  left: 50%;
+  bottom: 130px;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: calc(100vw - 32px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  direction: rtl;
+}
+
+.scroll-end-cta-link {
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: rgba(18, 18, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.scroll-end-cta-link:first-child {
+  background: linear-gradient(90deg, #ff7a7a, #3ddad2);
+  color: #08080a;
+  border-color: transparent;
+}
+
+@media (max-width: 560px) {
+  .scroll-end-cta {
+    bottom: 112px;
+  }
+  .scroll-end-cta-link {
+    padding: 9px 16px;
+    font-size: 12.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-end-cta {
+    transition: none;
+  }
+}
+
+/* ---------- Minimal placeholder pages ---------- */
+.placeholder-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+  direction: rtl;
+}
+
+.placeholder-page h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #bcd4d2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.placeholder-page p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 14.5px;
+}
+
+.placeholder-page a {
+  margin-top: 12px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 700;
+}

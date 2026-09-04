@@ -4,13 +4,21 @@ import { useEffect, useRef } from "react";
 
 const FRAME_COUNT = 60;
 
+const END_LINKS = [
+  { href: "/portfolio", label: "سابقة أعمالنا" },
+  { href: "/testimonials", label: "آراء العملاء" },
+  { href: "/contact", label: "تواصل بينا" },
+];
+
 export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const track = trackRef.current;
+    const cta = ctaRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
     // Under reduced-motion, map frames 1:1 to scroll position with no eased
@@ -45,6 +53,7 @@ export default function ScrollSequence() {
     let rafId = 0;
     let vw = 0;
     let vh = 0;
+    let ctaShown = false;
 
     const setCanvasSize = () => {
       vw = window.innerWidth;
@@ -61,19 +70,31 @@ export default function ScrollSequence() {
     const drawFrame = (index) => {
       const img = images[index];
       if (!img || !img.complete || img.naturalWidth === 0) return;
-      // Portrait (phones): "contain" so the whole frame is always visible —
-      // no side-cropping. Landscape: "cover" to fill the screen edge to edge.
+      // Portrait (phones): the frame can't cover the screen without cropping
+      // people/content off the sides, so it's shown whole ("contain") with a
+      // softly blurred, darkened copy of the same frame filling the bars
+      // behind it instead of flat black. Landscape: "cover" fills edge to edge.
       const contain = vh > vw;
-      const scale = contain
-        ? Math.min(vw / imgW, vh / imgH)
-        : Math.max(vw / imgW, vh / imgH);
-      const w = imgW * scale;
-      const h = imgH * scale;
+
       if (contain) {
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, vw, vh);
+        const bgScale = Math.max(vw / imgW, vh / imgH) * 1.15;
+        const bw = imgW * bgScale;
+        const bh = imgH * bgScale;
+        ctx.save();
+        ctx.filter = "blur(28px) brightness(0.55)";
+        ctx.drawImage(img, (vw - bw) / 2, (vh - bh) / 2, bw, bh);
+        ctx.restore();
+
+        const scale = Math.min(vw / imgW, vh / imgH);
+        const w = imgW * scale;
+        const h = imgH * scale;
+        ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
+      } else {
+        const scale = Math.max(vw / imgW, vh / imgH);
+        const w = imgW * scale;
+        const h = imgH * scale;
+        ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
       }
-      ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
       lastDrawn = index;
     };
 
@@ -89,6 +110,14 @@ export default function ScrollSequence() {
       if (Math.abs(targetFrame - currentFrame) < 0.001) currentFrame = targetFrame;
       const index = Math.round(currentFrame);
       if (index !== lastDrawn) drawFrame(index);
+
+      const shouldShow = targetFrame >= FRAME_COUNT - 1.5;
+      if (shouldShow !== ctaShown) {
+        ctaShown = shouldShow;
+        cta.style.opacity = shouldShow ? "1" : "0";
+        cta.style.pointerEvents = shouldShow ? "auto" : "none";
+      }
+
       rafId = requestAnimationFrame(tick);
     };
 
@@ -154,6 +183,13 @@ export default function ScrollSequence() {
           background: "#000",
         }}
       />
+      <div ref={ctaRef} className="scroll-end-cta">
+        {END_LINKS.map((l) => (
+          <a key={l.href} href={l.href} className="scroll-end-cta-link">
+            {l.label}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
