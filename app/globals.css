@@ -102,3 +102,390 @@ body {
     transition: none;
   }
 }
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+  padding: 18px clamp(18px, 5vw, 56px);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), transparent);
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease, padding 0.3s ease,
+    border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.navbar-solid {
+  background: rgba(10, 10, 12, 0.6);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+
+.navbar-mark {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.navbar-mark-teal,
+.navbar-mark-coral {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 4px solid;
+}
+
+.navbar-mark-teal {
+  border-color: #3ddad2 transparent #3ddad2 #3ddad2;
+  transform: rotate(45deg);
+}
+
+.navbar-mark-coral {
+  border-color: transparent #ff7a7a #ff7a7a transparent;
+  transform: rotate(45deg);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 34px);
+}
+
+.navbar-link {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff7a7a, #3ddad2);
+  transition: width 0.25s ease;
+}
+
+.navbar-link:hover {
+  color: #fff;
+}
+
+.navbar-link:hover::after {
+  width: 100%;
+}
+
+@media (max-width: 560px) {
+  .navbar-links {
+    gap: 14px;
+  }
+  .navbar-link {
+    font-size: 12.5px;
+  }
+  .navbar-brand {
+    font-size: 15px;
+  }
+}
+
+/* ---------- Portfolio ---------- */
+.portfolio {
+  position: relative;
+  background: #08080a;
+  padding: 90px clamp(18px, 5vw, 56px) 120px;
+}
+
+.portfolio-title {
+  text-align: center;
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 800;
+  margin: 0 0 48px;
+  background: linear-gradient(90deg, #fff, #bcd4d2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.portfolio-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 26px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  color: #fff;
+  font-family: inherit;
+  opacity: 0;
+  animation: portfolio-in 0.6s ease forwards;
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(61, 218, 210, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@keyframes portfolio-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.portfolio-card-logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 16px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.5);
+}
+
+.portfolio-card-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.portfolio-card-name {
+  font-weight: 700;
+  font-size: 14.5px;
+  text-align: center;
+}
+
+.portfolio-card-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+/* ---------- Portfolio modal ---------- */
+.portfolio-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(4, 4, 6, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  padding: 80px 20px 40px;
+  overflow-y: auto;
+  animation: portfolio-modal-in 0.28s ease;
+}
+
+@keyframes portfolio-modal-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.portfolio-modal-close {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.portfolio-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #fff;
+  direction: rtl;
+  text-align: right;
+}
+
+.portfolio-modal-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #fff;
+  padding: 8px;
+  object-fit: contain;
+}
+
+.portfolio-modal-name {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.portfolio-modal-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.portfolio-modal-visit {
+  margin-right: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff7a7a, #3ddad2);
+  color: #08080a;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.portfolio-mockups {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+}
+
+.mockup-laptop {
+  width: min(640px, 82vw);
+  animation: mockup-in-left 0.5s ease 0.1s both;
+}
+
+.mockup-laptop-screen {
+  background: #0c0c0e;
+  border: 2px solid #2a2a2e;
+  border-radius: 14px 14px 4px 4px;
+  padding: 8px 8px 0;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+.mockup-laptop-screen img {
+  display: block;
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+}
+
+.mockup-laptop-base {
+  height: 12px;
+  background: linear-gradient(#2c2c30, #17171a);
+  border-radius: 0 0 8px 8px;
+  position: relative;
+}
+
+.mockup-laptop-base::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 4px;
+  background: #08080a;
+  border-radius: 0 0 6px 6px;
+}
+
+.mockup-phone {
+  position: relative;
+  width: min(190px, 34vw);
+  border: 3px solid #2a2a2e;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #0c0c0e;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  animation: mockup-in-right 0.5s ease 0.22s both;
+}
+
+.mockup-phone img {
+  display: block;
+  width: 100%;
+}
+
+.mockup-phone-notch {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46%;
+  height: 16px;
+  background: #0c0c0e;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+@keyframes mockup-in-left {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mockup-in-right {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card,
+  .mockup-laptop,
+  .mockup-phone,
+  .portfolio-modal {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
