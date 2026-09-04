@@ -10,15 +10,35 @@ const END_LINKS = [
   { href: "/contact", label: "تواصل بينا" },
 ];
 
+// Frame ranges are 0-indexed (frame 1 in the storyboard == index 0). Each
+// caption fades in over its first ~1.5 frames and out over its last ~1.5,
+// so it's fully gone before the next one (or the end CTA) appears.
+const CAPTIONS = [
+  { from: 0, to: 7, text: "لسه بتدوّر في الفواتير والإكسل؟" },
+  { from: 19, to: 29, text: "Openappo بيحوّل شغلك كله لمكان واحد" },
+  { from: 44, to: 54, text: "كل حاجة قدامك، لحظة بلحظة" },
+  { from: 55, to: 58, text: "قرارات أسرع، نتائج أوضح" },
+];
+
+function captionOpacity(frame, from, to) {
+  const fade = 1.5;
+  if (frame < from || frame > to) return 0;
+  if (frame < from + fade) return (frame - from) / fade;
+  if (frame > to - fade) return Math.max(0, (to - frame) / fade);
+  return 1;
+}
+
 export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
   const ctaRef = useRef(null);
+  const captionRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const track = trackRef.current;
     const cta = ctaRef.current;
+    const caption = captionRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
     // Under reduced-motion, map frames 1:1 to scroll position with no eased
@@ -54,6 +74,7 @@ export default function ScrollSequence() {
     let vw = 0;
     let vh = 0;
     let ctaShown = false;
+    let shownCaptionText = "";
 
     const setCanvasSize = () => {
       vw = window.innerWidth;
@@ -117,6 +138,22 @@ export default function ScrollSequence() {
         cta.style.opacity = shouldShow ? "1" : "0";
         cta.style.pointerEvents = shouldShow ? "auto" : "none";
       }
+
+      let activeText = "";
+      let activeOpacity = 0;
+      for (const c of CAPTIONS) {
+        const o = captionOpacity(currentFrame, c.from, c.to);
+        if (o > 0) {
+          activeText = c.text;
+          activeOpacity = o;
+          break;
+        }
+      }
+      if (activeText !== shownCaptionText) {
+        shownCaptionText = activeText;
+        caption.textContent = activeText;
+      }
+      caption.style.opacity = activeText ? String(activeOpacity) : "0";
 
       rafId = requestAnimationFrame(tick);
     };
@@ -183,6 +220,7 @@ export default function ScrollSequence() {
           background: "#000",
         }}
       />
+      <div ref={captionRef} className="scroll-caption" />
       <div ref={ctaRef} className="scroll-end-cta">
         {END_LINKS.map((l) => (
           <a key={l.href} href={l.href} className="scroll-end-cta-link">
