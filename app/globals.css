@@ -16,5 +16,89 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Noto Kufi Arabic", "Tajawal", sans-serif;
+}
+
+/* ---------- Dock ---------- */
+.dock {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: rgba(18, 18, 20, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.55);
+  direction: rtl;
+  max-width: calc(100vw - 24px);
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.82);
+  transform-origin: bottom center;
+  will-change: transform;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.dock-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dock-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.dock-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dock-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .dock {
+    gap: 2px;
+    padding: 6px 8px;
+    border-radius: 16px;
+  }
+  .dock-item {
+    padding: 5px 7px;
+  }
+  .dock-icon {
+    width: 21px;
+    height: 21px;
+  }
+  .dock-label {
+    font-size: 9.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-item {
+    transition: none;
+  }
 }

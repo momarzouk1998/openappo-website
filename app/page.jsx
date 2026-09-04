@@ -1,5 +1,12 @@
 import ScrollSequence from "./ScrollSequence";
+import Dock from "./Dock";
 
 export default function Page() {
-  return <ScrollSequence />;
+  return (
+    <>
+      <span id="top" />
+      <ScrollSequence />
+      <Dock />
+    </>
+  );
 }
