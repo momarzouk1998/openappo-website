@@ -38,3 +38,5 @@ next-env.d.ts
 # raw brand source files (processed copy lives in public/brand/)
 /openappo logo.jpg
 /ChatGPT Image*.png
+*.wfp
+

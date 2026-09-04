@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Openappo",
-  description: "Openappo",
+  title: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
+  description: "نظام سحابي متكامل يجمع كل تفاصيل مشروعك من مبيعات، فواتير، ومخزون في مكان واحد.",
 };
 
 export const viewport = {
@@ -14,7 +14,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="ar" dir="rtl">
       <body>{children}</body>
     </html>
   );

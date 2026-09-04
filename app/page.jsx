@@ -1,15 +1,25 @@
 import ScrollSequence from "./ScrollSequence";
-import Dock from "./Dock";
 
 export default function Page() {
   return (
     <>
       <span id="top" />
-      <a href="/" className="brand-badge" aria-label="Openappo">
-        <img src="/brand/openappo-wordmark.png" alt="Openappo" />
-      </a>
+      <header className="openappo-nav">
+        <a href="/" className="openappo-logo-wrap" aria-label="Openappo">
+          <img
+            src="/brand/openappo-wordmark.png"
+            alt="Openappo"
+            className="openappo-logo-img"
+          />
+        </a>
+        <a href="/contact" className="nav-cta-btn">
+          <span>تواصل معنا</span>
+          <span>←</span>
+        </a>
+      </header>
       <ScrollSequence />
-      <Dock />
     </>
   );
 }
+
+

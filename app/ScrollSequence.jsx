@@ -1,66 +1,30 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 60;
-
-const END_LINKS = [
-  { href: "/portfolio", label: "سابقة أعمالنا" },
-  { href: "/testimonials", label: "آراء العملاء" },
-  { href: "/contact", label: "تواصل بينا" },
-];
-
-// Frame ranges are 0-indexed (frame 1 in the storyboard == index 0). Each
-// caption is a solid brand-colored box that slides up from below and holds
-// still — no continuous scroll-linked fade — until its range ends, then it
-// drops back out before the next one slides in.
-const CAPTIONS = [
-  { from: 0, to: 8, text: "لسه بتدوّر في الفواتير والإكسل؟", accent: "coral" },
-  { from: 19, to: 30, text: "Openappo بيحوّل شغلك كله لمكان واحد", accent: "teal" },
-  { from: 44, to: 54, text: "كل حاجة قدامك، لحظة بلحظة", accent: "coral" },
-  // Ends at 57, not 59: the end-of-scroll CTA fades in at FRAME_COUNT - 1.5
-  // (~58.5), so this needs to have fully dropped out before then.
-  { from: 55, to: 57, text: "قرارات أسرع، نتائج أوضح", accent: "teal" },
-];
-
-function captionIndexForFrame(frame) {
-  for (let i = 0; i < CAPTIONS.length; i++) {
-    if (frame >= CAPTIONS[i].from && frame <= CAPTIONS[i].to) return i;
-  }
-  return -1;
-}
 
 export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
-  const ctaRef = useRef(null);
-  const captionRef = useRef(null);
+  const [showHero, setShowHero] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const track = trackRef.current;
-    const cta = ctaRef.current;
-    const caption = captionRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
-    // Under reduced-motion, map frames 1:1 to scroll position with no eased
-    // "catch-up" motion — the sequence stays fully user-controlled.
+    // Under reduced-motion, map frames 1:1 to scroll position with no eased catch-up
     const ease = window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ? 1
       : 0.12;
 
-    // Viewport width (fall back to a desktop value if it reads as 0, e.g. an
-    // off-screen render, so we never lock into the mobile tier by mistake).
     const cssWidth =
       window.innerWidth || document.documentElement.clientWidth || 1280;
 
-    // Single full-quality source (1920x1080, q92 mozjpeg). No downscaled tiers —
-    // image fidelity is the priority; the browser caches each frame after the
-    // first pass.
     const framePath = (i) =>
       `/frames/frame-${String(i + 1).padStart(3, "0")}.jpg`;
 
-    // Shorter scrub distance on phones so the sequence doesn't feel endless.
     const isPhone = cssWidth < 768;
     const pxPerFrame = isPhone ? 70 : 105;
     track.style.height = `${FRAME_COUNT * pxPerFrame}px`;
@@ -75,8 +39,6 @@ export default function ScrollSequence() {
     let rafId = 0;
     let vw = 0;
     let vh = 0;
-    let ctaShown = false;
-    let activeCaptionIndex = -1;
 
     const setCanvasSize = () => {
       vw = window.innerWidth;
@@ -93,10 +55,6 @@ export default function ScrollSequence() {
     const drawFrame = (index) => {
       const img = images[index];
       if (!img || !img.complete || img.naturalWidth === 0) return;
-      // Portrait (phones): the frame can't cover the screen without cropping
-      // people/content off the sides, so it's shown whole ("contain") with a
-      // softly blurred, darkened copy of the same frame filling the bars
-      // behind it instead of flat black. Landscape: "cover" fills edge to edge.
       const contain = vh > vw;
 
       if (contain) {
@@ -134,31 +92,6 @@ export default function ScrollSequence() {
       const index = Math.round(currentFrame);
       if (index !== lastDrawn) drawFrame(index);
 
-      const shouldShow = targetFrame >= FRAME_COUNT - 1.5;
-      if (shouldShow !== ctaShown) {
-        ctaShown = shouldShow;
-        cta.style.opacity = shouldShow ? "1" : "0";
-        cta.style.pointerEvents = shouldShow ? "auto" : "none";
-      }
-
-      const idx = captionIndexForFrame(Math.round(currentFrame));
-      if (idx !== activeCaptionIndex) {
-        activeCaptionIndex = idx;
-        // Drop the box out first...
-        caption.classList.remove("scroll-caption-show");
-        if (idx !== -1) {
-          const c = CAPTIONS[idx];
-          // ...then, after the drop-out transition, load the new text/color
-          // and slide the box back up into place.
-          window.clearTimeout(caption._swapTimer);
-          caption._swapTimer = window.setTimeout(() => {
-            caption.textContent = c.text;
-            caption.dataset.accent = c.accent;
-            caption.classList.add("scroll-caption-show");
-          }, 220);
-        }
-      }
-
       rafId = requestAnimationFrame(tick);
     };
 
@@ -166,7 +99,6 @@ export default function ScrollSequence() {
 
     let lastW = window.innerWidth;
     const onResize = () => {
-      // Ignore height-only changes (mobile browser chrome showing/hiding).
       if (window.innerWidth === lastW) return;
       lastW = window.innerWidth;
       setCanvasSize();
@@ -174,7 +106,7 @@ export default function ScrollSequence() {
       drawFrame(Math.round(currentFrame));
     };
 
-    // Preload the sequence in order (== scroll priority from the top).
+    // Preload the sequence in order
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
       img.decoding = "async";
@@ -199,12 +131,17 @@ export default function ScrollSequence() {
     currentFrame = targetFrame;
     rafId = requestAnimationFrame(tick);
 
+    // Hero text starts appearing smoothly after ~1.2s and stays fixed forever
+    const heroTimer = setTimeout(() => {
+      setShowHero(true);
+    }, 1200);
+
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
 
     return () => {
+      clearTimeout(heroTimer);
       cancelAnimationFrame(rafId);
-      window.clearTimeout(caption._swapTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
@@ -225,14 +162,78 @@ export default function ScrollSequence() {
           background: "#000",
         }}
       />
-      <div ref={captionRef} className="scroll-caption" />
-      <div ref={ctaRef} className="scroll-end-cta">
-        {END_LINKS.map((l) => (
-          <a key={l.href} href={l.href} className="scroll-end-cta-link">
-            {l.label}
+
+      {/* Persistent Hero Overlay with Openappo Brand Details */}
+      <div className={`hero-overlay ${showHero ? "is-visible" : ""}`}>
+        <div className="hero-tagline">
+          <span className="hero-tagline-dot" />
+          <span>منظومة إدارة وتطوير الأعمال الذكية • OPENAPPO</span>
+        </div>
+
+        <div className="hero-heading-group">
+          <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
+          <h1 className="hero-main-title">Openappo</h1>
+          <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
+        </div>
+
+        <div className="hero-desc-container">
+          <div className="hero-desc-bar" />
+          <p className="hero-desc">
+            ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
+            <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
+          </p>
+        </div>
+
+        <div className="hero-actions">
+          <a href="/portfolio" className="btn-explore">
+            <span>استكشف حلولنا</span>
+            <span className="btn-arrow-icon">←</span>
           </a>
-        ))}
+          <a href="/contact" className="btn-watch">
+            <span className="btn-play-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </span>
+            <span>تواصل معنا الآن</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Bottom Floating Info Bar */}
+      <div className={`hero-bottom-bar ${showHero ? "is-visible" : ""}`}>
+        <div className="bottom-bar-item">
+          <svg
+            className="bottom-bar-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <span>حلول برمجية وسحابية مخصصة لنمو أعمالك</span>
+        </div>
+        <div className="bottom-bar-divider" />
+        <div className="bottom-bar-item">
+          <svg
+            className="bottom-bar-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <span>support@openappo.com</span>
+        </div>
       </div>
     </div>
   );
 }
+
