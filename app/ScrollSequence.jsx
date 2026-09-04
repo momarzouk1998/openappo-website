@@ -61,9 +61,18 @@ export default function ScrollSequence() {
     const drawFrame = (index) => {
       const img = images[index];
       if (!img || !img.complete || img.naturalWidth === 0) return;
-      const scale = Math.max(vw / imgW, vh / imgH);
+      // Portrait (phones): "contain" so the whole frame is always visible —
+      // no side-cropping. Landscape: "cover" to fill the screen edge to edge.
+      const contain = vh > vw;
+      const scale = contain
+        ? Math.min(vw / imgW, vh / imgH)
+        : Math.max(vw / imgW, vh / imgH);
       const w = imgW * scale;
       const h = imgH * scale;
+      if (contain) {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, vw, vh);
+      }
       ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
       lastDrawn = index;
     };
