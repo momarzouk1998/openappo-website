@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import ScrollSequence from "./ScrollSequence";
 import Portfolio from "./Portfolio";
+import Testimonials from "./Testimonials";
 import Dock from "./Dock";
 
 export default function Page() {
@@ -10,6 +11,7 @@ export default function Page() {
       <span id="top" />
       <ScrollSequence />
       <Portfolio />
+      <Testimonials />
       <Dock />
     </>
   );

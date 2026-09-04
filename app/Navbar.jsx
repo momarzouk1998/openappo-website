@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const LINKS = [
   { href: "#top", label: "الرئيسية" },
   { href: "#portfolio", label: "سابقة الأعمال" },
+  { href: "#testimonials", label: "آراء العملاء" },
 ];
 
 export default function Navbar() {
