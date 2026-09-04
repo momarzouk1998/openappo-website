@@ -11,21 +11,23 @@ const END_LINKS = [
 ];
 
 // Frame ranges are 0-indexed (frame 1 in the storyboard == index 0). Each
-// caption fades in over its first ~1.5 frames and out over its last ~1.5,
-// so it's fully gone before the next one (or the end CTA) appears.
+// caption is a solid brand-colored box that slides up from below and holds
+// still — no continuous scroll-linked fade — until its range ends, then it
+// drops back out before the next one slides in.
 const CAPTIONS = [
-  { from: 0, to: 7, text: "لسه بتدوّر في الفواتير والإكسل؟" },
-  { from: 19, to: 29, text: "Openappo بيحوّل شغلك كله لمكان واحد" },
-  { from: 44, to: 54, text: "كل حاجة قدامك، لحظة بلحظة" },
-  { from: 55, to: 58, text: "قرارات أسرع، نتائج أوضح" },
+  { from: 0, to: 8, text: "لسه بتدوّر في الفواتير والإكسل؟", accent: "coral" },
+  { from: 19, to: 30, text: "Openappo بيحوّل شغلك كله لمكان واحد", accent: "teal" },
+  { from: 44, to: 54, text: "كل حاجة قدامك، لحظة بلحظة", accent: "coral" },
+  // Ends at 57, not 59: the end-of-scroll CTA fades in at FRAME_COUNT - 1.5
+  // (~58.5), so this needs to have fully dropped out before then.
+  { from: 55, to: 57, text: "قرارات أسرع، نتائج أوضح", accent: "teal" },
 ];
 
-function captionOpacity(frame, from, to) {
-  const fade = 1.5;
-  if (frame < from || frame > to) return 0;
-  if (frame < from + fade) return (frame - from) / fade;
-  if (frame > to - fade) return Math.max(0, (to - frame) / fade);
-  return 1;
+function captionIndexForFrame(frame) {
+  for (let i = 0; i < CAPTIONS.length; i++) {
+    if (frame >= CAPTIONS[i].from && frame <= CAPTIONS[i].to) return i;
+  }
+  return -1;
 }
 
 export default function ScrollSequence() {
@@ -74,7 +76,7 @@ export default function ScrollSequence() {
     let vw = 0;
     let vh = 0;
     let ctaShown = false;
-    let shownCaptionText = "";
+    let activeCaptionIndex = -1;
 
     const setCanvasSize = () => {
       vw = window.innerWidth;
@@ -139,21 +141,23 @@ export default function ScrollSequence() {
         cta.style.pointerEvents = shouldShow ? "auto" : "none";
       }
 
-      let activeText = "";
-      let activeOpacity = 0;
-      for (const c of CAPTIONS) {
-        const o = captionOpacity(currentFrame, c.from, c.to);
-        if (o > 0) {
-          activeText = c.text;
-          activeOpacity = o;
-          break;
+      const idx = captionIndexForFrame(Math.round(currentFrame));
+      if (idx !== activeCaptionIndex) {
+        activeCaptionIndex = idx;
+        // Drop the box out first...
+        caption.classList.remove("scroll-caption-show");
+        if (idx !== -1) {
+          const c = CAPTIONS[idx];
+          // ...then, after the drop-out transition, load the new text/color
+          // and slide the box back up into place.
+          window.clearTimeout(caption._swapTimer);
+          caption._swapTimer = window.setTimeout(() => {
+            caption.textContent = c.text;
+            caption.dataset.accent = c.accent;
+            caption.classList.add("scroll-caption-show");
+          }, 220);
         }
       }
-      if (activeText !== shownCaptionText) {
-        shownCaptionText = activeText;
-        caption.textContent = activeText;
-      }
-      caption.style.opacity = activeText ? String(activeOpacity) : "0";
 
       rafId = requestAnimationFrame(tick);
     };
@@ -200,6 +204,7 @@ export default function ScrollSequence() {
 
     return () => {
       cancelAnimationFrame(rafId);
+      window.clearTimeout(caption._swapTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
