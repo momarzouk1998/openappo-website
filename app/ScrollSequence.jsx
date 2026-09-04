@@ -24,11 +24,11 @@ export default function ScrollSequence() {
     const cssWidth =
       window.innerWidth || document.documentElement.clientWidth || 1280;
 
-    // Pick an image tier from the effective pixel width of the viewport.
-    const effWidth = cssWidth * Math.min(window.devicePixelRatio || 1, 2);
-    const tier = effWidth <= 900 ? "w720" : "w1280";
+    // Single full-quality source (1920x1080, q92 mozjpeg). No downscaled tiers —
+    // image fidelity is the priority; the browser caches each frame after the
+    // first pass.
     const framePath = (i) =>
-      `/frames/${tier}/frame-${String(i + 1).padStart(3, "0")}.webp`;
+      `/frames/frame-${String(i + 1).padStart(3, "0")}.jpg`;
 
     // Shorter scrub distance on phones so the sequence doesn't feel endless.
     const isPhone = cssWidth < 768;
