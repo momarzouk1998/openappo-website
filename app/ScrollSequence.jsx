@@ -3,12 +3,6 @@
 import { useEffect, useRef } from "react";
 
 const FRAME_COUNT = 60;
-const FRAME_PATH = (i) =>
-  `/frames/frame-${String(i + 1).padStart(3, "0")}.jpg`;
-
-// Vertical scroll distance (in px) allotted to each frame. Higher = slower,
-// smoother scrub.
-const PX_PER_FRAME = 110;
 
 export default function ScrollSequence() {
   const canvasRef = useRef(null);
@@ -17,23 +11,49 @@ export default function ScrollSequence() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const track = trackRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
+
+    // Under reduced-motion, map frames 1:1 to scroll position with no eased
+    // "catch-up" motion — the sequence stays fully user-controlled.
+    const ease = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 1
+      : 0.12;
+
+    // Viewport width (fall back to a desktop value if it reads as 0, e.g. an
+    // off-screen render, so we never lock into the mobile tier by mistake).
+    const cssWidth =
+      window.innerWidth || document.documentElement.clientWidth || 1280;
+
+    // Pick an image tier from the effective pixel width of the viewport.
+    const effWidth = cssWidth * Math.min(window.devicePixelRatio || 1, 2);
+    const tier = effWidth <= 900 ? "w720" : "w1280";
+    const framePath = (i) =>
+      `/frames/${tier}/frame-${String(i + 1).padStart(3, "0")}.webp`;
+
+    // Shorter scrub distance on phones so the sequence doesn't feel endless.
+    const isPhone = cssWidth < 768;
+    const pxPerFrame = isPhone ? 70 : 105;
+    track.style.height = `${FRAME_COUNT * pxPerFrame}px`;
 
     const images = new Array(FRAME_COUNT);
     let imgW = 1280;
     let imgH = 720;
 
-    let currentFrame = 0; // eased value
+    let currentFrame = 0;
     let targetFrame = 0;
     let lastDrawn = -1;
     let rafId = 0;
+    let vw = 0;
+    let vh = 0;
 
     const setCanvasSize = () => {
+      vw = window.innerWidth;
+      vh = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(window.innerWidth * dpr);
-      canvas.height = Math.round(window.innerHeight * dpr);
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
+      canvas.width = Math.round(vw * dpr);
+      canvas.height = Math.round(vh * dpr);
+      canvas.style.width = vw + "px";
+      canvas.style.height = vh + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       lastDrawn = -1;
     };
@@ -41,50 +61,46 @@ export default function ScrollSequence() {
     const drawFrame = (index) => {
       const img = images[index];
       if (!img || !img.complete || img.naturalWidth === 0) return;
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
       const scale = Math.max(vw / imgW, vh / imgH);
       const w = imgW * scale;
       const h = imgH * scale;
-      const x = (vw - w) / 2;
-      const y = (vh - h) / 2;
-
-      ctx.clearRect(0, 0, vw, vh);
-      ctx.drawImage(img, x, y, w, h);
+      ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
       lastDrawn = index;
     };
 
     const computeTarget = () => {
       const total = track.offsetHeight - window.innerHeight;
-      const progress = total > 0 ? Math.min(Math.max(window.scrollY / total, 0), 1) : 0;
+      const progress =
+        total > 0 ? Math.min(Math.max(window.scrollY / total, 0), 1) : 0;
       targetFrame = progress * (FRAME_COUNT - 1);
     };
 
     const tick = () => {
-      currentFrame += (targetFrame - currentFrame) * 0.12;
+      currentFrame += (targetFrame - currentFrame) * ease;
       if (Math.abs(targetFrame - currentFrame) < 0.001) currentFrame = targetFrame;
-
       const index = Math.round(currentFrame);
       if (index !== lastDrawn) drawFrame(index);
-
       rafId = requestAnimationFrame(tick);
     };
 
     const onScroll = () => computeTarget();
+
+    let lastW = window.innerWidth;
     const onResize = () => {
+      // Ignore height-only changes (mobile browser chrome showing/hiding).
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
       setCanvasSize();
       computeTarget();
       drawFrame(Math.round(currentFrame));
     };
 
-    // Preload every frame.
-    let loaded = 0;
+    // Preload the sequence in order (== scroll priority from the top).
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
-      img.src = FRAME_PATH(i);
+      img.decoding = "async";
+      img.src = framePath(i);
       img.onload = () => {
-        loaded++;
         if (i === 0) {
           imgW = img.naturalWidth || imgW;
           imgH = img.naturalHeight || imgH;
@@ -92,6 +108,8 @@ export default function ScrollSequence() {
           computeTarget();
           drawFrame(0);
           canvas.style.opacity = "1";
+        } else if (Math.round(currentFrame) === i) {
+          drawFrame(i);
         }
       };
       images[i] = img;
@@ -113,10 +131,7 @@ export default function ScrollSequence() {
   }, []);
 
   return (
-    <div
-      ref={trackRef}
-      style={{ height: `${FRAME_COUNT * PX_PER_FRAME}px`, position: "relative" }}
-    >
+    <div ref={trackRef} style={{ position: "relative", touchAction: "pan-y" }}>
       <canvas
         ref={canvasRef}
         style={{
@@ -126,7 +141,7 @@ export default function ScrollSequence() {
           height: "100%",
           display: "block",
           opacity: 0,
-          transition: "opacity 0.6s ease",
+          transition: "opacity 0.5s ease",
           background: "#000",
         }}
       />
