@@ -886,6 +886,7 @@ body {
     align-items: center;
     gap: 8px;
     pointer-events: none;
+    box-sizing: border-box;
   }
   .hero-overlay {
     position: relative;
@@ -895,8 +896,11 @@ body {
     left: auto;
     max-width: none;
     width: 100%;
+    box-sizing: border-box;
   }
   .hero-glass-card {
+    width: 100%;
+    box-sizing: border-box;
     padding: 12px 14px 10px 14px;
     border-radius: 18px;
     background: rgba(9, 14, 22, 0.92);
@@ -982,6 +986,7 @@ body {
     width: 100%;
     max-width: none;
     border-radius: 20px;
+    box-sizing: border-box;
   }
   .btn-how-it-works {
     padding: 8px 14px;

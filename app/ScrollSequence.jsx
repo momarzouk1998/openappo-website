@@ -132,7 +132,11 @@ export default function ScrollSequence() {
 
       if (bottomBar) {
         bottomBar.style.opacity = barProgress.toFixed(3);
-        bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        if (vw < 768) {
+          bottomBar.style.transform = `translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        } else {
+          bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        }
         bottomBar.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
