@@ -214,8 +214,14 @@ export default function ScrollSequence() {
 
       {/* Initial Scroll Hint to invite user to scroll */}
       <div ref={scrollHintRef} className="scroll-hint">
-        <span>مرّر للأسفل لاستكشاف Openappo</span>
-        <span className="scroll-hint-arrow">↓</span>
+        <span className="scroll-hint-dot" />
+        <span className="scroll-hint-text">اسحب أو مرّر للأسفل لاستكشاف</span>
+        <span className="scroll-hint-brand">Openappo</span>
+        <span className="scroll-hint-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
+        </span>
       </div>
 
       {/* Progressive Hero Overlay inside frosted dark glass card */}
