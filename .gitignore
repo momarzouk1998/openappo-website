@@ -41,3 +41,4 @@ next-env.d.ts
 /ChatGPT Image*.png
 *.wfp
 
+_capture/
