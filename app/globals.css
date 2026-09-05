@@ -22,16 +22,15 @@ body {
   direction: rtl;
 }
 
-/* ---------- Top Nav Brand ---------- */
+/* ---------- Top Nav Brand (Top Left) ---------- */
 .openappo-nav {
   position: fixed;
   top: 24px;
-  right: 32px;
   left: 32px;
+  right: auto;
   z-index: 25;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   pointer-events: none;
 }
 
@@ -57,36 +56,10 @@ body {
 }
 
 .openappo-logo-img {
-  height: 26px;
+  height: 28px;
   width: auto;
   display: block;
   object-fit: contain;
-}
-
-.nav-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  border-radius: 999px;
-  background: rgba(11, 17, 28, 0.88);
-  border: 1px solid rgba(61, 218, 210, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  color: #fff;
-  text-decoration: none;
-  font-size: 13.5px;
-  font-weight: 700;
-  pointer-events: auto;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
-  transition: all 0.2s ease;
-}
-
-.nav-cta-btn:hover {
-  background: rgba(61, 218, 210, 0.2);
-  border-color: #3ddad2;
-  color: #3ddad2;
-  transform: translateY(-2px);
 }
 
 /* ---------- Scroll Down Prompt (Initial) ---------- */
@@ -280,14 +253,14 @@ body {
   transform: translateX(-4px);
 }
 
-.btn-watch {
+.btn-whatsapp {
   display: inline-flex;
   align-items: center;
   gap: 12px;
   padding: 13px 26px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(37, 211, 102, 0.12);
+  border: 1.5px solid rgba(37, 211, 102, 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   color: #ffffff;
@@ -299,29 +272,30 @@ body {
   cursor: pointer;
 }
 
-.btn-watch:hover {
-  background: rgba(255, 122, 122, 0.18);
-  border-color: #ff7a7a;
+.btn-whatsapp:hover {
+  background: rgba(37, 211, 102, 0.24);
+  border-color: #25D366;
   color: #fff;
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 30px -6px rgba(255, 122, 122, 0.35);
+  box-shadow: 0 12px 30px -6px rgba(37, 211, 102, 0.4);
 }
 
-.btn-play-circle {
+.btn-whatsapp-circle {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 1.5px solid #ff7a7a;
+  border: 1.5px solid #25D366;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #ff7a7a;
+  color: #25D366;
   flex-shrink: 0;
+  background: rgba(37, 211, 102, 0.15);
 }
 
-.btn-play-circle svg {
-  width: 13px;
-  height: 13px;
+.btn-whatsapp-circle svg {
+  width: 14px;
+  height: 14px;
 }
 /* ---------- Bottom Floating Contact Bar ---------- */
 .hero-bottom-bar {
@@ -470,20 +444,20 @@ body {
     font-size: 12px;
     gap: 6px;
   }
-  .btn-watch {
+  .btn-whatsapp {
     flex: 1;
     justify-content: center;
     padding: 9px 12px;
     font-size: 12px;
     gap: 6px;
   }
-  .btn-play-circle {
-    width: 18px;
-    height: 18px;
+  .btn-whatsapp-circle {
+    width: 20px;
+    height: 20px;
   }
-  .btn-play-circle svg {
-    width: 9px;
-    height: 9px;
+  .btn-whatsapp-circle svg {
+    width: 10px;
+    height: 10px;
   }
   .hero-bottom-bar {
     display: none !important;

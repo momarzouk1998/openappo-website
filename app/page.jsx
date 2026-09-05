@@ -7,19 +7,16 @@ export default function Page() {
       <header className="openappo-nav">
         <a href="/" className="openappo-logo-wrap" aria-label="Openappo">
           <img
-            src="/brand/openappo-wordmark.png"
+            src="/brand/openappo-wordmark-dark.png"
             alt="Openappo"
             className="openappo-logo-img"
           />
-        </a>
-        <a href="/contact" className="nav-cta-btn">
-          <span>تواصل معنا</span>
-          <span>←</span>
         </a>
       </header>
       <ScrollSequence />
     </>
   );
 }
+
 
 
