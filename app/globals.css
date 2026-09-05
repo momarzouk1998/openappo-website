@@ -297,58 +297,69 @@ body {
   width: 14px;
   height: 14px;
 }
-/* ---------- Bottom Floating Contact Bar ---------- */
+.btn-testimonials {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-testimonials:hover {
+  background: rgba(255, 193, 7, 0.18);
+  border-color: #ffc107;
+  color: #fff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px -6px rgba(255, 193, 7, 0.35);
+}
+
+.btn-star-icon {
+  color: #ffc107;
+  font-size: 15px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.btn-testimonials:hover .btn-star-icon {
+  transform: scale(1.2) rotate(15deg);
+}
+
+/* ---------- Bottom Floating Action Bar (Bottom Center) ---------- */
 .hero-bottom-bar {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
-  z-index: 15;
+  z-index: 25;
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 11px 28px;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 16px;
   border-radius: 999px;
-  background: rgba(14, 20, 28, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.75);
+  background: rgba(10, 16, 26, 0.84);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.85),
+              0 0 30px -5px rgba(61, 218, 210, 0.15);
   direction: rtl;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
   max-width: calc(100vw - 32px);
-}
-
-.hero-bottom-bar.is-visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
-}
-
-.bottom-bar-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  white-space: nowrap;
-}
-
-.bottom-bar-icon {
-  width: 16px;
-  height: 16px;
-  color: #3ddad2;
-  flex-shrink: 0;
-}
-
-.bottom-bar-divider {
-  width: 1px;
-  height: 14px;
-  background: rgba(255, 255, 255, 0.2);
 }
 
 /* ---------- Mobile & Responsive Adjustments ---------- */
@@ -380,7 +391,7 @@ body {
     left: 12px;
     max-width: none;
     top: auto;
-    bottom: max(12px, env(safe-area-inset-bottom));
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
     transform: none;
   }
   .hero-glass-card {
@@ -420,7 +431,7 @@ body {
     display: none;
   }
   .hero-desc-container {
-    margin-bottom: 14px;
+    margin-bottom: 0;
     gap: 10px;
   }
   .hero-desc-bar {
@@ -431,36 +442,31 @@ body {
     line-height: 1.5;
     color: #e2e8f0;
   }
-  .hero-actions {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    width: 100%;
-  }
-  .btn-explore {
-    flex: 1;
-    justify-content: center;
-    padding: 9px 12px;
-    font-size: 12px;
+  .hero-bottom-bar {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    padding: 6px 10px;
     gap: 6px;
+    max-width: calc(100vw - 16px);
+    border-radius: 999px;
   }
+  .btn-explore,
+  .btn-testimonials,
   .btn-whatsapp {
-    flex: 1;
-    justify-content: center;
-    padding: 9px 12px;
-    font-size: 12px;
-    gap: 6px;
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 4px;
+    white-space: nowrap;
   }
   .btn-whatsapp-circle {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
   .btn-whatsapp-circle svg {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
   }
-  .hero-bottom-bar {
-    display: none !important;
+  .btn-star-icon {
+    font-size: 12px;
   }
 }
 
