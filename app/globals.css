@@ -1482,14 +1482,17 @@ body {
 
 @media (max-width: 640px) {
   .pf-wall-stage {
-    height: min(58vh, 440px);
+    height: min(64vh, 520px);
+    perspective: 1100px;
   }
+  /* Single, full-width column on phones — 3 tiny columns were unreadable. */
   .pf-wall {
-    gap: 8px;
-    padding: 0 2px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 4px;
   }
   .pf-wall-col {
-    gap: 8px;
+    gap: 12px;
   }
   .pf-modal-head {
     flex-wrap: wrap;

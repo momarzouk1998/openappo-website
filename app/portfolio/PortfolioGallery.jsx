@@ -64,14 +64,15 @@ const PROJECTS = [
 const shotSrc = (slug, i) =>
   `/portfolio/systems/${slug}/${slug}-${String(i + 1).padStart(2, "0")}.jpg`;
 
-// Round-robin the screenshots into 3 columns, then double each column so the
-// infinite -50% vertical drift wraps seamlessly.
-function buildColumns(slug, count) {
-  const base = [[], [], []];
-  for (let i = 0; i < count; i++) base[i % 3].push(shotSrc(slug, i));
+// Split the screenshots into `n` columns (round-robin), then double each column
+// so the infinite -50% vertical drift wraps seamlessly.
+function buildColumns(slug, count, n) {
+  const base = Array.from({ length: n }, () => []);
+  for (let i = 0; i < count; i++) base[i % n].push(shotSrc(slug, i));
   return base.map((col) => {
     let list = col.length ? col.slice() : [shotSrc(slug, 0)];
-    while (list.length < 4) list = list.concat(col.length ? col : list);
+    const min = n === 1 ? 2 : 4;
+    while (list.length < min) list = list.concat(col.length ? col : list);
     return list.concat(list);
   });
 }
@@ -79,13 +80,22 @@ function buildColumns(slug, count) {
 export default function PortfolioGallery() {
   const [activeSlug, setActiveSlug] = useState(null);
   const [zoom, setZoom] = useState(null);
+  const [oneCol, setOneCol] = useState(false);
 
   const project = PROJECTS.find((p) => p.slug === activeSlug) || null;
   const count = project ? SHOTS[project.slug] || 0 : 0;
   const columns = useMemo(
-    () => (project ? buildColumns(project.slug, count) : []),
-    [project, count]
+    () => (project ? buildColumns(project.slug, count, oneCol ? 1 : 3) : []),
+    [project, count, oneCol]
   );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setOneCol(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const close = useCallback(() => {
     setActiveSlug(null);
