@@ -107,7 +107,11 @@ export default function ScrollSequence() {
 
       if (hero) {
         hero.style.opacity = heroProgress.toFixed(3);
-        hero.style.transform = `translateY(${(36 * (1 - heroProgress)).toFixed(1)}px)`;
+        if (vw < 768) {
+          hero.style.transform = `translateY(${(20 * (1 - heroProgress)).toFixed(1)}px)`;
+        } else {
+          hero.style.transform = `translateY(calc(-50% + ${(36 * (1 - heroProgress)).toFixed(1)}px))`;
+        }
         hero.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
       }
 
