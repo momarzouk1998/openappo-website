@@ -256,15 +256,22 @@ export default function ScrollSequence() {
 
       {/* Floating Bottom Center Action Buttons Bar */}
       <div ref={bottomBarRef} className="hero-bottom-bar">
-        <a href="/portfolio" className="btn-explore">
-          <span>سابقة الأعمال</span>
-          <span className="btn-arrow-icon">←</span>
+        <a href="/how-it-works" className="btn-how-it-works">
+          <span className="btn-how-icon">⚡</span>
+          <span>كيف نعمل</span>
         </a>
 
-        <a href="/testimonials" className="btn-testimonials">
-          <span className="btn-star-icon">★</span>
-          <span>آراء العملاء</span>
-        </a>
+        <div className="bottom-bar-subrow">
+          <a href="/portfolio" className="btn-explore">
+            <span>سابقة الأعمال</span>
+            <span className="btn-arrow-icon">←</span>
+          </a>
+
+          <a href="/testimonials" className="btn-testimonials">
+            <span className="btn-star-icon">★</span>
+            <span>آراء العملاء</span>
+          </a>
+        </div>
       </div>
 
       {/* Floating Bottom-Left Contact Widget */}
