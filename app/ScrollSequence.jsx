@@ -124,7 +124,11 @@ export default function ScrollSequence() {
 
       if (videoTrust) {
         videoTrust.style.opacity = heroProgress.toFixed(3);
-        videoTrust.style.transform = `translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+        if (vw < 768) {
+          videoTrust.style.transform = `translateX(-50%) translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+        } else {
+          videoTrust.style.transform = `translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+        }
         videoTrust.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
       }
 
