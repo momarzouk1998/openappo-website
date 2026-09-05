@@ -235,7 +235,7 @@ export default function ScrollSequence() {
                 <svg viewBox="0 0 24 24" fill="none" className="swipe-hand-svg">
                   <path
                     d="M9 11.25V4.5A1.5 1.5 0 0 1 10.5 3v0A1.5 1.5 0 0 1 12 4.5v6.75M12 9V6A1.5 1.5 0 0 1 13.5 4.5v0A1.5 1.5 0 0 1 15 6v3.75M15 9.75V7.5A1.5 1.5 0 0 1 16.5 6v0A1.5 1.5 0 0 1 18 7.5v3.75M9 11.25a2.25 2.25 0 0 0-2.25-2.25v0A2.25 2.25 0 0 0 4.5 11.25v3.75a6.75 6.75 0 0 0 6.75 6.75h.75a6.75 6.75 0 0 0 6.75-6.75v-5.25"
-                    stroke="#3ddad2"
+                    stroke="#ff7a7a"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"

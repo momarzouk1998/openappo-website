@@ -772,9 +772,9 @@ body {
   .swipe-trail-glow {
     position: absolute;
     width: 4px;
-    background: linear-gradient(180deg, rgba(61, 218, 210, 0.1) 0%, #3ddad2 50%, #ff7a7a 100%);
+    background: linear-gradient(180deg, rgba(255, 122, 122, 0.1) 0%, #ff7a7a 50%, #3ddad2 100%);
     border-radius: 4px;
-    box-shadow: 0 0 12px #3ddad2, 0 0 20px #ff7a7a;
+    box-shadow: 0 0 12px #ff7a7a, 0 0 20px #3ddad2;
     animation: swipeTrailBig 2.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
   .swipe-hand-wrapper {
@@ -786,7 +786,7 @@ body {
   .swipe-hand-svg {
     width: 40px;
     height: 40px;
-    filter: drop-shadow(0 0 12px rgba(61, 218, 210, 0.95));
+    filter: drop-shadow(0 0 14px rgba(255, 122, 122, 0.95)) drop-shadow(0 0 6px #ff7a7a);
   }
   .hero-overlay {
     top: calc(56px + 56.25vw + 10px);
