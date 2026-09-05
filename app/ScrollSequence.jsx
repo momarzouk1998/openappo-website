@@ -275,6 +275,25 @@ export default function ScrollSequence() {
               <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
             </p>
           </div>
+
+          {/* Option 1: Trust & Stats Bar */}
+          <div className="hero-trust-bar">
+            <div className="hero-trust-item">
+              <span className="hero-trust-val">+500</span>
+              <span className="hero-trust-lbl">شركة وثقت بنا</span>
+            </div>
+            <span className="hero-trust-divider">•</span>
+            <div className="hero-trust-item">
+              <span className="hero-trust-star">⭐</span>
+              <span className="hero-trust-val">4.9/5</span>
+              <span className="hero-trust-lbl">تقييم العملاء</span>
+            </div>
+            <span className="hero-trust-divider">•</span>
+            <div className="hero-trust-item">
+              <span className="hero-trust-icon">🛡️</span>
+              <span className="hero-trust-lbl">دعم فني 24/7</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -295,6 +314,22 @@ export default function ScrollSequence() {
             <span className="btn-star-icon">★</span>
             <span>آراء العملاء</span>
           </a>
+        </div>
+
+        {/* Option 2: Smart Feature Badges */}
+        <div className="hero-feature-badges">
+          <span className="feature-badge">
+            <span className="badge-icon">☁️</span>
+            <span>سحابي 100%</span>
+          </span>
+          <span className="feature-badge">
+            <span className="badge-icon">📊</span>
+            <span>تقارير لحظية</span>
+          </span>
+          <span className="feature-badge">
+            <span className="badge-icon">⚡</span>
+            <span>أعلى كفاءة</span>
+          </span>
         </div>
       </div>
 

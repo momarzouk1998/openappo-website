@@ -319,6 +319,88 @@ body {
   font-weight: 800;
 }
 
+/* ---------- Trust & Stats Bar ---------- */
+.hero-trust-bar {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.hero-trust-val {
+  color: #3ddad2;
+  font-weight: 800;
+}
+
+.hero-trust-star {
+  color: #ffc107;
+  font-size: 13px;
+}
+
+.hero-trust-icon {
+  font-size: 12px;
+}
+
+.hero-trust-lbl {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-trust-divider {
+  color: rgba(61, 218, 210, 0.5);
+  font-size: 10px;
+}
+
+/* ---------- Smart Feature Badges ---------- */
+.hero-feature-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(61, 218, 210, 0.08);
+  border: 1px solid rgba(61, 218, 210, 0.28);
+  color: #e2e8f0;
+  font-size: 11.5px;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.feature-badge:hover {
+  background: rgba(61, 218, 210, 0.18);
+  border-color: rgba(61, 218, 210, 0.6);
+  transform: translateY(-1px);
+}
+
+.badge-icon {
+  font-size: 12px;
+}
+
 /* ---------- Buttons ---------- */
 .hero-actions {
   display: flex;
@@ -842,6 +924,32 @@ body {
     font-size: 11px;
     line-height: 1.45;
     color: #e2e8f0;
+  }
+  .hero-trust-bar {
+    margin-top: 6px;
+    padding-top: 6px;
+    gap: 6px;
+  }
+  .hero-trust-item {
+    font-size: 10px;
+    gap: 3px;
+  }
+  .hero-trust-star {
+    font-size: 11px;
+  }
+  .hero-feature-badges {
+    margin-top: 4px;
+    padding-top: 6px;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+  .feature-badge {
+    padding: 3.5px 7.5px;
+    font-size: 9.5px;
+    gap: 3px;
+  }
+  .badge-icon {
+    font-size: 10px;
   }
   .hero-bottom-bar {
     top: calc(56px + 56.25vw + 205px);
