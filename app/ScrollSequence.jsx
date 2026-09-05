@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const FRAME_COUNT = 60;
 
 export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
-  const [showHero, setShowHero] = useState(false);
+  const heroRef = useRef(null);
+  const bottomBarRef = useRef(null);
+  const scrollHintRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const track = trackRef.current;
+    const hero = heroRef.current;
+    const bottomBar = bottomBarRef.current;
+    const scrollHint = scrollHintRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
     // Under reduced-motion, map frames 1:1 to scroll position with no eased catch-up
@@ -92,6 +97,31 @@ export default function ScrollSequence() {
       const index = Math.round(currentFrame);
       if (index !== lastDrawn) drawFrame(index);
 
+      // Progressive entrance tied to scroll position:
+      // - At 0 scroll (progress < 0.02): Hero is hidden, scroll hint is visible
+      // - Scrolling between 0.02 and 0.16: Hero fades in and slides up smoothly
+      // - Past 0.16: Hero reaches 100% full opacity and remains firmly visible
+      const progress = currentFrame / (FRAME_COUNT - 1);
+      const heroProgress = Math.min(Math.max((progress - 0.02) / 0.14, 0), 1);
+      const hintProgress = Math.max(1 - progress / 0.06, 0);
+
+      if (hero) {
+        hero.style.opacity = heroProgress.toFixed(3);
+        hero.style.transform = `translateY(${(36 * (1 - heroProgress)).toFixed(1)}px)`;
+        hero.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
+      }
+
+      if (bottomBar) {
+        bottomBar.style.opacity = heroProgress.toFixed(3);
+        bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - heroProgress)).toFixed(1)}px)`;
+        bottomBar.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
+      }
+
+      if (scrollHint) {
+        scrollHint.style.opacity = hintProgress.toFixed(3);
+        scrollHint.style.pointerEvents = hintProgress > 0.2 ? "auto" : "none";
+      }
+
       rafId = requestAnimationFrame(tick);
     };
 
@@ -131,16 +161,10 @@ export default function ScrollSequence() {
     currentFrame = targetFrame;
     rafId = requestAnimationFrame(tick);
 
-    // Hero text starts appearing smoothly after ~1.2s and stays fixed forever
-    const heroTimer = setTimeout(() => {
-      setShowHero(true);
-    }, 1200);
-
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
 
     return () => {
-      clearTimeout(heroTimer);
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -163,45 +187,53 @@ export default function ScrollSequence() {
         }}
       />
 
-      {/* Persistent Hero Overlay with Openappo Brand Details */}
-      <div className={`hero-overlay ${showHero ? "is-visible" : ""}`}>
-        <div className="hero-tagline">
-          <span className="hero-tagline-dot" />
-          <span>منظومة إدارة وتطوير الأعمال الذكية • OPENAPPO</span>
-        </div>
+      {/* Initial Scroll Hint to invite user to scroll */}
+      <div ref={scrollHintRef} className="scroll-hint">
+        <span>مرّر للأسفل لاستكشاف Openappo</span>
+        <span className="scroll-hint-arrow">↓</span>
+      </div>
 
-        <div className="hero-heading-group">
-          <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
-          <h1 className="hero-main-title">Openappo</h1>
-          <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
-        </div>
+      {/* Progressive Hero Overlay inside frosted dark glass card */}
+      <div ref={heroRef} className="hero-overlay">
+        <div className="hero-glass-card">
+          <div className="hero-tagline">
+            <span className="hero-tagline-dot" />
+            <span>منظومة إدارة وتطوير الأعمال الذكية • OPENAPPO</span>
+          </div>
 
-        <div className="hero-desc-container">
-          <div className="hero-desc-bar" />
-          <p className="hero-desc">
-            ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
-            <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
-          </p>
-        </div>
+          <div className="hero-heading-group">
+            <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
+            <h1 className="hero-main-title">Openappo</h1>
+            <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
+          </div>
 
-        <div className="hero-actions">
-          <a href="/portfolio" className="btn-explore">
-            <span>استكشف حلولنا</span>
-            <span className="btn-arrow-icon">←</span>
-          </a>
-          <a href="/contact" className="btn-watch">
-            <span className="btn-play-circle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-            </span>
-            <span>تواصل معنا الآن</span>
-          </a>
+          <div className="hero-desc-container">
+            <div className="hero-desc-bar" />
+            <p className="hero-desc">
+              ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
+              <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
+            </p>
+          </div>
+
+          <div className="hero-actions">
+            <a href="/portfolio" className="btn-explore">
+              <span>استكشف حلولنا</span>
+              <span className="btn-arrow-icon">←</span>
+            </a>
+            <a href="/contact" className="btn-watch">
+              <span className="btn-play-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </span>
+              <span>تواصل معنا الآن</span>
+            </a>
+          </div>
         </div>
       </div>
 
       {/* Bottom Floating Info Bar */}
-      <div className={`hero-bottom-bar ${showHero ? "is-visible" : ""}`}>
+      <div ref={bottomBarRef} className="hero-bottom-bar">
         <div className="bottom-bar-item">
           <svg
             className="bottom-bar-icon"
@@ -236,4 +268,5 @@ export default function ScrollSequence() {
     </div>
   );
 }
+
 
