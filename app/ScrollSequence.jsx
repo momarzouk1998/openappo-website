@@ -63,18 +63,30 @@ export default function ScrollSequence() {
       const contain = vh > vw;
 
       if (contain) {
+        // Soft ambient background
         const bgScale = Math.max(vw / imgW, vh / imgH) * 1.15;
         const bw = imgW * bgScale;
         const bh = imgH * bgScale;
         ctx.save();
-        ctx.filter = "blur(28px) brightness(0.55)";
+        ctx.filter = "blur(28px) brightness(0.4)";
         ctx.drawImage(img, (vw - bw) / 2, (vh - bh) / 2, bw, bh);
         ctx.restore();
 
-        const scale = Math.min(vw / imgW, vh / imgH);
-        const w = imgW * scale;
-        const h = imgH * scale;
-        ctx.drawImage(img, (vw - w) / 2, (vh - h) / 2, w, h);
+        // Pin video frame cleanly at the upper section of phone screen
+        const topOffset = Math.max(56, Math.min(68, Math.round(vh * 0.08)));
+        const scale = vw / imgW;
+        const w = vw;
+        const h = Math.round(imgH * scale);
+        ctx.drawImage(img, 0, topOffset, w, h);
+
+        // Soft gradient fade at bottom of video frame for smooth transition
+        ctx.save();
+        const grad = ctx.createLinearGradient(0, topOffset + h - 24, 0, topOffset + h);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(1, "rgba(0,0,0,0.85)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, topOffset + h - 24, w, 24);
+        ctx.restore();
       } else {
         const scale = Math.max(vw / imgW, vh / imgH);
         const w = imgW * scale;
