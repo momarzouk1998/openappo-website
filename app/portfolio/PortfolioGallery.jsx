@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import SHOTS from "./shots.json";
 
 // No live URLs on purpose — these are internal client systems.
@@ -16,61 +16,51 @@ const PROJECTS = [
   { slug: "riyadalquran", name: "رياض القرآن الكريم", subtitle: "موقع جمعية خيرية" },
 ].filter((p) => (SHOTS[p.slug] || 0) > 0);
 
-const AUTOPLAY_MS = 3200;
-
 const shotSrc = (slug, i) =>
   `/portfolio/systems/${slug}/${slug}-${String(i + 1).padStart(2, "0")}.jpg`;
 
+// Round-robin the screenshots into 3 columns, then double each column so the
+// infinite -50% vertical drift wraps seamlessly.
+function buildColumns(slug, count) {
+  const base = [[], [], []];
+  for (let i = 0; i < count; i++) base[i % 3].push(shotSrc(slug, i));
+  return base.map((col) => {
+    let list = col.length ? col.slice() : [shotSrc(slug, 0)];
+    while (list.length < 4) list = list.concat(col.length ? col : list);
+    return list.concat(list);
+  });
+}
+
 export default function PortfolioGallery() {
   const [activeSlug, setActiveSlug] = useState(null);
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [zoom, setZoom] = useState(null);
 
   const project = PROJECTS.find((p) => p.slug === activeSlug) || null;
   const count = project ? SHOTS[project.slug] || 0 : 0;
-
-  const open = (slug) => {
-    setActiveSlug(slug);
-    setIndex(0);
-    setPaused(false);
-  };
-  const close = useCallback(() => setActiveSlug(null), []);
-  const goTo = useCallback((i) => setIndex(i), []);
-  const next = useCallback(
-    () => setIndex((i) => (count ? (i + 1) % count : 0)),
-    [count]
-  );
-  const prev = useCallback(
-    () => setIndex((i) => (count ? (i - 1 + count) % count : 0)),
-    [count]
+  const columns = useMemo(
+    () => (project ? buildColumns(project.slug, count) : []),
+    [project, count]
   );
 
-  // Keyboard + scroll lock while the modal is open
+  const close = useCallback(() => {
+    setActiveSlug(null);
+    setZoom(null);
+  }, []);
+
   useEffect(() => {
     if (!project) return;
     document.body.style.overflow = "hidden";
     const onKey = (e) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") next();
-      if (e.key === "ArrowRight") prev();
+      if (e.key !== "Escape") return;
+      if (zoom) setZoom(null);
+      else close();
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  }, [project, close, next, prev]);
-
-  // Auto-advance the screenshots; pauses on hover / when tab hidden
-  const nextRef = useRef(next);
-  nextRef.current = next;
-  useEffect(() => {
-    if (!project || count < 2 || paused) return;
-    const id = setInterval(() => {
-      if (!document.hidden) nextRef.current();
-    }, AUTOPLAY_MS);
-    return () => clearInterval(id);
-  }, [project, count, paused, index]);
+  }, [project, zoom, close]);
 
   return (
     <>
@@ -80,7 +70,7 @@ export default function PortfolioGallery() {
             key={p.slug}
             className="pf-card"
             style={{ animationDelay: `${i * 55}ms` }}
-            onClick={() => open(p.slug)}
+            onClick={() => setActiveSlug(p.slug)}
           >
             <span className="pf-card-logo">
               <img src={`/portfolio/logos/${p.slug}.png`} alt={p.name} loading="lazy" />
@@ -94,12 +84,7 @@ export default function PortfolioGallery() {
 
       {project && (
         <div className="pf-modal" onClick={close}>
-          <div
-            className="pf-modal-inner"
-            onClick={(e) => e.stopPropagation()}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-          >
+          <div className="pf-modal-inner" onClick={(e) => e.stopPropagation()}>
             <div className="pf-modal-head">
               <img
                 className="pf-modal-logo"
@@ -108,60 +93,54 @@ export default function PortfolioGallery() {
               />
               <div className="pf-modal-titles">
                 <div className="pf-modal-name">{project.name}</div>
-                <div className="pf-modal-sub">{project.subtitle}</div>
+                <div className="pf-modal-sub">
+                  {project.subtitle} · {count} شاشة
+                </div>
               </div>
               <button className="pf-modal-close" onClick={close} aria-label="إغلاق">
                 ✕
               </button>
             </div>
 
-            <div className="pf-laptop">
-              <div className="pf-laptop-bar">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="pf-laptop-screen">
-                {Array.from({ length: count }).map((_, i) => (
-                  <img
-                    key={i}
-                    src={shotSrc(project.slug, i)}
-                    alt=""
-                    className={"pf-shot" + (i === index ? " is-active" : "")}
-                    loading={i === 0 ? "eager" : "lazy"}
-                  />
+            <div className="pf-wall-stage">
+              <div className="pf-wall" key={project.slug}>
+                {columns.map((col, ci) => (
+                  <div
+                    key={ci}
+                    className={"pf-wall-col" + (ci === 1 ? " pf-wall-col--down" : "")}
+                  >
+                    {col.map((src, i) => (
+                      <button
+                        key={i}
+                        className="pf-wall-shot"
+                        onClick={() => setZoom(src)}
+                        aria-label="تكبير الشاشة"
+                      >
+                        <img src={src} alt="" loading={ci === 0 && i < 2 ? "eager" : "lazy"} />
+                      </button>
+                    ))}
+                  </div>
                 ))}
-                {count > 1 && (
-                  <>
-                    <button className="pf-nav pf-prev" onClick={prev} aria-label="السابق">
-                      ‹
-                    </button>
-                    <button className="pf-nav pf-next" onClick={next} aria-label="التالي">
-                      ›
-                    </button>
-                    <span
-                      key={index}
-                      className={"pf-progress" + (paused ? " is-paused" : "")}
-                    />
-                  </>
-                )}
               </div>
-              <div className="pf-laptop-base" />
             </div>
 
-            {count > 1 && (
-              <div className="pf-dots">
-                {Array.from({ length: count }).map((_, i) => (
-                  <button
-                    key={i}
-                    className={"pf-dot" + (i === index ? " is-active" : "")}
-                    onClick={() => goTo(i)}
-                    aria-label={`شاشة ${i + 1}`}
-                  />
-                ))}
-              </div>
-            )}
+            <p className="pf-wall-hint">اضغط على أي شاشة لتكبيرها</p>
           </div>
+
+          {zoom && (
+            <div
+              className="pf-zoom"
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoom(null);
+              }}
+            >
+              <img src={zoom} alt="" />
+              <button className="pf-zoom-close" aria-label="إغلاق">
+                ✕
+              </button>
+            </div>
+          )}
         </div>
       )}
     </>
