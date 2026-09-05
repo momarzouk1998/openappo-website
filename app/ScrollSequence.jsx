@@ -110,19 +110,19 @@ export default function ScrollSequence() {
       if (index !== lastDrawn) drawFrame(index);
 
       // Progressive entrance tied to scroll position:
-      // - At 0 scroll (progress < 0.02): Hero is hidden, scroll hint is visible
-      // - Scrolling between 0.02 and 0.16: Hero fades in and slides up smoothly
-      // - Past 0.16: Hero reaches 100% full opacity and remains firmly visible
+      // - Before 45% scroll (progress < 0.45): Hero is hidden, scroll hint is visible
+      // - Between 45% and 65% scroll: Hero smoothly fades in and slides up into bottom-right corner
+      // - Past 65% scroll: Hero reaches 100% full opacity and remains firmly locked in place
       const progress = currentFrame / (FRAME_COUNT - 1);
-      const heroProgress = Math.min(Math.max((progress - 0.02) / 0.14, 0), 1);
-      const hintProgress = Math.max(1 - progress / 0.06, 0);
+      const heroProgress = Math.min(Math.max((progress - 0.45) / 0.20, 0), 1);
+      const hintProgress = Math.max(1 - progress / 0.35, 0);
 
       if (hero) {
         hero.style.opacity = heroProgress.toFixed(3);
         if (vw < 768) {
           hero.style.transform = `translateY(${(20 * (1 - heroProgress)).toFixed(1)}px)`;
         } else {
-          hero.style.transform = `translateY(calc(-50% + ${(36 * (1 - heroProgress)).toFixed(1)}px))`;
+          hero.style.transform = `translateY(${(32 * (1 - heroProgress)).toFixed(1)}px)`;
         }
         hero.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
       }
