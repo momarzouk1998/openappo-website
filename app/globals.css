@@ -189,6 +189,11 @@ body {
   50% { transform: translateY(3px); }
 }
 
+/* ---------- Hero Fixed Overlay Wrapper ---------- */
+.hero-overlay-wrapper {
+  display: contents;
+}
+
 /* ---------- Hero Fixed Overlay (Glass Card - Extreme Bottom Right Corner) ---------- */
 .hero-overlay {
   position: fixed;
@@ -870,12 +875,26 @@ body {
     height: 40px;
     filter: drop-shadow(0 0 14px rgba(255, 122, 122, 0.95)) drop-shadow(0 0 6px #ff7a7a);
   }
-  .hero-overlay {
-    top: calc(56px + 56.25vw + 10px);
-    bottom: auto;
-    right: 12px;
+  .hero-overlay-wrapper {
+    position: fixed;
+    top: calc(56px + 56.25vw + 8px);
     left: 12px;
+    right: 12px;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .hero-overlay {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    right: auto;
+    left: auto;
     max-width: none;
+    width: 100%;
   }
   .hero-glass-card {
     padding: 12px 14px 10px 14px;
@@ -952,14 +971,16 @@ body {
     font-size: 10px;
   }
   .hero-bottom-bar {
-    top: calc(56px + 56.25vw + 205px);
+    position: relative;
+    top: auto;
     bottom: auto;
-    left: 50%;
+    left: auto;
     right: auto;
-    transform: translateX(-50%) translateY(20px);
+    transform: none;
     padding: 8px 12px;
     gap: 8px;
-    max-width: calc(100vw - 20px);
+    width: 100%;
+    max-width: none;
     border-radius: 20px;
   }
   .btn-how-it-works {

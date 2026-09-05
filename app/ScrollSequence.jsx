@@ -248,88 +248,91 @@ export default function ScrollSequence() {
         </div>
       </div>
 
-      {/* Progressive Hero Overlay inside frosted dark glass card */}
-      <div ref={heroRef} className="hero-overlay">
-        <div className="hero-glass-card">
-          <div className="hero-tagline">
-            <span className="hero-tagline-dot" />
-            <span>منظومة إدارة وتطوير الأعمال الذكية • OPENAPPO</span>
-          </div>
-
-          <div className="hero-heading-group">
-            <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
-            <h1 className="hero-main-title">
-              <img
-                src="/brand/openappo-wordmark-dark.png"
-                alt="Openappo"
-                className="hero-title-logo"
-              />
-            </h1>
-            <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
-          </div>
-
-          <div className="hero-desc-container">
-            <div className="hero-desc-bar" />
-            <p className="hero-desc">
-              ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
-              <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
-            </p>
-          </div>
-
-          {/* Option 1: Trust & Stats Bar */}
-          <div className="hero-trust-bar">
-            <div className="hero-trust-item">
-              <span className="hero-trust-val">+500</span>
-              <span className="hero-trust-lbl">شركة وثقت بنا</span>
+      {/* Progressive Hero Overlay & Action Buttons Wrapper */}
+      <div className="hero-overlay-wrapper">
+        {/* Progressive Hero Overlay inside frosted dark glass card */}
+        <div ref={heroRef} className="hero-overlay">
+          <div className="hero-glass-card">
+            <div className="hero-tagline">
+              <span className="hero-tagline-dot" />
+              <span>منظومة إدارة وتطوير الأعمال الذكية • OPENAPPO</span>
             </div>
-            <span className="hero-trust-divider">•</span>
-            <div className="hero-trust-item">
-              <span className="hero-trust-star">⭐</span>
-              <span className="hero-trust-val">4.9/5</span>
-              <span className="hero-trust-lbl">تقييم العملاء</span>
+
+            <div className="hero-heading-group">
+              <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
+              <h1 className="hero-main-title">
+                <img
+                  src="/brand/openappo-wordmark-dark.png"
+                  alt="Openappo"
+                  className="hero-title-logo"
+                />
+              </h1>
+              <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
             </div>
-            <span className="hero-trust-divider">•</span>
-            <div className="hero-trust-item">
-              <span className="hero-trust-icon">🛡️</span>
-              <span className="hero-trust-lbl">دعم فني 24/7</span>
+
+            <div className="hero-desc-container">
+              <div className="hero-desc-bar" />
+              <p className="hero-desc">
+                ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
+                <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
+              </p>
+            </div>
+
+            {/* Option 1: Trust & Stats Bar */}
+            <div className="hero-trust-bar">
+              <div className="hero-trust-item">
+                <span className="hero-trust-val">+500</span>
+                <span className="hero-trust-lbl">شركة وثقت بنا</span>
+              </div>
+              <span className="hero-trust-divider">•</span>
+              <div className="hero-trust-item">
+                <span className="hero-trust-star">⭐</span>
+                <span className="hero-trust-val">4.9/5</span>
+                <span className="hero-trust-lbl">تقييم العملاء</span>
+              </div>
+              <span className="hero-trust-divider">•</span>
+              <div className="hero-trust-item">
+                <span className="hero-trust-icon">🛡️</span>
+                <span className="hero-trust-lbl">دعم فني 24/7</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Floating Bottom Center Action Buttons Bar */}
-      <div ref={bottomBarRef} className="hero-bottom-bar">
-        <a href="/how-it-works" className="btn-how-it-works">
-          <span className="btn-how-icon">⚡</span>
-          <span>كيف نعمل</span>
-        </a>
-
-        <div className="bottom-bar-subrow">
-          <a href="/portfolio" className="btn-explore">
-            <span>سابقة الأعمال</span>
-            <span className="btn-arrow-icon">←</span>
+        {/* Floating Bottom Center Action Buttons Bar */}
+        <div ref={bottomBarRef} className="hero-bottom-bar">
+          <a href="/how-it-works" className="btn-how-it-works">
+            <span className="btn-how-icon">⚡</span>
+            <span>كيف نعمل</span>
           </a>
 
-          <a href="/testimonials" className="btn-testimonials">
-            <span className="btn-star-icon">★</span>
-            <span>آراء العملاء</span>
-          </a>
-        </div>
+          <div className="bottom-bar-subrow">
+            <a href="/portfolio" className="btn-explore">
+              <span>سابقة الأعمال</span>
+              <span className="btn-arrow-icon">←</span>
+            </a>
 
-        {/* Option 2: Smart Feature Badges */}
-        <div className="hero-feature-badges">
-          <span className="feature-badge">
-            <span className="badge-icon">☁️</span>
-            <span>سحابي 100%</span>
-          </span>
-          <span className="feature-badge">
-            <span className="badge-icon">📊</span>
-            <span>تقارير لحظية</span>
-          </span>
-          <span className="feature-badge">
-            <span className="badge-icon">⚡</span>
-            <span>أعلى كفاءة</span>
-          </span>
+            <a href="/testimonials" className="btn-testimonials">
+              <span className="btn-star-icon">★</span>
+              <span>آراء العملاء</span>
+            </a>
+          </div>
+
+          {/* Option 2: Smart Feature Badges */}
+          <div className="hero-feature-badges">
+            <span className="feature-badge">
+              <span className="badge-icon">☁️</span>
+              <span>سحابي 100%</span>
+            </span>
+            <span className="feature-badge">
+              <span className="badge-icon">📊</span>
+              <span>تقارير لحظية</span>
+            </span>
+            <span className="feature-badge">
+              <span className="badge-icon">⚡</span>
+              <span>أعلى كفاءة</span>
+            </span>
+          </div>
         </div>
       </div>
 
