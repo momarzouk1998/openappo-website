@@ -574,36 +574,35 @@ body {
 @media (max-width: 768px) {
   .openappo-nav {
     top: 12px;
-    right: 12px;
-    left: 12px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
   .openappo-logo-wrap {
-    padding: 8px 16px;
+    padding: 4px 12px;
     border-radius: 14px;
   }
   .openappo-logo-img {
     height: 26px;
   }
-  .nav-cta-btn {
-    padding: 6px 14px;
-    font-size: 11.5px;
-  }
   .scroll-hint {
-    bottom: 24px;
-    padding: 8px 16px;
-    font-size: 11.5px;
-    gap: 4px;
+    top: calc(60px + 56.25vw + 30px);
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 12px;
+    gap: 6px;
   }
   .hero-overlay {
+    top: calc(60px + 56.25vw + 6px);
+    bottom: auto;
     right: 12px;
     left: 12px;
     max-width: none;
-    top: auto;
-    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
-    transform: none;
   }
   .hero-glass-card {
-    padding: 14px 16px;
+    padding: 12px 14px 10px 14px;
     border-radius: 18px;
     background: rgba(9, 14, 22, 0.92);
     backdrop-filter: blur(20px);
@@ -611,23 +610,19 @@ body {
     box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.9), 0 0 20px -5px rgba(61, 218, 210, 0.2);
   }
   .hero-tagline {
-    font-size: 10.5px;
+    font-size: 10px;
     letter-spacing: 0.04em;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .hero-tagline-dot {
     width: 5px;
     height: 5px;
   }
   .hero-heading-group {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
+    margin-bottom: 6px;
   }
   .hero-subtitle {
-    font-size: 13.5px;
+    font-size: 12.5px;
     letter-spacing: 0.08em;
     margin-bottom: 0;
   }
@@ -635,21 +630,23 @@ body {
     margin: 2px 0 4px 0;
   }
   .hero-title-logo {
-    height: clamp(28px, 8.5vw, 40px);
+    height: clamp(26px, 8vw, 36px);
   }
   .hero-date {
     display: none;
   }
   .hero-desc-container {
     margin-bottom: 0;
-    gap: 10px;
+    gap: 6px;
   }
   .hero-desc-bar {
-    width: 2.5px;
+    width: 40px;
+    height: 2.5px;
+    margin: 0 auto 2px auto;
   }
   .hero-desc {
-    font-size: 11.5px;
-    line-height: 1.5;
+    font-size: 11px;
+    line-height: 1.45;
     color: #e2e8f0;
   }
   .hero-bottom-bar {
@@ -662,6 +659,18 @@ body {
     max-width: calc(100vw - 16px);
     border-radius: 999px;
   }
+  .contact-float-widget {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 12px;
+  }
+  .contact-float-trigger {
+    width: 46px;
+    height: 46px;
+  }
+  .contact-trigger-icon svg {
+    width: 20px;
+    height: 20px;
+  }
   .btn-explore,
   .btn-testimonials,
   .btn-whatsapp {
@@ -669,17 +678,6 @@ body {
     font-size: 11px;
     gap: 4px;
     white-space: nowrap;
-  }
-  .btn-whatsapp-circle {
-    width: 18px;
-    height: 18px;
-  }
-  .btn-whatsapp-circle svg {
-    width: 9px;
-    height: 9px;
-  }
-  .btn-star-icon {
-    font-size: 12px;
   }
 }
 
