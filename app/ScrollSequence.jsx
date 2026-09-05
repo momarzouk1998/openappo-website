@@ -339,12 +339,14 @@ export default function ScrollSequence() {
             </a>
           </div>
         </div>
-      </div>
 
-      {/* Floating Bottom-Left Contact Widget */}
-      <div ref={contactWidgetRef} className="contact-float-widget">
-        {contactOpen && (
-          <div className="contact-float-menu">
+        {/* Contact — floating FAB on desktop, always-visible cards on mobile */}
+        <div ref={contactWidgetRef} className="contact-float-widget">
+          <div
+            className={`contact-float-menu${
+              contactOpen ? " contact-float-menu--open" : ""
+            }`}
+          >
             <div className="contact-menu-header">
               <span className="contact-menu-label">تواصل معنا المباشر</span>
               <a href="tel:01558282760" className="contact-menu-phone">
@@ -373,7 +375,6 @@ export default function ScrollSequence() {
               </a>
             </div>
           </div>
-        )}
 
         <button
           type="button"
@@ -394,6 +395,7 @@ export default function ScrollSequence() {
             )}
           </span>
         </button>
+        </div>
       </div>
     </div>
   );
