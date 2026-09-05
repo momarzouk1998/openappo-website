@@ -128,14 +128,14 @@ body {
   display: inline-block;
 }
 
-/* ---------- Hero Fixed Overlay (Glass Card - Bottom Right Corner) ---------- */
+/* ---------- Hero Fixed Overlay (Glass Card - Extreme Bottom Right Corner) ---------- */
 .hero-overlay {
   position: fixed;
-  right: max(32px, 3.5vw);
-  bottom: max(36px, 4vh);
+  right: 18px;
+  bottom: 18px;
   top: auto;
   z-index: 15;
-  max-width: 530px;
+  max-width: 490px;
   text-align: right;
   direction: rtl;
   opacity: 0;
