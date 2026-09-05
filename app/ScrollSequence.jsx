@@ -9,6 +9,7 @@ export default function ScrollSequence() {
   const trackRef = useRef(null);
   const heroRef = useRef(null);
   const bottomBarRef = useRef(null);
+  const contactWidgetRef = useRef(null);
   const scrollHintRef = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -17,6 +18,7 @@ export default function ScrollSequence() {
     const track = trackRef.current;
     const hero = heroRef.current;
     const bottomBar = bottomBarRef.current;
+    const contactWidget = contactWidgetRef.current;
     const scrollHint = scrollHintRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
@@ -132,6 +134,12 @@ export default function ScrollSequence() {
         bottomBar.style.opacity = barProgress.toFixed(3);
         bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
         bottomBar.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
+      }
+
+      if (contactWidget) {
+        contactWidget.style.opacity = barProgress.toFixed(3);
+        contactWidget.style.transform = `translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        contactWidget.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
       if (scrollHint) {
@@ -254,7 +262,7 @@ export default function ScrollSequence() {
       </div>
 
       {/* Floating Bottom-Left Contact Widget */}
-      <div className="contact-float-widget">
+      <div ref={contactWidgetRef} className="contact-float-widget">
         {contactOpen && (
           <div className="contact-float-menu">
             <div className="contact-menu-header">
