@@ -78,12 +78,30 @@ body {
   }
 }
 
-/* ---------- Scroll Down Prompt (Initial) ---------- */
-.scroll-hint {
+/* ---------- Scroll Down Prompt & Mobile Gesture Guide ---------- */
+.scroll-hint-wrapper {
   position: fixed;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-swipe-guide {
+  display: none;
+}
+
+.scroll-hint {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
   z-index: 15;
   display: inline-flex;
   align-items: center;
@@ -682,14 +700,91 @@ body {
   .openappo-logo-img {
     height: 26px;
   }
-  .scroll-hint {
-    top: calc(60px + 56.25vw + 30px);
+  .scroll-hint-wrapper {
+    top: calc(56px + 56.25vw + 12px);
     bottom: auto;
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 20px;
-    font-size: 12px;
+    gap: 12px;
+    width: 100%;
+  }
+  .scroll-hint {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    padding: 8px 16px;
+    font-size: 11.5px;
     gap: 6px;
+    border-radius: 999px;
+    max-width: calc(100vw - 32px);
+  }
+  .mobile-swipe-guide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .phone-mockup-frame {
+    width: 56px;
+    height: 98px;
+    border-radius: 12px;
+    border: 2px solid #3ddad2;
+    background: rgba(10, 16, 26, 0.85);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8),
+                0 0 20px -2px rgba(61, 218, 210, 0.4);
+    position: relative;
+    padding: 5px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+  .phone-mockup-speaker {
+    width: 12px;
+    height: 2.5px;
+    border-radius: 2px;
+    background: rgba(61, 218, 210, 0.6);
+    margin-bottom: 3px;
+  }
+  .phone-mockup-screen {
+    flex: 1;
+    width: 100%;
+    border-radius: 6px;
+    background: rgba(5, 9, 15, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .phone-mockup-homebar {
+    width: 14px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.4);
+    margin-top: 3px;
+  }
+  .swipe-trail-glow {
+    position: absolute;
+    width: 3px;
+    background: linear-gradient(180deg, rgba(61, 218, 210, 0.1) 0%, #3ddad2 50%, #ff7a7a 100%);
+    border-radius: 3px;
+    box-shadow: 0 0 10px #3ddad2, 0 0 15px #ff7a7a;
+    animation: swipeTrail 2s infinite ease-in-out;
+  }
+  .swipe-hand-wrapper {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    animation: mobileSwipeGesture 2s infinite ease-in-out;
+  }
+  .swipe-hand-svg {
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(0 0 8px rgba(61, 218, 210, 0.8));
   }
   .hero-overlay {
     top: calc(56px + 56.25vw + 10px);

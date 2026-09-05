@@ -212,16 +212,40 @@ export default function ScrollSequence() {
         }}
       />
 
-      {/* Initial Scroll Hint to invite user to scroll */}
-      <div ref={scrollHintRef} className="scroll-hint">
-        <span className="scroll-hint-dot" />
-        <span className="scroll-hint-text">اسحب أو مرّر للأسفل لاستكشاف</span>
-        <span className="scroll-hint-brand">Openappo</span>
-        <span className="scroll-hint-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M19 12l-7 7-7-7" />
-          </svg>
-        </span>
+      {/* Initial Scroll Hint & Mobile Phone Gesture Animation */}
+      <div ref={scrollHintRef} className="scroll-hint-wrapper">
+        <div className="scroll-hint">
+          <span className="scroll-hint-dot" />
+          <span className="scroll-hint-text">اسحب أو مرّر للأسفل لاستكشاف</span>
+          <span className="scroll-hint-brand">Openappo</span>
+          <span className="scroll-hint-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        {/* Animated Phone Gesture Guide (Mobile Only) */}
+        <div className="mobile-swipe-guide">
+          <div className="phone-mockup-frame">
+            <div className="phone-mockup-speaker" />
+            <div className="phone-mockup-screen">
+              <div className="swipe-trail-glow" />
+              <div className="swipe-hand-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" className="swipe-hand-svg">
+                  <path
+                    d="M9 11.25V4.5A1.5 1.5 0 0 1 10.5 3v0A1.5 1.5 0 0 1 12 4.5v6.75M12 9V6A1.5 1.5 0 0 1 13.5 4.5v0A1.5 1.5 0 0 1 15 6v3.75M15 9.75V7.5A1.5 1.5 0 0 1 16.5 6v0A1.5 1.5 0 0 1 18 7.5v3.75M9 11.25a2.25 2.25 0 0 0-2.25-2.25v0A2.25 2.25 0 0 0 4.5 11.25v3.75a6.75 6.75 0 0 0 6.75 6.75h.75a6.75 6.75 0 0 0 6.75-6.75v-5.25"
+                    stroke="#3ddad2"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="phone-mockup-homebar" />
+          </div>
+        </div>
       </div>
 
       {/* Progressive Hero Overlay inside frosted dark glass card */}
