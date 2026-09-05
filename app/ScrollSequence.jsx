@@ -224,34 +224,25 @@ export default function ScrollSequence() {
         }}
       />
 
-      {/* Floating Top-Right Video Trust & Stats Badge */}
+      {/* Floating Top-Right Video Feature Badges */}
       <div ref={videoTrustRef} className="video-top-trust-badge">
         <div className="video-trust-item">
-          <span className="video-trust-star">⭐</span>
-          <div className="video-trust-texts">
-            <span className="video-trust-val">4.9 / 5</span>
-            <span className="video-trust-lbl">تقييم العملاء</span>
-          </div>
+          <span className="video-feature-icon">☁️</span>
+          <span className="video-feature-text">سحابي 100%</span>
         </div>
 
         <span className="video-trust-sep" />
 
         <div className="video-trust-item">
-          <span className="video-trust-dot-cyan" />
-          <div className="video-trust-texts">
-            <span className="video-trust-val">+500</span>
-            <span className="video-trust-lbl">شركة وثقت بنا</span>
-          </div>
+          <span className="video-feature-icon">📊</span>
+          <span className="video-feature-text">تقارير لحظية</span>
         </div>
 
         <span className="video-trust-sep" />
 
         <div className="video-trust-item">
-          <span className="video-trust-dot-coral" />
-          <div className="video-trust-texts">
-            <span className="video-trust-val">24/7</span>
-            <span className="video-trust-lbl">دعم فني مستمر</span>
-          </div>
+          <span className="video-feature-icon">⚡</span>
+          <span className="video-feature-text">أعلى كفاءة</span>
         </div>
       </div>
 
@@ -342,22 +333,6 @@ export default function ScrollSequence() {
               <span className="btn-star-icon">★</span>
               <span>آراء العملاء</span>
             </a>
-          </div>
-
-          {/* Option 2: Smart Feature Badges */}
-          <div className="hero-feature-badges">
-            <span className="feature-badge">
-              <span className="badge-icon">☁️</span>
-              <span>سحابي 100%</span>
-            </span>
-            <span className="feature-badge">
-              <span className="badge-icon">📊</span>
-              <span>تقارير لحظية</span>
-            </span>
-            <span className="feature-badge">
-              <span className="badge-icon">⚡</span>
-              <span>أعلى كفاءة</span>
-            </span>
           </div>
         </div>
       </div>

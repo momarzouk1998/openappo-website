@@ -328,7 +328,7 @@ body {
   font-weight: 800;
 }
 
-/* ---------- Top-Right Video Trust & Stats Badge ---------- */
+/* ---------- Top-Right Video Feature Badges ---------- */
 .video-top-trust-badge {
   position: fixed;
   top: 28px;
@@ -337,7 +337,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 9px 18px;
+  padding: 8px 18px;
   border-radius: 999px;
   background: rgba(10, 16, 26, 0.85);
   border: 1.5px solid rgba(61, 218, 210, 0.45);
@@ -354,93 +354,24 @@ body {
 .video-trust-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.video-trust-star {
+.video-feature-icon {
   font-size: 14px;
-  color: #ffc107;
-  filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.6));
 }
 
-.video-trust-dot-cyan {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #3ddad2;
-  box-shadow: 0 0 8px #3ddad2;
-}
-
-.video-trust-dot-coral {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ff7a7a;
-  box-shadow: 0 0 8px #ff7a7a;
-}
-
-.video-trust-texts {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-  text-align: right;
-}
-
-.video-trust-val {
-  font-size: 13px;
+.video-feature-text {
+  font-size: 12.5px;
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: 0.02em;
-}
-
-.video-trust-lbl {
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.68);
+  white-space: nowrap;
 }
 
 .video-trust-sep {
   width: 1px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-/* ---------- Smart Feature Badges ---------- */
-.hero-feature-badges {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  margin-top: 6px;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.15);
-}
-
-.feature-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(61, 218, 210, 0.08);
-  border: 1px solid rgba(61, 218, 210, 0.28);
-  color: #e2e8f0;
-  font-size: 11.5px;
-  font-weight: 700;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
-}
-
-.feature-badge:hover {
-  background: rgba(61, 218, 210, 0.18);
-  border-color: rgba(61, 218, 210, 0.6);
-  transform: translateY(-1px);
-}
-
-.badge-icon {
-  font-size: 12px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* ---------- Buttons ---------- */
@@ -958,22 +889,15 @@ body {
   .video-trust-item {
     gap: 4px;
   }
-  .video-trust-star {
+  .video-feature-icon {
     font-size: 11px;
   }
-  .video-trust-dot-cyan,
-  .video-trust-dot-coral {
-    width: 5px;
-    height: 5px;
-  }
-  .video-trust-val {
-    font-size: 10px;
-  }
-  .video-trust-lbl {
-    font-size: 8px;
+  .video-feature-text {
+    font-size: 9.5px;
+    font-weight: 700;
   }
   .video-trust-sep {
-    height: 14px;
+    height: 12px;
   }
   .hero-tagline {
     font-size: 10px;
@@ -1015,20 +939,6 @@ body {
     font-size: 11px;
     line-height: 1.45;
     color: #e2e8f0;
-  }
-  .hero-feature-badges {
-    margin-top: 4px;
-    padding-top: 6px;
-    gap: 4px;
-    flex-wrap: nowrap;
-  }
-  .feature-badge {
-    padding: 3.5px 7.5px;
-    font-size: 9.5px;
-    gap: 3px;
-  }
-  .badge-icon {
-    font-size: 10px;
   }
   .hero-bottom-bar {
     position: relative;
