@@ -110,11 +110,11 @@ export default function ScrollSequence() {
       if (index !== lastDrawn) drawFrame(index);
 
       // Progressive entrance tied to scroll position:
-      // - Before 45% scroll (progress < 0.45): Hero is hidden, scroll hint is visible
-      // - Between 45% and 65% scroll: Hero smoothly fades in and slides up into bottom-right corner
-      // - Past 65% scroll: Hero reaches 100% full opacity and remains firmly locked in place
+      // - Hero card appears between 50% and 75% scroll
+      // - Action buttons bar appears from 80% scroll onwards
       const progress = currentFrame / (FRAME_COUNT - 1);
-      const heroProgress = Math.min(Math.max((progress - 0.45) / 0.20, 0), 1);
+      const heroProgress = Math.min(Math.max((progress - 0.50) / 0.25, 0), 1);
+      const barProgress = Math.min(Math.max((progress - 0.80) / 0.18, 0), 1);
       const hintProgress = Math.max(1 - progress / 0.35, 0);
 
       if (hero) {
@@ -128,9 +128,13 @@ export default function ScrollSequence() {
       }
 
       if (bottomBar) {
-        bottomBar.style.opacity = heroProgress.toFixed(3);
-        bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - heroProgress)).toFixed(1)}px)`;
-        bottomBar.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
+        bottomBar.style.opacity = barProgress.toFixed(3);
+        if (vw < 768) {
+          bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        } else {
+          bottomBar.style.transform = `translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
+        }
+        bottomBar.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
       if (scrollHint) {
@@ -219,7 +223,13 @@ export default function ScrollSequence() {
 
           <div className="hero-heading-group">
             <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
-            <h1 className="hero-main-title">Openappo</h1>
+            <h1 className="hero-main-title">
+              <img
+                src="/brand/openappo-wordmark-dark.png"
+                alt="Openappo"
+                className="hero-title-logo"
+              />
+            </h1>
             <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
           </div>
 
