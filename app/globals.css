@@ -249,7 +249,7 @@ body {
 }
 
 .hero-heading-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -257,17 +257,8 @@ body {
   width: 100%;
 }
 
-.hero-subtitle {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0.3em;
-  color: rgba(255, 255, 255, 0.95);
-  margin-bottom: -2px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
 .hero-main-title {
-  margin: 6px 0 8px 0;
+  margin: 4px 0 6px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -281,13 +272,26 @@ body {
   filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.8));
 }
 
-.hero-date {
-  font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #ff9e9e;
+.hero-custom-slogan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(61, 218, 210, 0.1);
+  border: 1px solid rgba(61, 218, 210, 0.35);
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
   margin-top: 4px;
-  text-shadow: 0 0 12px rgba(255, 122, 122, 0.4);
+  box-shadow: 0 0 20px rgba(61, 218, 210, 0.2);
+  text-shadow: 0 0 12px rgba(61, 218, 210, 0.4);
+}
+
+.slogan-sparkle {
+  color: #3ddad2;
+  font-size: 14px;
 }
 
 .hero-desc-container {
@@ -324,48 +328,81 @@ body {
   font-weight: 800;
 }
 
-/* ---------- Trust & Stats Bar ---------- */
-.hero-trust-bar {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+/* ---------- Top-Right Video Trust & Stats Badge ---------- */
+.video-top-trust-badge {
+  position: fixed;
+  top: 28px;
+  right: 28px;
+  z-index: 25;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
+  gap: 14px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(10, 16, 26, 0.85);
+  border: 1.5px solid rgba(61, 218, 210, 0.45);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: 0 14px 38px -6px rgba(0, 0, 0, 0.85),
+              0 0 24px -4px rgba(61, 218, 210, 0.3);
+  direction: rtl;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
 }
 
-.hero-trust-item {
+.video-trust-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.88);
+  gap: 8px;
 }
 
-.hero-trust-val {
-  color: #3ddad2;
-  font-weight: 800;
-}
-
-.hero-trust-star {
+.video-trust-star {
+  font-size: 14px;
   color: #ffc107;
+  filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.6));
+}
+
+.video-trust-dot-cyan {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3ddad2;
+  box-shadow: 0 0 8px #3ddad2;
+}
+
+.video-trust-dot-coral {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff7a7a;
+  box-shadow: 0 0 8px #ff7a7a;
+}
+
+.video-trust-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.video-trust-val {
   font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
 }
 
-.hero-trust-icon {
-  font-size: 12px;
-}
-
-.hero-trust-lbl {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.hero-trust-divider {
-  color: rgba(61, 218, 210, 0.5);
+.video-trust-lbl {
   font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.video-trust-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* ---------- Smart Feature Badges ---------- */
@@ -908,6 +945,36 @@ body {
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.9), 0 0 20px -5px rgba(61, 218, 210, 0.2);
   }
+  .video-top-trust-badge {
+    top: 60px;
+    right: 8px;
+    padding: 5px 10px;
+    gap: 7px;
+    border-radius: 999px;
+    background: rgba(10, 16, 26, 0.88);
+    border: 1px solid rgba(61, 218, 210, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 16px rgba(61, 218, 210, 0.3);
+  }
+  .video-trust-item {
+    gap: 4px;
+  }
+  .video-trust-star {
+    font-size: 11px;
+  }
+  .video-trust-dot-cyan,
+  .video-trust-dot-coral {
+    width: 5px;
+    height: 5px;
+  }
+  .video-trust-val {
+    font-size: 10px;
+  }
+  .video-trust-lbl {
+    font-size: 8px;
+  }
+  .video-trust-sep {
+    height: 14px;
+  }
   .hero-tagline {
     font-size: 10px;
     letter-spacing: 0.04em;
@@ -920,19 +987,20 @@ body {
   .hero-heading-group {
     margin-bottom: 6px;
   }
-  .hero-subtitle {
-    font-size: 12.5px;
-    letter-spacing: 0.08em;
-    margin-bottom: 0;
-  }
   .hero-main-title {
-    margin: 2px 0 4px 0;
+    margin: 2px 0 2px 0;
   }
   .hero-title-logo {
     height: clamp(26px, 8vw, 36px);
   }
-  .hero-date {
-    display: none;
+  .hero-custom-slogan {
+    font-size: 11px;
+    padding: 3px 10px;
+    gap: 4px;
+    margin-top: 2px;
+  }
+  .slogan-sparkle {
+    font-size: 10px;
   }
   .hero-desc-container {
     margin-bottom: 0;
@@ -947,18 +1015,6 @@ body {
     font-size: 11px;
     line-height: 1.45;
     color: #e2e8f0;
-  }
-  .hero-trust-bar {
-    margin-top: 6px;
-    padding-top: 6px;
-    gap: 6px;
-  }
-  .hero-trust-item {
-    font-size: 10px;
-    gap: 3px;
-  }
-  .hero-trust-star {
-    font-size: 11px;
   }
   .hero-feature-badges {
     margin-top: 4px;

@@ -8,6 +8,7 @@ export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
   const heroRef = useRef(null);
+  const videoTrustRef = useRef(null);
   const bottomBarRef = useRef(null);
   const contactWidgetRef = useRef(null);
   const scrollHintRef = useRef(null);
@@ -17,6 +18,7 @@ export default function ScrollSequence() {
     const canvas = canvasRef.current;
     const track = trackRef.current;
     const hero = heroRef.current;
+    const videoTrust = videoTrustRef.current;
     const bottomBar = bottomBarRef.current;
     const contactWidget = contactWidgetRef.current;
     const scrollHint = scrollHintRef.current;
@@ -120,6 +122,12 @@ export default function ScrollSequence() {
       const barProgress = Math.min(Math.max((progress - 0.80) / 0.18, 0), 1);
       const hintProgress = Math.max(1 - progress / 0.35, 0);
 
+      if (videoTrust) {
+        videoTrust.style.opacity = heroProgress.toFixed(3);
+        videoTrust.style.transform = `translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+        videoTrust.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
+      }
+
       if (hero) {
         hero.style.opacity = heroProgress.toFixed(3);
         if (vw < 768) {
@@ -216,6 +224,37 @@ export default function ScrollSequence() {
         }}
       />
 
+      {/* Floating Top-Right Video Trust & Stats Badge */}
+      <div ref={videoTrustRef} className="video-top-trust-badge">
+        <div className="video-trust-item">
+          <span className="video-trust-star">⭐</span>
+          <div className="video-trust-texts">
+            <span className="video-trust-val">4.9 / 5</span>
+            <span className="video-trust-lbl">تقييم العملاء</span>
+          </div>
+        </div>
+
+        <span className="video-trust-sep" />
+
+        <div className="video-trust-item">
+          <span className="video-trust-dot-cyan" />
+          <div className="video-trust-texts">
+            <span className="video-trust-val">+500</span>
+            <span className="video-trust-lbl">شركة وثقت بنا</span>
+          </div>
+        </div>
+
+        <span className="video-trust-sep" />
+
+        <div className="video-trust-item">
+          <span className="video-trust-dot-coral" />
+          <div className="video-trust-texts">
+            <span className="video-trust-val">24/7</span>
+            <span className="video-trust-lbl">دعم فني مستمر</span>
+          </div>
+        </div>
+      </div>
+
       {/* Initial Scroll Hint & Mobile Phone Gesture Animation */}
       <div ref={scrollHintRef} className="scroll-hint-wrapper">
         <div className="scroll-hint">
@@ -263,7 +302,6 @@ export default function ScrollSequence() {
             </div>
 
             <div className="hero-heading-group">
-              <div className="hero-subtitle">حَــوّل شـغـلـك مـع</div>
               <h1 className="hero-main-title">
                 <img
                   src="/brand/openappo-wordmark-dark.png"
@@ -271,7 +309,10 @@ export default function ScrollSequence() {
                   className="hero-title-logo"
                 />
               </h1>
-              <div className="hero-date">نظام سحابي متكامل يجمع كل تفاصيل مشروعك في مكان واحد</div>
+              <div className="hero-custom-slogan">
+                <span className="slogan-sparkle">✨</span>
+                <span>بنصمم السيستم حسب طريقة شغلك بالظبط</span>
+              </div>
             </div>
 
             <div className="hero-desc-container">
@@ -280,25 +321,6 @@ export default function ScrollSequence() {
                 ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
                 <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
               </p>
-            </div>
-
-            {/* Option 1: Trust & Stats Bar */}
-            <div className="hero-trust-bar">
-              <div className="hero-trust-item">
-                <span className="hero-trust-val">+500</span>
-                <span className="hero-trust-lbl">شركة وثقت بنا</span>
-              </div>
-              <span className="hero-trust-divider">•</span>
-              <div className="hero-trust-item">
-                <span className="hero-trust-star">⭐</span>
-                <span className="hero-trust-val">4.9/5</span>
-                <span className="hero-trust-lbl">تقييم العملاء</span>
-              </div>
-              <span className="hero-trust-divider">•</span>
-              <div className="hero-trust-item">
-                <span className="hero-trust-icon">🛡️</span>
-                <span className="hero-trust-lbl">دعم فني 24/7</span>
-              </div>
             </div>
           </div>
         </div>
