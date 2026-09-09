@@ -1,92 +1,36 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import SHOTS from "./shots.json";
 
-// No live URLs on purpose — these are internal client systems.
-const PROJECTS = [
-  {
-    slug: "opengym",
-    name: "OpenGym",
-    subtitle: "منصة إدارة الجيمات",
-    desc: "منصة متكاملة لإدارة الجيمات: الاشتراكات والمدفوعات والأعضاء والموظفين والتقارير من لوحة تحكم واحدة.",
-  },
-  {
-    slug: "binqasim",
-    name: "بي قاسم",
-    subtitle: "استيراد وتصدير وتوزيع",
-    desc: "نظام إدارة شركة استيراد وتصدير: شحنات الاستيراد وتوزيع التكاليف، المخزون وتقييم العملات، العملاء والموردين، المبيعات والأقساط، الموارد البشرية والتقارير المالية.",
-  },
-  {
-    slug: "elhoot",
-    name: "الحوت للأدوات الكهربائية",
-    subtitle: "نظام إدارة تجارة الجملة",
-    desc: "نظام إدارة تجارة الجملة للأدوات الكهربائية — مبيعات، مخزون، عملاء وموردين، وحسابات في مكان واحد.",
-  },
-  {
-    slug: "elnazlawy",
-    name: "النزلاوي",
-    subtitle: "تجارة وتوزيع الأجهزة الكهربائية",
-    desc: "نظام إدارة تجارة وتوزيع الأجهزة الكهربائية والإضاءة — مبيعات ومخزون وعملاء وحسابات.",
-  },
-  {
-    slug: "maspero",
-    name: "ماسبيرو",
-    subtitle: "الخدمات الرقمية والمحافظ",
-    desc: "نظام إدارة خدمات الطباعة والإنترنت والمحافظ الإلكترونية — نقطة بيع، إدارة الشفتات، التعاملات المالية وحوافز الموظفين.",
-  },
-  {
-    slug: "mazaya",
-    name: "مزايا للأثاث",
-    subtitle: "نظام إدارة المصنع",
-    desc: "نظام إدارة مصنع أثاث — متابعة الإنتاج والمخزون والطلبات والحسابات.",
-  },
-  {
-    slug: "kishk",
-    name: "أحمد كشك",
-    subtitle: "الأقمشة والستائر الفاخرة",
-    desc: "نظام متكامل لإدارة مؤسسة أحمد كشك للأقمشة والستائر بفروعها الأربعة. بيتابع رحلة الطلب من رفع المقاسات والتسعير والعقد، لقص القماش والورشة والتركيب — مع المخزون والأصناف، الحسابات والتحصيلات، صلاحيات الموظفين لكل فرع، وتقارير تنفيذية لحظية.",
-  },
-  {
-    slug: "rtx",
-    name: "RTX",
-    subtitle: "نظام إدارة الشركة",
-    desc: "نظام إدارة شركة RTX للتجارة والتصنيع — الاشتراكات والعمليات والمتابعة اليومية.",
-  },
-  {
-    slug: "riyadalquran",
-    name: "رياض القرآن الكريم",
-    subtitle: "موقع جمعية خيرية",
-    desc: "الموقع الإلكتروني لجمعية رياض القرآن الكريم الخيرية — عرض المشاريع والحالات وبوابة التبرعات.",
-  },
-].filter((p) => (SHOTS[p.slug] || 0) > 0);
-
-const shotSrc = (slug, i) =>
-  `/portfolio/systems/${slug}/${slug}-${String(i + 1).padStart(2, "0")}.jpg`;
+// Screenshots + metadata come from the manifest the admin panel publishes.
+// Project shape: { slug, name, subtitle, desc, youtubeId, logo, shots: [url] }
 
 // Split the screenshots into `n` columns (round-robin), then double each column
 // so the infinite -50% vertical drift wraps seamlessly.
-function buildColumns(slug, count, n) {
+function buildColumns(shots, n) {
+  const src = shots && shots.length ? shots : [];
   const base = Array.from({ length: n }, () => []);
-  for (let i = 0; i < count; i++) base[i % n].push(shotSrc(slug, i));
+  for (let i = 0; i < src.length; i++) base[i % n].push(src[i]);
   return base.map((col) => {
-    let list = col.length ? col.slice() : [shotSrc(slug, 0)];
+    let list = col.length ? col.slice() : src.slice(0, 1);
     const min = n === 1 ? 2 : 4;
-    while (list.length < min) list = list.concat(col.length ? col : list);
+    while (list.length && list.length < min) {
+      list = list.concat(col.length ? col : list);
+    }
     return list.concat(list);
   });
 }
 
-export default function PortfolioGallery() {
+export default function PortfolioGallery({ projects = [] }) {
   const [activeSlug, setActiveSlug] = useState(null);
   const [zoom, setZoom] = useState(null);
   const [oneCol, setOneCol] = useState(false);
 
-  const project = PROJECTS.find((p) => p.slug === activeSlug) || null;
-  const count = project ? SHOTS[project.slug] || 0 : 0;
+  const project = projects.find((p) => p.slug === activeSlug) || null;
+  const count = project ? (project.shots || []).length : 0;
   const columns = useMemo(
-    () => (project ? buildColumns(project.slug, count, oneCol ? 1 : 3) : []),
-    [project, count, oneCol]
+    () => (project ? buildColumns(project.shots || [], oneCol ? 1 : 3) : []),
+    [project, oneCol]
   );
 
   useEffect(() => {
@@ -120,7 +64,7 @@ export default function PortfolioGallery() {
   return (
     <>
       <div className="pf-grid">
-        {PROJECTS.map((p, i) => (
+        {projects.map((p, i) => (
           <button
             key={p.slug}
             className="pf-card"
@@ -128,11 +72,15 @@ export default function PortfolioGallery() {
             onClick={() => setActiveSlug(p.slug)}
           >
             <span className="pf-card-logo">
-              <img src={`/portfolio/logos/${p.slug}.png`} alt={p.name} loading="lazy" />
+              {p.logo ? (
+                <img src={p.logo} alt={p.name} loading="lazy" />
+              ) : (
+                <span className="pf-card-logo-txt">{(p.name || "?").trim()[0]}</span>
+              )}
             </span>
             <span className="pf-card-name">{p.name}</span>
             <span className="pf-card-sub">{p.subtitle}</span>
-            <span className="pf-card-count">{SHOTS[p.slug]} شاشة</span>
+            <span className="pf-card-count">{(p.shots || []).length} شاشة</span>
           </button>
         ))}
       </div>
@@ -141,15 +89,22 @@ export default function PortfolioGallery() {
         <div className="pf-modal" onClick={close}>
           <div className="pf-modal-inner" onClick={(e) => e.stopPropagation()}>
             <div className="pf-modal-head">
-              <img
-                className="pf-modal-logo"
-                src={`/portfolio/logos/${project.slug}.png`}
-                alt={project.name}
-              />
+              {project.logo ? (
+                <img
+                  className="pf-modal-logo"
+                  src={project.logo}
+                  alt={project.name}
+                />
+              ) : (
+                <span className="pf-modal-logo pf-modal-logo--txt">
+                  {(project.name || "?").trim()[0]}
+                </span>
+              )}
               <div className="pf-modal-titles">
                 <div className="pf-modal-name">{project.name}</div>
                 <div className="pf-modal-sub">
-                  {project.subtitle} · {count} شاشة
+                  {project.subtitle}
+                  {count ? ` · ${count} شاشة` : ""}
                 </div>
               </div>
               <button className="pf-modal-close" onClick={close} aria-label="إغلاق">
@@ -159,29 +114,50 @@ export default function PortfolioGallery() {
 
             {project.desc && <p className="pf-modal-desc">{project.desc}</p>}
 
-            <div className="pf-wall-stage">
-              <div className="pf-wall" key={project.slug}>
-                {columns.map((col, ci) => (
-                  <div
-                    key={ci}
-                    className={"pf-wall-col" + (ci === 1 ? " pf-wall-col--down" : "")}
-                  >
-                    {col.map((src, i) => (
-                      <button
-                        key={i}
-                        className="pf-wall-shot"
-                        onClick={() => setZoom(src)}
-                        aria-label="تكبير الشاشة"
+            {project.youtubeId && (
+              <div className="pf-modal-video">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${project.youtubeId}?rel=0&modestbranding=1`}
+                  title={project.name}
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
+            )}
+
+            {count > 0 && (
+              <>
+                <div className="pf-wall-stage">
+                  <div className="pf-wall" key={project.slug}>
+                    {columns.map((col, ci) => (
+                      <div
+                        key={ci}
+                        className={
+                          "pf-wall-col" + (ci === 1 ? " pf-wall-col--down" : "")
+                        }
                       >
-                        <img src={src} alt="" loading={ci === 0 && i < 2 ? "eager" : "lazy"} />
-                      </button>
+                        {col.map((src, i) => (
+                          <button
+                            key={i}
+                            className="pf-wall-shot"
+                            onClick={() => setZoom(src)}
+                            aria-label="تكبير الشاشة"
+                          >
+                            <img
+                              src={src}
+                              alt=""
+                              loading={ci === 0 && i < 2 ? "eager" : "lazy"}
+                            />
+                          </button>
+                        ))}
+                      </div>
                     ))}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <p className="pf-wall-hint">اضغط على أي شاشة لتكبيرها</p>
+                </div>
+                <p className="pf-wall-hint">اضغط على أي شاشة لتكبيرها</p>
+              </>
+            )}
           </div>
 
           {zoom && (

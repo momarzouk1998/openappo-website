@@ -1235,6 +1235,11 @@ body {
   max-height: 100%;
   object-fit: contain;
 }
+.pf-card-logo-txt {
+  font-weight: 800;
+  font-size: 34px;
+  color: #0b1220;
+}
 .pf-card-name {
   font-weight: 800;
   font-size: 15px;
@@ -1303,6 +1308,14 @@ body {
   object-fit: contain;
   flex: none;
 }
+.pf-modal-logo--txt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 22px;
+  color: #0b1220;
+}
 .pf-modal-titles {
   flex: 1;
   min-width: 0;
@@ -1335,6 +1348,31 @@ body {
   color: #fff;
   font-size: 15px;
   cursor: pointer;
+}
+
+.pf-modal-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.pf-modal-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.pf-empty {
+  max-width: 640px;
+  margin: 40px auto;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 

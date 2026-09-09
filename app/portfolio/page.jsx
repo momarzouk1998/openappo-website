@@ -5,7 +5,27 @@ export const metadata = {
   description: "أنظمة إدارة أعمال حقيقية صمّمها ونفّذها فريق Openappo لعملائه.",
 };
 
-export default function PortfolioPage() {
+// Content is managed from the admin panel and published as a manifest.
+const MANIFEST_URL =
+  process.env.PORTFOLIO_MANIFEST_URL ||
+  "https://admin.openappo.com/api/public/portfolio";
+
+export const revalidate = 60;
+
+async function getProjects() {
+  try {
+    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.projects) ? data.projects : [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function PortfolioPage() {
+  const projects = await getProjects();
+
   return (
     <main className="pf-page">
       <a href="/" className="pf-back">
@@ -21,7 +41,11 @@ export default function PortfolioPage() {
         </p>
       </header>
 
-      <PortfolioGallery />
+      {projects.length === 0 ? (
+        <p className="pf-empty">لسه بنجهّز المعرض — ارجع لنا قريب.</p>
+      ) : (
+        <PortfolioGallery projects={projects} />
+      )}
     </main>
   );
 }
