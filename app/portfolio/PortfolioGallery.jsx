@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // Screenshots + metadata come from the manifest the admin panel publishes.
 // Project shape: { slug, name, subtitle, desc, youtubeId, logo, shots: [url] }
 
-const AUTO_MS = 500; // how long each screenshot holds before advancing
+const AUTO_MS = 1000; // how long each screenshot holds before advancing
 const NEIGHBOURS = 3; // how many cards to keep mounted either side of centre
 
 /** Shortest signed distance from `cur` to `i` on a ring of `n` — so the
