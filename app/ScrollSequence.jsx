@@ -62,6 +62,22 @@ export default function ScrollSequence() {
       lastDrawn = -1;
     };
 
+    const isReady = (i) => {
+      const im = images[i];
+      return !!im && im.complete && im.naturalWidth > 0;
+    };
+
+    // Frames arrive out of order over the network. Never leave the canvas
+    // blank waiting for one — fall back to the closest frame we already have.
+    const nearestReady = (index) => {
+      if (isReady(index)) return index;
+      for (let d = 1; d < FRAME_COUNT; d++) {
+        if (index - d >= 0 && isReady(index - d)) return index - d;
+        if (index + d < FRAME_COUNT && isReady(index + d)) return index + d;
+      }
+      return -1;
+    };
+
     const drawFrame = (index) => {
       const img = images[index];
       if (!img || !img.complete || img.naturalWidth === 0) return;
@@ -111,8 +127,10 @@ export default function ScrollSequence() {
     const tick = () => {
       currentFrame += (targetFrame - currentFrame) * ease;
       if (Math.abs(targetFrame - currentFrame) < 0.001) currentFrame = targetFrame;
-      const index = Math.round(currentFrame);
-      if (index !== lastDrawn) drawFrame(index);
+      // Redraw whenever the best frame we can show changes — that covers both
+      // scrolling and a nearer frame finishing its download.
+      const resolved = nearestReady(Math.round(currentFrame));
+      if (resolved >= 0 && resolved !== lastDrawn) drawFrame(resolved);
 
       // Progressive entrance tied to scroll position:
       // - Hero card appears between 50% and 75% scroll
@@ -174,28 +192,55 @@ export default function ScrollSequence() {
       lastW = window.innerWidth;
       setCanvasSize();
       computeTarget();
-      drawFrame(Math.round(currentFrame));
+      const r = nearestReady(Math.round(currentFrame));
+      if (r >= 0) drawFrame(r);
     };
 
-    // Preload the sequence in order
-    for (let i = 0; i < FRAME_COUNT; i++) {
-      const img = new Image();
-      img.decoding = "async";
-      img.src = framePath(i);
-      img.onload = () => {
-        if (i === 0) {
-          imgW = img.naturalWidth || imgW;
-          imgH = img.naturalHeight || imgH;
-          setCanvasSize();
-          computeTarget();
-          drawFrame(0);
-          canvas.style.opacity = "1";
-        } else if (Math.round(currentFrame) === i) {
-          drawFrame(i);
+    // Load order matters far more than raw bandwidth here: firing all 60 at
+    // once means the browser's connection pool delivers them roughly in order,
+    // so scrolling ahead lands on frames that haven't arrived yet. Instead:
+    // frame 0 first (unblocks the canvas), then a coarse pass spread across the
+    // whole sequence so every scroll position has something near it, then the
+    // in-between frames to sharpen it up.
+    const STRIDE = 5;
+    const order = [0];
+    for (let i = STRIDE; i < FRAME_COUNT; i += STRIDE) order.push(i);
+    for (let i = 1; i < FRAME_COUNT; i++) {
+      if (i % STRIDE !== 0) order.push(i);
+    }
+
+    const startLoad = (i) =>
+      new Promise((resolve) => {
+        const img = new Image();
+        img.decoding = "async";
+        if (i === 0) img.fetchPriority = "high";
+        img.onload = () => {
+          if (i === 0) {
+            imgW = img.naturalWidth || imgW;
+            imgH = img.naturalHeight || imgH;
+            setCanvasSize();
+            computeTarget();
+            drawFrame(0);
+            canvas.style.opacity = "1";
+          }
+          resolve();
+        };
+        img.onerror = resolve; // a missing frame must not stall the queue
+        img.src = framePath(i);
+        images[i] = img;
+      });
+
+    let cancelled = false;
+    (async () => {
+      await startLoad(0);
+      let next = 1;
+      const worker = async () => {
+        while (!cancelled && next < order.length) {
+          await startLoad(order[next++]);
         }
       };
-      images[i] = img;
-    }
+      await Promise.all(Array.from({ length: 6 }, worker));
+    })();
 
     setCanvasSize();
     computeTarget();
@@ -206,6 +251,7 @@ export default function ScrollSequence() {
     window.addEventListener("resize", onResize);
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);

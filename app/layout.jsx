@@ -15,6 +15,15 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
+      <head>
+        {/* First frame gates the whole hero — start it with the HTML, not after JS boots. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/frames/frame-001.jpg"
+          fetchPriority="high"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
