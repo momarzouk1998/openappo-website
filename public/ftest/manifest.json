@@ -1,0 +1,38 @@
+{
+  "030": {
+    "orig": {
+      "src": "/ftest/f030-orig.jpg",
+      "kb": 266
+    },
+    "avif78": {
+      "src": "/ftest/f030-avif78.avif",
+      "kb": 132
+    },
+    "avif60": {
+      "src": "/ftest/f030-avif60.avif",
+      "kb": 81
+    },
+    "webp88": {
+      "src": "/ftest/f030-webp88.webp",
+      "kb": 148
+    }
+  },
+  "050": {
+    "orig": {
+      "src": "/ftest/f050-orig.jpg",
+      "kb": 268
+    },
+    "avif78": {
+      "src": "/ftest/f050-avif78.avif",
+      "kb": 137
+    },
+    "avif60": {
+      "src": "/ftest/f050-avif60.avif",
+      "kb": 85
+    },
+    "webp88": {
+      "src": "/ftest/f050-webp88.webp",
+      "kb": 147
+    }
+  }
+}
