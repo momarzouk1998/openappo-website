@@ -1206,7 +1206,8 @@ body {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 5;
+  /* above .openappo-nav (25) — the logo header would otherwise swallow taps */
+  z-index: 26;
   padding: 8px 16px;
   border-radius: 999px;
   background: rgba(10, 16, 26, 0.8);
@@ -1830,7 +1831,7 @@ body {
   position: fixed;
   top: 20px;
   right: 128px;
-  z-index: 6;
+  z-index: 26;
   padding: 0;
   border: 0;
   background: none;
@@ -1986,4 +1987,60 @@ body {
   border-color: rgba(15, 155, 147, 0.45);
   box-shadow: 0 40px 84px -24px rgba(9, 18, 30, 0.5),
     0 0 40px -18px rgba(15, 155, 147, 0.55);
+}
+
+@media (max-width: 768px) {
+  /* The logo header is centred on phones, so the toggle cannot live beside the
+     back link — it lands underneath the wordmark. Split them to the corners. */
+  .pf-theme {
+    right: auto;
+    left: 16px;
+    top: 16px;
+  }
+  .pf-back {
+    right: 16px;
+    top: 16px;
+    padding: 7px 13px;
+    font-size: 12px;
+  }
+  .pf-page {
+    padding-top: 92px;
+  }
+}
+
+/* ---- Logo motion inside the white tile ----
+   Staggered off --i so the twelve tiles never bob in unison. */
+.pf-card-logo {
+  position: relative;
+  overflow: hidden;
+}
+.pf-card-logo img {
+  animation: pfLogoFloat 4.6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 190ms);
+}
+@keyframes pfLogoFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.06); }
+}
+/* A slow glass glint across the tile. Grey, not white — a white sweep on a
+   white tile is invisible. */
+.pf-card-logo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(11, 18, 32, 0.09) 48%,
+    rgba(11, 18, 32, 0.02) 56%,
+    transparent 64%
+  );
+  transform: translateX(-130%);
+  animation: pfLogoShine 6.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 320ms);
+}
+@keyframes pfLogoShine {
+  0%, 62% { transform: translateX(-130%); }
+  86%, 100% { transform: translateX(130%); }
 }

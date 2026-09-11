@@ -227,7 +227,7 @@ export default function PortfolioGallery({ projects = [] }) {
                 <article
                   key={`${copy}-${p.slug}`}
                   className="pf-card"
-                  style={copy === 0 ? { animationDelay: `${i * 55}ms` } : undefined}
+                  style={{ "--i": i, ...(copy === 0 ? { animationDelay: `${i * 55}ms` } : {}) }}
                 >
                   <span className="pf-card-logo">
                     {p.logo ? (
