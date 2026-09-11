@@ -2044,3 +2044,69 @@ body {
   0%, 62% { transform: translateX(-130%); }
   86%, 100% { transform: translateX(130%); }
 }
+
+/* ---- Light theme: homepage chrome ----
+   The scroll frames themselves are photographs and stay as they are; this is
+   the glass furniture sitting over them. */
+/* The attribute lives ON <html>, so it cannot also be a descendant of itself. */
+[data-pf-theme="light"],
+[data-pf-theme="light"] body {
+  background: #f2f5f8;
+  color: #0b1220;
+}
+[data-pf-theme="light"] .openappo-logo-wrap,
+[data-pf-theme="light"] .scroll-hint,
+[data-pf-theme="light"] .video-top-trust-badge,
+[data-pf-theme="light"] .hero-glass-card,
+[data-pf-theme="light"] .hero-bottom-bar,
+[data-pf-theme="light"] .contact-float-menu,
+[data-pf-theme="light"] .contact-float-trigger {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(9, 18, 30, 0.14);
+  color: #0b1220;
+  box-shadow: 0 16px 40px -14px rgba(9, 18, 30, 0.3);
+}
+[data-pf-theme="light"] .scroll-hint-text,
+[data-pf-theme="light"] .hero-desc,
+[data-pf-theme="light"] .contact-menu-label,
+[data-pf-theme="light"] .video-feature-text {
+  color: rgba(11, 18, 32, 0.72);
+}
+[data-pf-theme="light"] .hero-tagline,
+[data-pf-theme="light"] .contact-menu-phone,
+[data-pf-theme="light"] .hero-desc-highlight {
+  color: #0f9b93;
+  text-shadow: none;
+}
+[data-pf-theme="light"] .hero-custom-slogan {
+  background: rgba(15, 155, 147, 0.1);
+  border-color: rgba(15, 155, 147, 0.32);
+  color: #071018;
+  text-shadow: none;
+  box-shadow: none;
+}
+[data-pf-theme="light"] .btn-explore,
+[data-pf-theme="light"] .btn-testimonials,
+[data-pf-theme="light"] .btn-how-it-works,
+[data-pf-theme="light"] .contact-menu-btn {
+  background: rgba(9, 18, 30, 0.05);
+  border-color: rgba(9, 18, 30, 0.14);
+  color: #0b1220;
+}
+[data-pf-theme="light"] .btn-explore:hover,
+[data-pf-theme="light"] .btn-testimonials:hover,
+[data-pf-theme="light"] .btn-how-it-works:hover,
+[data-pf-theme="light"] .contact-menu-btn:hover {
+  background: rgba(15, 155, 147, 0.14);
+  border-color: rgba(15, 155, 147, 0.45);
+}
+/* The wordmark artwork is light-on-transparent — both files in public/brand
+   are. On a white chip it would vanish, so in light mode it keeps a dark
+   backing plate until a dark-ink version of the logo exists. */
+[data-pf-theme="light"] .openappo-logo-wrap {
+  background: rgba(7, 16, 24, 0.92);
+  border-color: rgba(9, 18, 30, 0.2);
+}
+
+:root { --pf-canvas-bg: #000; }
+[data-pf-theme="light"] { --pf-canvas-bg: #f2f5f8; }

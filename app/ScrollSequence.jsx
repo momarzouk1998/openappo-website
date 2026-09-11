@@ -24,6 +24,10 @@ export default function ScrollSequence() {
     const scrollHint = scrollHintRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
+    // The canvas paints its own backdrop, so it has to know the theme; a black
+    // letterbox on a light page looks like a broken image.
+    const isLight = () => document.documentElement.dataset.pfTheme === "light";
+
     // Under reduced-motion, map frames 1:1 to scroll position with no eased catch-up
     const ease = window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ? 1
@@ -112,7 +116,7 @@ export default function ScrollSequence() {
         const bw = imgW * bgScale;
         const bh = imgH * bgScale;
         ctx.save();
-        ctx.filter = "blur(28px) brightness(0.4)";
+        ctx.filter = isLight() ? "blur(28px) brightness(1.25)" : "blur(28px) brightness(0.4)";
         ctx.drawImage(img, (vw - bw) / 2, (vh - bh) / 2, bw, bh);
         ctx.restore();
 
@@ -127,7 +131,7 @@ export default function ScrollSequence() {
         ctx.save();
         const grad = ctx.createLinearGradient(0, topOffset + h - 24, 0, topOffset + h);
         grad.addColorStop(0, "rgba(0,0,0,0)");
-        grad.addColorStop(1, "rgba(0,0,0,0.85)");
+        grad.addColorStop(1, isLight() ? "rgba(242,245,248,0.9)" : "rgba(0,0,0,0.85)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, topOffset + h - 24, w, 24);
         ctx.restore();
@@ -278,11 +282,22 @@ export default function ScrollSequence() {
     currentFrame = targetFrame;
     rafId = requestAnimationFrame(tick);
 
+    // The canvas only repaints when the chosen frame changes, so a theme flip
+    // would leave the old letterbox until the next scroll. Force a redraw.
+    const themeWatch = new MutationObserver(() => {
+      lastDrawn = -1;
+    });
+    themeWatch.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-pf-theme"],
+    });
+
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
 
     return () => {
       cancelled = true;
+      themeWatch.disconnect();
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -301,7 +316,7 @@ export default function ScrollSequence() {
           display: "block",
           opacity: 0,
           transition: "opacity 0.5s ease",
-          background: "#000",
+          background: "var(--pf-canvas-bg, #000)",
         }}
       />
 

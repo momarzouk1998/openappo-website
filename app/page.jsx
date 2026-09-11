@@ -1,3 +1,4 @@
+import ThemeToggle from "./ThemeToggle";
 import ScrollSequence from "./ScrollSequence";
 
 export default function Page() {
@@ -13,6 +14,7 @@ export default function Page() {
           />
         </a>
       </header>
+      <ThemeToggle />
       <ScrollSequence />
     </>
   );

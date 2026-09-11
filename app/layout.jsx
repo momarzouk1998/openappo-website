@@ -16,6 +16,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
       <head>
+        {/* Apply the saved theme before the first paint — otherwise the page
+            flashes dark, then repaints light. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{document.documentElement.dataset.pfTheme=localStorage.getItem('pf-theme')||'dark'}catch(e){document.documentElement.dataset.pfTheme='dark'}",
+          }}
+        />
         {/* First frame gates the whole hero — start it with the HTML, not after
             JS boots. type= makes browsers without AVIF skip these entirely, and
             media= matches the resolution split in ScrollSequence. */}

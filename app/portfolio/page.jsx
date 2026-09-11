@@ -1,7 +1,7 @@
 import PortfolioGallery from "./PortfolioGallery";
 import TechBackground from "./TechBackground";
 import HeroIntro from "./HeroIntro";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "../ThemeToggle";
 
 const SITE = "https://openappo.com";
 
@@ -100,13 +100,6 @@ export default async function PortfolioPage() {
 
   return (
     <main className="pf-page">
-      <script
-        dangerouslySetInnerHTML={{
-          __html:
-            "try{document.documentElement.dataset.pfTheme=localStorage.getItem('pf-theme')||'dark'}catch(e){document.documentElement.dataset.pfTheme='dark'}",
-        }}
-      />
-
       <TechBackground />
 
       <script
