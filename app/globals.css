@@ -1339,29 +1339,32 @@ body {
   font-weight: 700;
 }
 .pf-hero-rot-win {
-  height: 1.55em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
   overflow: hidden;
+  position: relative;
+  min-width: 140px;
+}
+.pf-hero-rot-text {
   display: inline-block;
-}
-.pf-hero-rot-track {
-  display: flex;
-  flex-direction: column;
-  animation: pfRoll 11s cubic-bezier(0.76, 0, 0.24, 1) infinite;
-}
-.pf-hero-rot-track span {
-  height: 1.55em;
-  line-height: 1.55em;
-  white-space: nowrap;
   color: #3ddad2;
   font-weight: 800;
   font-size: 14px;
+  line-height: 26px;
+  white-space: nowrap;
+  animation: pfTextSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-@keyframes pfRoll {
-  0%, 16%   { transform: translateY(0); }
-  20%, 36%  { transform: translateY(-20%); }
-  40%, 56%  { transform: translateY(-40%); }
-  60%, 76%  { transform: translateY(-60%); }
-  80%, 100% { transform: translateY(-80%); }
+@keyframes pfTextSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===================================================================
@@ -2450,7 +2453,7 @@ body {
 [data-pf-theme="light"] .pf-hero-rot-lead {
   color: #475569;
 }
-[data-pf-theme="light"] .pf-hero-rot-track span {
+[data-pf-theme="light"] .pf-hero-rot-text {
   color: #0f9b93;
 }
 
@@ -2463,7 +2466,7 @@ body {
 [data-pf-theme="light"] .pf-card-sub,
 [data-pf-theme="light"] .pf-card-count,
 [data-pf-theme="light"] .pf-flow-count,
-[data-pf-theme="light"] .pf-hero-rot-track span,
+[data-pf-theme="light"] .pf-hero-rot-text,
 [data-pf-theme="light"] .pf-stat-num i {
   color: #0f9b93;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 const SECTORS = [
   "التجارة والتوزيع",
   "المصانع والإنتاج",
@@ -9,6 +11,15 @@ const SECTORS = [
 ];
 
 export default function HeroIntro() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((prev) => (prev + 1) % SECTORS.length);
+    }, 2500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <header className="pf-hero">
       <div className="pf-hero-badge-wrap">
@@ -31,16 +42,14 @@ export default function HeroIntro() {
       </p>
 
       <div className="pf-hero-rot-wrap">
-        <p className="pf-hero-rot">
+        <div className="pf-hero-rot">
           <span className="pf-hero-rot-lead">خبرة تنفيذية وتشغيلية في</span>
           <span className="pf-hero-rot-win">
-            <span className="pf-hero-rot-track">
-              {[...SECTORS, SECTORS[0]].map((s, i) => (
-                <span key={i}>{s}</span>
-              ))}
+            <span key={index} className="pf-hero-rot-text">
+              {SECTORS[index]}
             </span>
           </span>
-        </p>
+        </div>
       </div>
     </header>
   );
