@@ -2,31 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Screenshots + metadata come from the manifest the admin panel publishes.
-// Project shape: { slug, name, subtitle, desc, youtubeId, logo, shots: [url] }
+const AUTO_MS = 1200;
+const BEHIND = 3;
 
-const AUTO_MS = 1000; // how long the front screenshot holds before receding
-const BEHIND = 3; // how many upcoming screenshots peek out behind the front one
-
-/** 0 = front, 1..n-1 = queued behind it. Wraps, so the deck never runs out. */
 function rel(i, cur, n) {
   return (i - cur + n) % n;
 }
 
-/**
- * Depth stack: the front screenshot is shown whole and as large as the stage
- * allows, with the next few receding behind it. On each tick the front one
- * shrinks and fades back while the one behind grows into its place.
- */
 function deckStyle(o, n) {
   if (o === n - 1) {
-    // Just left the front — shrink and fade rather than vanish.
     return { transform: "translateZ(80px) scale(0.92)", opacity: 0, zIndex: 40, pointerEvents: "none" };
   }
   if (o > BEHIND) return { opacity: 0, pointerEvents: "none" };
   return {
-    transform: `translateY(${-o * 24}px) translateZ(${-o * 170}px) scale(${1 - o * 0.09})`,
-    opacity: o === 0 ? 1 : o === 1 ? 0.4 : o === 2 ? 0.18 : 0.07,
+    transform: `translateY(${-o * 20}px) translateZ(${-o * 150}px) scale(${1 - o * 0.08})`,
+    opacity: o === 0 ? 1 : o === 1 ? 0.45 : o === 2 ? 0.2 : 0.08,
     zIndex: 100 - o,
     pointerEvents: o === 0 ? "auto" : "none",
   };
@@ -35,7 +25,7 @@ function deckStyle(o, n) {
 function Deck({ shots, onZoom }) {
   const n = shots.length;
   const [cur, setCur] = useState(0);
-  const [held, setHeld] = useState(false); // paused right after a manual move
+  const [held, setHeld] = useState(false);
   const loaded = useRef(new Set());
   const [, bump] = useState(0);
   const touch = useRef(null);
@@ -45,7 +35,6 @@ function Deck({ shots, onZoom }) {
     bump((v) => v + 1);
   }, []);
 
-  // Fetch ahead so the cadence never lands on a screenshot that hasn't arrived.
   useEffect(() => {
     if (!n) return;
     for (let d = 1; d <= BEHIND + 1; d++) {
@@ -76,10 +65,9 @@ function Deck({ shots, onZoom }) {
     [n]
   );
 
-  // Give the viewer 4s of manual control before autoplay resumes.
   useEffect(() => {
     if (!held) return;
-    const id = setTimeout(() => setHeld(false), 4000);
+    const id = setTimeout(() => setHeld(false), 4500);
     return () => clearTimeout(id);
   }, [held, cur]);
 
@@ -92,13 +80,14 @@ function Deck({ shots, onZoom }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [go]);
 
-  // 10 of the 12 systems have copy and a logo but no screenshots yet; an empty
-  // modal reads as a broken carousel, so say what is actually going on.
   if (!n)
     return (
-      <p className="pf-flow-pending">
-        الشاشات التفصيلية لهذا النظام قيد الإعداد — تواصل معنا لعرضٍ مباشر.
-      </p>
+      <div className="pf-flow-pending">
+        <p>الشاشات التفصيلية لهذا النظام قيد الإعداد والإطلاق.</p>
+        <a href="https://wa.me/201558282760" target="_blank" rel="noopener noreferrer" className="pf-demo-cta">
+          طلب عرض توضيحي مباشر عبر واتساب ←
+        </a>
+      </div>
     );
 
   const visible = [];
@@ -109,9 +98,6 @@ function Deck({ shots, onZoom }) {
 
   return (
     <>
-      {/* No hover-pause: the click that opens the modal leaves the cursor on
-          the centred stage, so mouseenter fires at once and nothing advances
-          on desktop. Only an explicit move holds it. */}
       <div
         className="pf-deck-stage"
         onTouchStart={(e) => {
@@ -122,7 +108,7 @@ function Deck({ shots, onZoom }) {
           if (touch.current == null) return;
           const dx = e.changedTouches[0].clientX - touch.current;
           touch.current = null;
-          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); // follow the finger
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
         }}
       >
         <div className="pf-deck">
@@ -160,7 +146,7 @@ function Deck({ shots, onZoom }) {
           {cur + 1} / {n}
         </span>
         <span className="pf-flow-hint">
-          اسحب يمين أو شمال · اضغط على الشاشة لتكبيرها
+          مرّر للتنقل بين الشاشات · اضغط على الشاشة لتكبيرها
         </span>
       </div>
     </>
@@ -170,19 +156,13 @@ function Deck({ shots, onZoom }) {
 export default function PortfolioGallery({ projects = [] }) {
   const [activeSlug, setActiveSlug] = useState(null);
   const [zoom, setZoom] = useState(null);
-  // Hovering pauses the reel on desktop, but touch has no hover — without this
-  // a phone user is tapping a moving target.
-  const [reelHeld, setReelHeld] = useState(false);
-  const holdTimer = useRef(null);
-  const holdReel = useCallback((ms) => {
-    setReelHeld(true);
-    clearTimeout(holdTimer.current);
-    if (ms) holdTimer.current = setTimeout(() => setReelHeld(false), ms);
-  }, []);
-  useEffect(() => () => clearTimeout(holdTimer.current), []);
 
-  const project = projects.find((p) => p.slug === activeSlug) || null;
-  const count = project ? (project.shots || []).length : 0;
+  // Split into Featured systems (those with rich screenshots) and the rest of the matrix
+  const featuredProjects = projects.filter((p) => (p.shots || []).length > 0);
+  const matrixProjects = projects.filter((p) => (p.shots || []).length === 0);
+
+  const activeProject = projects.find((p) => p.slug === activeSlug) || null;
+  const count = activeProject ? (activeProject.shots || []).length : 0;
 
   const close = useCallback(() => {
     setActiveSlug(null);
@@ -190,7 +170,7 @@ export default function PortfolioGallery({ projects = [] }) {
   }, []);
 
   useEffect(() => {
-    if (!project) return;
+    if (!activeProject) return;
     document.body.style.overflow = "hidden";
     const onKey = (e) => {
       if (e.key !== "Escape") return;
@@ -202,83 +182,155 @@ export default function PortfolioGallery({ projects = [] }) {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  }, [project, zoom, close]);
+  }, [activeProject, zoom, close]);
 
   return (
-    <>
-      {/* A running reel rather than a static grid. The first group is the real,
-          crawlable content; the second is an aria-hidden clone that makes the
-          loop seamless. All twelve cards stay in the DOM either way. */}
-      <div
-        className="pf-reel"
-        data-held={reelHeld ? "true" : undefined}
-        onPointerEnter={(e) => e.pointerType === "mouse" && holdReel(0)}
-        onPointerLeave={(e) => e.pointerType === "mouse" && setReelHeld(false)}
-        onPointerDown={() => holdReel(8000)}
-      >
-        <div className="pf-reel-track" style={{ animationDuration: `${projects.length * 7}s` }}>
-          {[0, 1].map((copy) => (
-            <div
-              className="pf-reel-group"
-              key={copy}
-              aria-hidden={copy === 1 ? "true" : undefined}
-            >
-              {projects.map((p, i) => (
-                <article
-                  key={`${copy}-${p.slug}`}
-                  className="pf-card"
-                  style={{ "--i": i, ...(copy === 0 ? { animationDelay: `${i * 55}ms` } : {}) }}
-                >
-                  <span className="pf-card-logo">
+    <div className="pf-gallery-container">
+      {/* 1. FEATURED SPOTLIGHT SHOWCASES */}
+      <section className="pf-featured-section">
+        <div className="pf-section-header">
+          <span className="pf-section-tag">🌟 أنظمة مميزة واستعراض حي</span>
+          <h2 className="pf-section-title">منظومات ERP كبرى تعمل على أرض الواقع</h2>
+        </div>
+
+        <div className="pf-featured-grid">
+          {featuredProjects.map((p, idx) => (
+            <div key={p.slug} className={`pf-spotlight-card ${idx % 2 === 1 ? "is-reversed" : ""}`}>
+              {/* Left/Interactive Visual Preview */}
+              <div className="pf-spotlight-preview" onClick={() => setActiveSlug(p.slug)}>
+                <div className="pf-spotlight-mockup-frame">
+                  <div className="pf-mockup-header">
+                    <span className="mockup-dot red" />
+                    <span className="mockup-dot yellow" />
+                    <span className="mockup-dot green" />
+                    <span className="mockup-url">app.openappo.com/{p.slug}</span>
+                  </div>
+                  <div className="pf-mockup-screen-wrap">
+                    <img
+                      src={p.shots[0]}
+                      alt={p.name}
+                      className="pf-mockup-img"
+                      loading="eager"
+                    />
+                    {p.shots[1] && (
+                      <img
+                        src={p.shots[1]}
+                        alt=""
+                        className="pf-mockup-img-layer"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="pf-mockup-badge">
+                      <span>👁️ اضغط لاستعراض {p.shots.length} شاشة حقيقية</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right/Info Column */}
+              <div className="pf-spotlight-info">
+                <div className="pf-spotlight-head">
+                  <span className="pf-spotlight-logo">
                     {p.logo ? (
-                      <img src={p.logo} alt={`شعار ${p.name}`} loading="lazy" />
+                      <img src={p.logo} alt={p.name} />
                     ) : (
-                      <span className="pf-card-logo-txt">
-                        {(p.name || "?").trim()[0]}
-                      </span>
+                      <span className="pf-card-logo-txt">{(p.name || "?").trim()[0]}</span>
                     )}
                   </span>
-                  <h2 className="pf-card-name">{p.name}</h2>
-                  <p className="pf-card-sub">{p.subtitle}</p>
-                  {p.desc && <p className="pf-card-desc">{p.desc}</p>}
-                  {(p.shots || []).length > 0 && (
-                    <span className="pf-card-count">{p.shots.length} شاشة</span>
-                  )}
-                  <button
-                    className="pf-card-open"
-                    onClick={() => setActiveSlug(p.slug)}
-                    aria-label={`استعراض ${p.name}`}
-                    tabIndex={copy === 1 ? -1 : 0}
-                  >
-                    <span>عرض التفاصيل</span>
-                  </button>
-                </article>
-              ))}
+                  <div className="pf-spotlight-meta">
+                    <span className="pf-spotlight-badge">منظومة سحابية متكاملة</span>
+                    <h3 className="pf-spotlight-name">{p.name}</h3>
+                  </div>
+                </div>
+
+                <p className="pf-spotlight-sub">{p.subtitle}</p>
+
+                {p.desc && <p className="pf-spotlight-desc">{p.desc}</p>}
+
+                <div className="pf-spotlight-pills">
+                  <span className="pf-pill">سحابي 100%</span>
+                  <span className="pf-pill">تقارير لحظية</span>
+                  <span className="pf-pill">صلاحيات دقيقة</span>
+                  <span className="pf-pill highlight">{p.shots.length} شاشة تشغيلية</span>
+                </div>
+
+                <button
+                  className="pf-spotlight-btn"
+                  onClick={() => setActiveSlug(p.slug)}
+                >
+                  <span>استعراض شاشات النظام بالكامل</span>
+                  <span className="pf-btn-arrow">←</span>
+                </button>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {project && (
+      {/* 2. THE FULL SYSTEMS ECOSYSTEM MATRIX */}
+      <section className="pf-matrix-section">
+        <div className="pf-section-header">
+          <span className="pf-section-tag">💼 قطاعات وحلول أعمال متخصصة</span>
+          <h2 className="pf-section-title">منظومات رقمية صُممت خصيصاً لكل قطاع</h2>
+          <p className="pf-section-sub">
+            حلول برمجية مخصصة لإدارة العمليات، المخازن، الفواتير، والحسابات مصممة وفق طبيعة كل نشاط تجاري وصناعي وخدمي.
+          </p>
+        </div>
+
+        <div className="pf-matrix-grid">
+          {matrixProjects.map((p, i) => (
+            <article
+              key={p.slug}
+              className="pf-matrix-card"
+              onClick={() => setActiveSlug(p.slug)}
+            >
+              <div className="pf-matrix-top">
+                <span className="pf-matrix-logo">
+                  {p.logo ? (
+                    <img src={p.logo} alt={p.name} loading="lazy" />
+                  ) : (
+                    <span className="pf-card-logo-txt">{(p.name || "?").trim()[0]}</span>
+                  )}
+                </span>
+                <span className="pf-matrix-status">ERP مخصص</span>
+              </div>
+
+              <h3 className="pf-matrix-name">{p.name}</h3>
+              <p className="pf-matrix-sub">{p.subtitle}</p>
+              {p.desc && <p className="pf-matrix-desc">{p.desc}</p>}
+
+              <div className="pf-matrix-footer">
+                <span className="pf-matrix-explore">
+                  <span>عرض تفاصيل المنظومة</span>
+                  <span className="pf-matrix-arrow">←</span>
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. MODAL FOR SYSTEM DETAILS & SCREENSHOT DECK */}
+      {activeProject && (
         <div className="pf-modal" onClick={close}>
           <div className="pf-modal-inner" onClick={(e) => e.stopPropagation()}>
             <div className="pf-modal-head">
-              {project.logo ? (
+              {activeProject.logo ? (
                 <img
                   className="pf-modal-logo"
-                  src={project.logo}
-                  alt={project.name}
+                  src={activeProject.logo}
+                  alt={activeProject.name}
                 />
               ) : (
                 <span className="pf-modal-logo pf-modal-logo--txt">
-                  {(project.name || "?").trim()[0]}
+                  {(activeProject.name || "?").trim()[0]}
                 </span>
               )}
               <div className="pf-modal-titles">
-                <div className="pf-modal-name">{project.name}</div>
+                <div className="pf-modal-name">{activeProject.name}</div>
                 <div className="pf-modal-sub">
-                  {project.subtitle}
-                  {count ? ` · ${count} شاشة` : ""}
+                  {activeProject.subtitle}
+                  {count ? ` · ${count} شاشة تشغيلية` : ""}
                 </div>
               </div>
               <button className="pf-modal-close" onClick={close} aria-label="إغلاق">
@@ -286,13 +338,13 @@ export default function PortfolioGallery({ projects = [] }) {
               </button>
             </div>
 
-            {project.desc && <p className="pf-modal-desc">{project.desc}</p>}
+            {activeProject.desc && <p className="pf-modal-desc">{activeProject.desc}</p>}
 
-            {project.youtubeId && (
+            {activeProject.youtubeId && (
               <div className="pf-modal-video">
                 <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${project.youtubeId}?rel=0&modestbranding=1`}
-                  title={project.name}
+                  src={`https://www.youtube-nocookie.com/embed/${activeProject.youtubeId}?rel=0&modestbranding=1`}
+                  title={activeProject.name}
                   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   loading="lazy"
@@ -301,8 +353,8 @@ export default function PortfolioGallery({ projects = [] }) {
             )}
 
             <Deck
-              key={project.slug}
-              shots={project.shots || []}
+              key={activeProject.slug}
+              shots={activeProject.shots || []}
               onZoom={setZoom}
             />
           </div>
@@ -323,6 +375,6 @@ export default function PortfolioGallery({ projects = [] }) {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }
