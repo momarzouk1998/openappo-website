@@ -1440,45 +1440,22 @@ body {
   perspective: 1200px;
 }
 .pf-spotlight-mockup-frame {
-  border-radius: 16px;
-  background: #060a12;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(61, 218, 210, 0.12);
+  border-radius: 20px;
+  background: #080d17;
+  border: 1.5px solid rgba(61, 218, 210, 0.35);
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(61, 218, 210, 0.15);
   overflow: hidden;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .pf-spotlight-preview:hover .pf-spotlight-mockup-frame {
   transform: translateY(-6px) scale(1.02);
-  border-color: rgba(61, 218, 210, 0.6);
-  box-shadow: 0 24px 55px -12px rgba(0, 0, 0, 0.95), 0 0 40px rgba(61, 218, 210, 0.3);
-}
-.pf-mockup-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.mockup-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-}
-.mockup-dot.red { background: #ff5f56; }
-.mockup-dot.yellow { background: #ffbd2e; }
-.mockup-dot.green { background: #27c93f; }
-.mockup-url {
-  margin-right: auto;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  font-family: monospace;
-  direction: ltr;
+  border-color: #3ddad2;
+  box-shadow: 0 24px 55px -12px rgba(0, 0, 0, 0.95), 0 0 45px rgba(61, 218, 210, 0.4);
 }
 
 .pf-mockup-screen-wrap {
   position: relative;
-  height: 270px;
+  height: 290px;
   overflow: hidden;
   background: #080d17;
   display: flex;

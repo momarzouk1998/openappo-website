@@ -459,13 +459,6 @@ export default function PortfolioGallery({ projects = [] }) {
                 {/* Left/Interactive Visual Preview Mockup */}
                 <div className="pf-spotlight-preview" onClick={() => setActiveSlug(p.slug)}>
                   <div className="pf-spotlight-mockup-frame">
-                    <div className="pf-mockup-header">
-                      <span className="mockup-dot red" />
-                      <span className="mockup-dot yellow" />
-                      <span className="mockup-dot green" />
-                      
-                    </div>
-
                     <div className="pf-mockup-screen-wrap">
                       {hasShots ? (
                         <>
