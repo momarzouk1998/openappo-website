@@ -2,39 +2,46 @@
 
 const SECTORS = [
   "التجارة والتوزيع",
-  "التصنيع والمصانع",
-  "الخدمات الرقمية",
-  "القطاع الخيري",
+  "المصانع والإنتاج",
+  "الاستيراد وسلاسل الإمداد",
+  "نقاط البيع والخدمات",
+  "الصالات والجمعيات",
 ];
 
-const TITLE = "أنظمة إدارة أعمال نصمّمها لكل نشاط على حِدة";
-
 export default function HeroIntro() {
-  const words = TITLE.split(" ");
-
   return (
     <header className="pf-hero">
-      <span className="pf-hero-kicker">سابقة الأعمال • PORTFOLIO</span>
+      <div className="pf-hero-badge-wrap">
+        <span className="pf-hero-badge">
+          <span className="pf-badge-sparkle teal" />
+          <span className="pf-hero-kicker">سابقة الأعمال والشاشات الفعلية</span>
+          <span className="pf-badge-sparkle coral" />
+        </span>
+      </div>
 
       <h1 className="pf-hero-title">
-        {words.map((w, i) => (
-          <span key={i} style={{ "--i": i }}>
-            {w}
-            {i < words.length - 1 ? " " : ""}
-          </span>
-        ))}
+        <span className="pf-hero-title-main">منظومات ERP وإدارة أعمال سحابية</span>
+        <span className="pf-hero-title-sub">
+          نُصمّمها بدقة وفق <span className="pf-title-gradient">تفاصيل وهوية نشاطك</span>
+        </span>
       </h1>
 
-      <p className="pf-hero-rot">
-        <span className="pf-hero-rot-lead">خبرة مثبتة في</span>
-        <span className="pf-hero-rot-win">
-          <span className="pf-hero-rot-track">
-            {[...SECTORS, SECTORS[0]].map((s, i) => (
-              <span key={i}>{s}</span>
-            ))}
-          </span>
-        </span>
+      <p className="pf-hero-desc">
+        شاشات حقيقية وحلول برمجية متكاملة تعمل على أرض الواقع في مختلف القطاعات التجارية والصناعية والخدمية
       </p>
+
+      <div className="pf-hero-rot-wrap">
+        <p className="pf-hero-rot">
+          <span className="pf-hero-rot-lead">خبرة تنفيذية وتشغيلية في</span>
+          <span className="pf-hero-rot-win">
+            <span className="pf-hero-rot-track">
+              {[...SECTORS, SECTORS[0]].map((s, i) => (
+                <span key={i}>{s}</span>
+              ))}
+            </span>
+          </span>
+        </p>
+      </div>
     </header>
   );
 }

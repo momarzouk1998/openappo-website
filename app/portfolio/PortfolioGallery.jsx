@@ -463,7 +463,7 @@ export default function PortfolioGallery({ projects = [] }) {
                       <span className="mockup-dot red" />
                       <span className="mockup-dot yellow" />
                       <span className="mockup-dot green" />
-                      <span className="mockup-url">app.openappo.com/{p.slug}</span>
+                      
                     </div>
 
                     <div className="pf-mockup-screen-wrap">
