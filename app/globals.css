@@ -1123,14 +1123,21 @@ body {
    Portfolio page (/portfolio) — "سابقة الأعمال"
    =================================================================== */
 .pf-page {
+  /* position only, never z-index: a stacking context here would trap the
+     fixed modal underneath the page chrome. */
   position: relative;
-  z-index: 1;
   min-height: 100vh;
+  background: radial-gradient(1200px 600px at 50% -10%, #10202e 0%, #05080d 55%, #05080d 100%);
   color: #fff;
   direction: rtl;
   padding: 84px clamp(16px, 5vw, 64px) 120px;
   max-width: 1240px;
   margin: 0 auto;
+}
+.pf-page > .pf-hero,
+.pf-page > .pf-grid,
+.pf-page > .pf-empty {
+  position: relative;
 }
 
 /* ---- Animated tech backdrop ---- */
@@ -1140,100 +1147,60 @@ body {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: radial-gradient(1200px 600px at 50% -10%, #10202e 0%, #05080d 55%, #05080d 100%);
+  background: #05080d;
 }
 .pf-bg-canvas {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  display: block;
 }
-/* Perspective grid receding to the horizon. The scrolling is a transform on
-   an inner layer, not background-position — animating background-position
-   repaints the whole (huge) element every frame instead of compositing it. */
-.pf-bg-grid {
-  position: absolute;
-  left: -50%;
-  right: -50%;
-  bottom: -30%;
-  height: 90%;
-  transform: perspective(420px) rotateX(62deg);
-  transform-origin: 50% 100%;
-  mask-image: linear-gradient(to top, #000 0%, transparent 72%);
-  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 72%);
-  opacity: 0.8;
-  overflow: hidden;
-}
-.pf-bg-grid-inner {
-  position: absolute;
-  inset: -60px 0 0 0;
-  background-image: linear-gradient(rgba(61, 218, 210, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(61, 218, 210, 0.22) 1px, transparent 1px);
-  background-size: 60px 60px;
-  will-change: transform;
-  animation: pfGridDrift 9s linear infinite;
-}
-@keyframes pfGridDrift {
-  to {
-    transform: translate3d(0, 60px, 0);
-  }
-}
-/* Slow aurora blobs. A radial-gradient, NOT filter:blur() — animating
-   transform on a 46vw blurred element forced a full blur re-raster every
-   frame and measured 12fps vs 55fps without it. Same look, no blur pass. */
+/* Two slow drifting colour fields give the flat black some depth. */
 .pf-bg-glow {
   position: absolute;
   border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
   will-change: transform;
 }
-.pf-bg-glow--teal {
-  width: 70vw;
-  height: 70vw;
-  top: -22%;
-  right: -16%;
-  background: radial-gradient(
-    circle,
-    rgba(61, 218, 210, 0.17) 0%,
-    rgba(61, 218, 210, 0.07) 38%,
-    transparent 68%
-  );
-  animation: pfGlowA 22s ease-in-out infinite alternate;
+.pf-bg-glow--a {
+  width: 46vmax;
+  height: 46vmax;
+  top: -14vmax;
+  right: -8vmax;
+  background: radial-gradient(circle, rgba(61, 218, 210, 0.34), transparent 68%);
+  animation: pfGlowA 26s ease-in-out infinite;
 }
-.pf-bg-glow--coral {
-  width: 58vw;
-  height: 58vw;
-  bottom: -22%;
-  left: -14%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 122, 122, 0.14) 0%,
-    rgba(255, 122, 122, 0.05) 38%,
-    transparent 68%
-  );
-  animation: pfGlowB 27s ease-in-out infinite alternate;
+.pf-bg-glow--b {
+  width: 38vmax;
+  height: 38vmax;
+  bottom: -14vmax;
+  left: -10vmax;
+  background: radial-gradient(circle, rgba(255, 122, 122, 0.24), transparent 68%);
+  animation: pfGlowB 32s ease-in-out infinite;
 }
 @keyframes pfGlowA {
-  to {
-    transform: translate3d(-10vw, 8vh, 0) scale(1.15);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-8vmax, 7vmax, 0) scale(1.16); }
 }
 @keyframes pfGlowB {
-  to {
-    transform: translate3d(8vw, -7vh, 0) scale(1.1);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(9vmax, -6vmax, 0) scale(1.2); }
 }
-/* Keeps body copy readable over the motion. */
-.pf-bg-scrim {
+/* Faint blueprint grid, fading out towards the bottom. */
+.pf-bg-grid {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    900px 520px at 50% 18%,
-    rgba(5, 8, 13, 0.2) 0%,
-    rgba(5, 8, 13, 0.62) 62%,
-    rgba(5, 8, 13, 0.82) 100%
-  );
+  background-image:
+    linear-gradient(rgba(61, 218, 210, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 218, 210, 0.055) 1px, transparent 1px);
+  background-size: 62px 62px;
+  -webkit-mask-image: radial-gradient(120% 85% at 50% 0%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(120% 85% at 50% 0%, #000 30%, transparent 78%);
+  animation: pfGridDrift 30s linear infinite;
 }
-
+@keyframes pfGridDrift {
+  to { background-position: 62px 62px, 62px 62px; }
+}
 
 .pf-back {
   position: fixed;
@@ -1517,19 +1484,20 @@ body {
 }
 
 
-/* ---- Coverflow: one screenshot at a time, neighbours curving away on an arc
-   ---- The previous drifting wall mounted every screenshot at once (56 for a
-   28-shot project) to show four legible tiles. This keeps 7 in the DOM. */
-.pf-flow-stage {
+/* ---- Screenshot deck: one screen shown WHOLE, next few receding behind ----
+   The previous coverflow cropped the centre image (object-fit: cover on a
+   fixed 16/9 box) and spent half the stage on turned-away neighbours. The
+   point of these screenshots is legible detail, so the front card is shown
+   uncropped and as large as the stage allows. */
+.pf-deck-stage {
   position: relative;
   width: 100%;
-  height: min(66vh, 560px);
-  perspective: 1600px;
-  perspective-origin: 50% 42%;
-  overflow: hidden;
+  height: min(76vh, 660px);
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
 }
 
-.pf-flow {
+.pf-deck {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
@@ -1537,39 +1505,40 @@ body {
   place-items: center;
 }
 
-.pf-flow-card {
+.pf-deck-card {
   position: absolute;
-  width: min(74%, 760px);
+  width: min(96%, 1180px);
+  height: 100%;
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: zoom-in;
   transform-style: preserve-3d;
-  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.42s ease;
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.62s ease;
   will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.pf-flow-card img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  object-position: top center;
-  border-radius: 14px;
+/* contain, never cover — a cropped screenshot defeats the purpose. */
+.pf-deck-card img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #0b1220;
-  box-shadow: 0 30px 60px -22px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 34px 70px -24px rgba(0, 0, 0, 0.9);
 }
-.pf-flow-card.is-current {
-  cursor: zoom-in;
-}
-.pf-flow-card.is-current img {
-  border-color: rgba(61, 218, 210, 0.4);
-  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.9),
-    0 0 40px -14px rgba(61, 218, 210, 0.45);
+.pf-deck-card.is-front img {
+  border-color: rgba(61, 218, 210, 0.42);
+  box-shadow: 0 44px 90px -22px rgba(0, 0, 0, 0.92),
+    0 0 46px -16px rgba(61, 218, 210, 0.5);
 }
 
-.pf-flow-nav {
+.pf-deck-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1578,7 +1547,7 @@ body {
   height: 42px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(10, 16, 26, 0.7);
+  background: rgba(10, 16, 26, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #fff;
@@ -1586,16 +1555,12 @@ body {
   line-height: 1;
   cursor: pointer;
 }
-.pf-flow-nav:hover {
+.pf-deck-nav:hover {
   background: rgba(61, 218, 210, 0.18);
   border-color: rgba(61, 218, 210, 0.4);
 }
-.pf-flow-nav--prev {
-  right: 8px;
-}
-.pf-flow-nav--next {
-  left: 8px;
-}
+.pf-deck-nav--prev { right: 6px; }
+.pf-deck-nav--next { left: 6px; }
 
 .pf-flow-meta {
   margin-top: 12px;
@@ -1654,17 +1619,16 @@ body {
 }
 
 @media (max-width: 640px) {
-  .pf-flow-stage {
-    height: min(52vh, 380px);
-    perspective: 1000px;
+  .pf-deck-stage {
+    height: min(58vh, 440px);
+    perspective: 1200px;
   }
-  /* Nearly full width on phones — the whole point is legible detail. */
-  .pf-flow-card {
-    width: 84%;
+  .pf-deck-card {
+    width: 98%;
   }
-  .pf-flow-nav {
-    width: 36px;
-    height: 36px;
+  .pf-deck-nav {
+    width: 34px;
+    height: 34px;
     font-size: 19px;
   }
   .pf-modal-head {
@@ -1681,31 +1645,14 @@ body {
   }
 }
 
-/* Shown instead of the gallery while a project's screenshots are pending. */
-.pf-soon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.pf-flow-pending {
+  margin: 8px 0 4px;
+  padding: 26px 22px;
+  border-radius: 16px;
   text-align: center;
-  padding: 42px 24px;
-  border-radius: 18px;
-  border: 1px dashed rgba(255, 255, 255, 0.16);
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.03);
-}
-.pf-soon-icon {
-  font-size: 30px;
-  opacity: 0.8;
-}
-.pf-soon-title {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.85);
-}
-.pf-soon-text {
-  margin: 0;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  border: 1px dashed rgba(255, 255, 255, 0.14);
 }

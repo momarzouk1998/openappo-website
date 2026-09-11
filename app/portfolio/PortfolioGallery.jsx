@@ -5,40 +5,34 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // Screenshots + metadata come from the manifest the admin panel publishes.
 // Project shape: { slug, name, subtitle, desc, youtubeId, logo, shots: [url] }
 
-const AUTO_MS = 1000; // how long each screenshot holds before advancing
-const NEIGHBOURS = 3; // how many cards to keep mounted either side of centre
+const AUTO_MS = 1000; // how long the front screenshot holds before receding
+const BEHIND = 3; // how many upcoming screenshots peek out behind the front one
 
-/** Shortest signed distance from `cur` to `i` on a ring of `n` — so the
- *  carousel wraps instead of running off one end. */
-function relative(i, cur, n) {
-  let d = i - cur;
-  if (d > n / 2) d -= n;
-  if (d < -n / 2) d += n;
-  return d;
+/** 0 = front, 1..n-1 = queued behind it. Wraps, so the deck never runs out. */
+function rel(i, cur, n) {
+  return (i - cur + n) % n;
 }
 
-/** Places a card on the arc: turned away, pushed back, sinking and fading
- *  with distance so only a sliver of the far ones shows. */
-function cardStyle(o) {
-  const a = Math.abs(o);
-  const s = Math.sign(o);
-  if (a > NEIGHBOURS) return { opacity: 0, pointerEvents: "none" };
+/**
+ * Depth stack: the front screenshot is shown whole and as large as the stage
+ * allows, with the next few receding behind it. On each tick the front one
+ * shrinks and fades back while the one behind grows into its place.
+ */
+function deckStyle(o, n) {
+  if (o === n - 1) {
+    // Just left the front — shrink and fade rather than vanish.
+    return { transform: "translateZ(80px) scale(0.92)", opacity: 0, zIndex: 40, pointerEvents: "none" };
+  }
+  if (o > BEHIND) return { opacity: 0, pointerEvents: "none" };
   return {
-    transform: [
-      `translateX(${s * (52 + (a - 1) * 26)}%)`,
-      `translateY(${a * a * 20}px)`,
-      `translateZ(${-a * 190}px)`,
-      `rotateY(${-s * (40 + (a - 1) * 9)}deg)`,
-      `rotateZ(${s * a * 4}deg)`,
-      `scale(${1 - a * 0.09})`,
-    ].join(" "),
-    opacity: a === 0 ? 1 : a === 1 ? 0.4 : a === 2 ? 0.16 : 0.06,
-    zIndex: 100 - a,
-    pointerEvents: a === 0 ? "auto" : a <= 2 ? "auto" : "none",
+    transform: `translateY(${-o * 24}px) translateZ(${-o * 170}px) scale(${1 - o * 0.09})`,
+    opacity: o === 0 ? 1 : o === 1 ? 0.4 : o === 2 ? 0.18 : 0.07,
+    zIndex: 100 - o,
+    pointerEvents: o === 0 ? "auto" : "none",
   };
 }
 
-function Coverflow({ shots, onZoom }) {
+function Deck({ shots, onZoom }) {
   const n = shots.length;
   const [cur, setCur] = useState(0);
   const [held, setHeld] = useState(false); // paused right after a manual move
@@ -51,10 +45,10 @@ function Coverflow({ shots, onZoom }) {
     bump((v) => v + 1);
   }, []);
 
-  // Fetch a few ahead so the 0.5s cadence never lands on a blank card.
+  // Fetch ahead so the cadence never lands on a screenshot that hasn't arrived.
   useEffect(() => {
     if (!n) return;
-    for (let d = 1; d <= NEIGHBOURS + 1; d++) {
+    for (let d = 1; d <= BEHIND + 1; d++) {
       const i = (cur + d) % n;
       if (loaded.current.has(i)) continue;
       const im = new Image();
@@ -63,7 +57,6 @@ function Coverflow({ shots, onZoom }) {
     }
   }, [cur, n, shots, markLoaded]);
 
-  // Auto-advance, but wait rather than flick past an image that hasn't landed.
   useEffect(() => {
     if (n < 2 || held) return;
     const id = setInterval(() => {
@@ -99,21 +92,28 @@ function Coverflow({ shots, onZoom }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [go]);
 
-  if (!n) return null;
+  // 10 of the 12 systems have copy and a logo but no screenshots yet; an empty
+  // modal reads as a broken carousel, so say what is actually going on.
+  if (!n)
+    return (
+      <p className="pf-flow-pending">
+        الشاشات التفصيلية لهذا النظام قيد الإعداد — تواصل معنا لعرضٍ مباشر.
+      </p>
+    );
 
   const visible = [];
   for (let i = 0; i < n; i++) {
-    const o = relative(i, cur, n);
-    if (Math.abs(o) <= NEIGHBOURS) visible.push({ i, o });
+    const o = rel(i, cur, n);
+    if (o <= BEHIND || o === n - 1) visible.push({ i, o });
   }
 
   return (
     <>
-      {/* No hover-pause: the click that opens the modal leaves the cursor
-          sitting on the centred stage, so mouseenter fires immediately and the
-          gallery never advances on desktop. Only an explicit move holds it. */}
+      {/* No hover-pause: the click that opens the modal leaves the cursor on
+          the centred stage, so mouseenter fires at once and nothing advances
+          on desktop. Only an explicit move holds it. */}
       <div
-        className="pf-flow-stage"
+        className="pf-deck-stage"
         onTouchStart={(e) => {
           touch.current = e.touches[0].clientX;
           setHeld(true);
@@ -122,23 +122,24 @@ function Coverflow({ shots, onZoom }) {
           if (touch.current == null) return;
           const dx = e.changedTouches[0].clientX - touch.current;
           touch.current = null;
-          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); // RTL-agnostic: follow the finger
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); // follow the finger
         }}
       >
-        <div className="pf-flow">
+        <div className="pf-deck">
           {visible.map(({ i, o }) => (
             <button
               key={i}
-              className={"pf-flow-card" + (o === 0 ? " is-current" : "")}
-              style={cardStyle(o)}
-              onClick={() => (o === 0 ? onZoom(shots[i]) : go(o > 0 ? 1 : -1))}
-              aria-label={o === 0 ? "تكبير الشاشة" : "شاشة أخرى"}
+              className={"pf-deck-card" + (o === 0 ? " is-front" : "")}
+              style={deckStyle(o, n)}
+              onClick={() => o === 0 && onZoom(shots[i])}
+              aria-label="تكبير الشاشة"
               tabIndex={o === 0 ? 0 : -1}
+              aria-hidden={o !== 0}
             >
               <img
                 src={shots[i]}
                 alt=""
-                loading={Math.abs(o) <= 1 ? "eager" : "lazy"}
+                loading={o <= 1 ? "eager" : "lazy"}
                 decoding="async"
                 onLoad={() => markLoaded(i)}
               />
@@ -146,18 +147,10 @@ function Coverflow({ shots, onZoom }) {
           ))}
         </div>
 
-        <button
-          className="pf-flow-nav pf-flow-nav--prev"
-          onClick={() => go(-1)}
-          aria-label="السابق"
-        >
+        <button className="pf-deck-nav pf-deck-nav--prev" onClick={() => go(-1)} aria-label="السابق">
           ‹
         </button>
-        <button
-          className="pf-flow-nav pf-flow-nav--next"
-          onClick={() => go(1)}
-          aria-label="التالي"
-        >
+        <button className="pf-deck-nav pf-deck-nav--next" onClick={() => go(1)} aria-label="التالي">
           ›
         </button>
       </div>
@@ -278,23 +271,11 @@ export default function PortfolioGallery({ projects = [] }) {
               </div>
             )}
 
-            {count > 0 ? (
-              <Coverflow
-                key={project.slug}
-                shots={project.shots}
-                onZoom={setZoom}
-              />
-            ) : (
-              // Without this the modal just stops after the description and
-              // reads as a broken gallery.
-              <div className="pf-soon">
-                <span className="pf-soon-icon">📸</span>
-                <p className="pf-soon-title">الشاشات قيد التجهيز</p>
-                <p className="pf-soon-text">
-                  نعمل على تجهيز شاشات هذا النظام لعرضها هنا قريبًا.
-                </p>
-              </div>
-            )}
+            <Deck
+              key={project.slug}
+              shots={project.shots || []}
+              onZoom={setZoom}
+            />
           </div>
 
           {zoom && (

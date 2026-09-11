@@ -3,11 +3,13 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Animated node-network backdrop. Deliberately NOT gated behind
- * prefers-reduced-motion: the owner browses with that setting on, and gating
- * motion behind it has already made two galleries look broken to them. Kept
- * cheap instead — particle count scales with viewport area, DPR is capped,
- * the loop is throttled to ~30fps and stops entirely while the tab is hidden.
+ * Drifting node constellation behind the portfolio page.
+ *
+ * Deliberately NOT gated behind prefers-reduced-motion: the owner browses with
+ * reduce enabled, and a background that silently freezes for them reads as a
+ * broken page — the same trap that killed two earlier galleries here.
+ * Cost is kept down instead: node count scales with viewport area and is
+ * capped, dpr is capped at 2, and the loop stops while the tab is hidden.
  */
 export default function TechBackground() {
   const ref = useRef(null);
@@ -15,121 +17,129 @@ export default function TechBackground() {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let w = 0, h = 0, dpr = 1, raf = 0, last = 0, stopped = false;
-    let nodes = [];
+    let w = 0, h = 0, link = 150, nodes = [], rafId = 0, running = false;
+    const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
-    const LINK = 150;        // px: draw a line between nodes closer than this
-    const FRAME = 1000 / 30; // throttle: 30fps is plenty for slow drift
-
-    const resize = () => {
-      w = canvas.clientWidth;
-      h = canvas.clientHeight;
-      // Decorative layer: render at 1x whatever the screen density.
-      // At 1.5x on a 1440px desktop this cost 21fps on its own.
-      dpr = 1;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      const target = Math.round(
-        Math.min(52, Math.max(20, (w * h) / 27000))
-      );
-      nodes = Array.from({ length: target }, () => ({
+    const build = () => {
+      const perNode = w < 640 ? 15000 : 9500; // px² of canvas per node
+      const n = Math.min(110, Math.max(24, Math.round((w * h) / perNode)));
+      link = w < 640 ? 108 : 152;
+      nodes = Array.from({ length: n }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.6 + 0.9,
-        warm: Math.random() < 0.18, // a few coral accents among the teal
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        r: Math.random() * 1.5 + 0.7,
+        accent: Math.random() < 0.13,
       }));
     };
 
-    const draw = (t) => {
-      if (stopped) return;
-      raf = requestAnimationFrame(draw);
-      if (t - last < FRAME) return;
-      last = t;
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build();
+    };
+
+    const draw = () => {
+      pointer.x += (pointer.tx - pointer.x) * 0.045;
+      pointer.y += (pointer.ty - pointer.y) * 0.045;
+      const px = pointer.x * 16;
+      const py = pointer.y * 16;
 
       ctx.clearRect(0, 0, w, h);
 
-      for (const n of nodes) {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < -20) n.x = w + 20;
-        else if (n.x > w + 20) n.x = -20;
-        if (n.y < -20) n.y = h + 20;
-        else if (n.y > h + 20) n.y = -20;
-      }
-
-      // links first, so nodes sit on top
-      ctx.lineWidth = 1;
+      // Links first so nodes sit on top of them.
+      const max2 = link * link;
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
+        const ax = a.x + px * a.r * 0.3;
+        const ay = a.y + py * a.r * 0.3;
         for (let j = i + 1; j < nodes.length; j++) {
           const b = nodes[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 > LINK * LINK) continue;
-          const alpha = (1 - Math.sqrt(d2) / LINK) * 0.42;
-          ctx.strokeStyle = `rgba(61, 218, 210, ${alpha.toFixed(3)})`;
+          if (d2 > max2) continue;
+          const t = 1 - Math.sqrt(d2) / link;
+          ctx.strokeStyle = `rgba(61,218,210,${(t * 0.2).toFixed(3)})`;
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(b.x + px * b.r * 0.3, b.y + py * b.r * 0.3);
           ctx.stroke();
         }
       }
 
-      for (const n of nodes) {
-        ctx.fillStyle = n.warm
-          ? "rgba(255, 122, 122, 0.9)"
-          : "rgba(61, 218, 210, 0.9)";
+      for (const p of nodes) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -24) p.x = w + 24;
+        else if (p.x > w + 24) p.x = -24;
+        if (p.y < -24) p.y = h + 24;
+        else if (p.y > h + 24) p.y = -24;
+
         ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.arc(p.x + px * p.r * 0.3, p.y + py * p.r * 0.3, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.accent
+          ? "rgba(255,122,122,0.7)"
+          : "rgba(61,218,210,0.55)";
         ctx.fill();
       }
+
+      rafId = requestAnimationFrame(draw);
     };
 
-    const onVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else if (!stopped) {
-        last = 0;
-        raf = requestAnimationFrame(draw);
-      }
+    const start = () => {
+      if (running) return;
+      running = true;
+      rafId = requestAnimationFrame(draw);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+    };
+
+    const onPointer = (e) => {
+      pointer.tx = (e.clientX / w - 0.5) * 2;
+      pointer.ty = (e.clientY / h - 0.5) * 2;
+    };
+    const onVisibility = () => (document.hidden ? stop() : start());
+
+    let resizeTimer = 0;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
     };
 
     resize();
-    raf = requestAnimationFrame(draw);
-
-    let rt = 0;
-    const onResize = () => {
-      clearTimeout(rt);
-      rt = setTimeout(resize, 180);
-    };
+    start();
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointermove", onPointer, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      stopped = true;
-      cancelAnimationFrame(raf);
-      clearTimeout(rt);
+      stop();
+      clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointer);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
   return (
     <div className="pf-bg" aria-hidden="true">
-      <div className="pf-bg-grid">
-        <div className="pf-bg-grid-inner" />
-      </div>
-      <div className="pf-bg-glow pf-bg-glow--teal" />
-      <div className="pf-bg-glow pf-bg-glow--coral" />
+      <span className="pf-bg-glow pf-bg-glow--a" />
+      <span className="pf-bg-glow pf-bg-glow--b" />
+      <span className="pf-bg-grid" />
       <canvas ref={ref} className="pf-bg-canvas" />
-      <div className="pf-bg-scrim" />
     </div>
   );
 }
