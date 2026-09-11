@@ -2110,3 +2110,20 @@ body {
 
 :root { --pf-canvas-bg: #000; }
 [data-pf-theme="light"] { --pf-canvas-bg: #f2f5f8; }
+
+/* Light mode swaps in the dark-ink wordmark and drops the backing chip.
+   The shipped artwork averages 2.12:1 against #f2f5f8 — invisible — while the
+   ink version measures 3.91:1. content: url() swaps the source without
+   downloading both files. */
+[data-pf-theme="light"] .openappo-logo-img {
+  content: url("/brand/openappo-wordmark-ink.png");
+  filter: none;
+}
+[data-pf-theme="light"] .openappo-logo-wrap {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  animation: none;
+}
