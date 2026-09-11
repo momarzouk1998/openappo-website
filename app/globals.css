@@ -2517,10 +2517,11 @@ body {
   -webkit-backdrop-filter: blur(16px);
 }
 [data-pf-theme="light"] .hero-title-logo {
-  background: transparent;
-  padding: 0;
-  border: none;
-  box-shadow: none;
+  filter: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* 2. Solid Pure White Cards with Logo Brand Borders */
@@ -2540,6 +2541,7 @@ body {
 [data-pf-theme="light"] .video-feature-text {
   color: #071018;
   font-weight: 800;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .video-trust-sep {
   background: rgba(15, 155, 147, 0.25);
@@ -2561,10 +2563,12 @@ body {
 [data-pf-theme="light"] .scroll-hint-text {
   color: #334155;
   font-weight: 700;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .scroll-hint-brand {
   color: #0f9b93;
   font-weight: 800;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .scroll-hint-dot {
   background: #0f9b93;
@@ -2578,7 +2582,7 @@ body {
 [data-pf-theme="light"] .hero-tagline {
   color: #0f9b93;
   font-weight: 800;
-  text-shadow: none;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .hero-tagline-dot {
   background: #0f9b93;
@@ -2590,23 +2594,24 @@ body {
   border: 1px solid rgba(15, 155, 147, 0.35);
   color: #071018;
   font-weight: 800;
-  text-shadow: none;
+  text-shadow: none !important;
   box-shadow: 0 3px 10px rgba(15, 155, 147, 0.08);
 }
 
 [data-pf-theme="light"] .hero-desc {
-  color: #1e293b;
+  color: #1e293b !important;
   font-weight: 600;
   line-height: 1.65;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .hero-desc-highlight {
   color: #0f9b93;
   font-weight: 800;
-  text-shadow: none;
+  text-shadow: none !important;
 }
 [data-pf-theme="light"] .hero-desc-bar {
   background: linear-gradient(90deg, #0f9b93, #e11d48);
-  box-shadow: 0 0 8px rgba(15, 155, 147, 0.4);
+  box-shadow: none;
 }
 
 /* 4. Richly Colored Action Buttons in Light Mode */
