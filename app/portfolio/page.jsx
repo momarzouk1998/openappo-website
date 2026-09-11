@@ -105,6 +105,16 @@ export default async function PortfolioPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(projects)) }}
       />
 
+      <header className="openappo-nav">
+        <a href="/" className="openappo-logo-wrap" aria-label="Openappo">
+          <img
+            src="/brand/openappo-wordmark-dark.png"
+            alt="Openappo"
+            className="openappo-logo-img"
+          />
+        </a>
+      </header>
+
       <a href="/" className="pf-back">
         ← الرئيسية
       </a>

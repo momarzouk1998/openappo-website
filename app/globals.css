@@ -1135,7 +1135,7 @@ body {
   margin: 0 auto;
 }
 .pf-page > .pf-hero,
-.pf-page > .pf-grid,
+.pf-page > .pf-reel,
 .pf-page > .pf-empty {
   position: relative;
 }
@@ -1250,10 +1250,47 @@ body {
 }
 
 /* ---- Grid ---- */
-.pf-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+/* ---- Systems reel ----
+   The page is RTL, so the track sits flush right and the clone extends off to
+   the LEFT; translating the track to the right (+50% = one group width) walks
+   into the clone and loops seamlessly. */
+.pf-reel {
+  position: relative;
+  overflow: hidden;
+  margin-inline: calc(clamp(16px, 5vw, 64px) * -1);
+  padding-block: 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.pf-reel-track {
+  display: flex;
+  width: max-content;
+  animation-name: pfReel;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+@keyframes pfReel {
+  to {
+    transform: translateX(50%);
+  }
+}
+/* Pause so a card can actually be clicked — driven by pointer/touch state, not
+   :hover alone, because touch devices never hover and would be tapping a moving
+   target. Safe here, unlike inside the modal: opening this page does not leave
+   the cursor sitting on the reel. */
+.pf-reel[data-held="true"] .pf-reel-track,
+.pf-reel:focus-within .pf-reel-track {
+  animation-play-state: paused;
+}
+.pf-reel-group {
+  display: flex;
   gap: 18px;
+  padding-inline: 9px;
+}
+.pf-reel .pf-card {
+  width: 320px;
+  flex: 0 0 320px;
 }
 
 .pf-card {
@@ -1655,4 +1692,14 @@ body {
   color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.03);
   border: 1px dashed rgba(255, 255, 255, 0.14);
+}
+
+@media (max-width: 640px) {
+  .pf-reel .pf-card {
+    width: 270px;
+    flex: 0 0 270px;
+  }
+  .pf-reel-group {
+    gap: 14px;
+  }
 }

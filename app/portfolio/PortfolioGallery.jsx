@@ -170,6 +170,16 @@ function Deck({ shots, onZoom }) {
 export default function PortfolioGallery({ projects = [] }) {
   const [activeSlug, setActiveSlug] = useState(null);
   const [zoom, setZoom] = useState(null);
+  // Hovering pauses the reel on desktop, but touch has no hover — without this
+  // a phone user is tapping a moving target.
+  const [reelHeld, setReelHeld] = useState(false);
+  const holdTimer = useRef(null);
+  const holdReel = useCallback((ms) => {
+    setReelHeld(true);
+    clearTimeout(holdTimer.current);
+    if (ms) holdTimer.current = setTimeout(() => setReelHeld(false), ms);
+  }, []);
+  useEffect(() => () => clearTimeout(holdTimer.current), []);
 
   const project = projects.find((p) => p.slug === activeSlug) || null;
   const count = project ? (project.shots || []).length : 0;
@@ -196,38 +206,57 @@ export default function PortfolioGallery({ projects = [] }) {
 
   return (
     <>
-      <div className="pf-grid">
-        {projects.map((p, i) => (
-          // An <article> rather than a <button>: the heading and description
-          // are real, crawlable page content — they used to exist only inside
-          // the click-rendered modal, invisible to search engines.
-          <article
-            key={p.slug}
-            className="pf-card"
-            style={{ animationDelay: `${i * 55}ms` }}
-          >
-            <span className="pf-card-logo">
-              {p.logo ? (
-                <img src={p.logo} alt={`شعار ${p.name}`} loading="lazy" />
-              ) : (
-                <span className="pf-card-logo-txt">{(p.name || "?").trim()[0]}</span>
-              )}
-            </span>
-            <h2 className="pf-card-name">{p.name}</h2>
-            <p className="pf-card-sub">{p.subtitle}</p>
-            {p.desc && <p className="pf-card-desc">{p.desc}</p>}
-            {(p.shots || []).length > 0 && (
-              <span className="pf-card-count">{p.shots.length} شاشة</span>
-            )}
-            <button
-              className="pf-card-open"
-              onClick={() => setActiveSlug(p.slug)}
-              aria-label={`استعراض ${p.name}`}
+      {/* A running reel rather than a static grid. The first group is the real,
+          crawlable content; the second is an aria-hidden clone that makes the
+          loop seamless. All twelve cards stay in the DOM either way. */}
+      <div
+        className="pf-reel"
+        data-held={reelHeld ? "true" : undefined}
+        onPointerEnter={(e) => e.pointerType === "mouse" && holdReel(0)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && setReelHeld(false)}
+        onPointerDown={() => holdReel(8000)}
+      >
+        <div className="pf-reel-track" style={{ animationDuration: `${projects.length * 7}s` }}>
+          {[0, 1].map((copy) => (
+            <div
+              className="pf-reel-group"
+              key={copy}
+              aria-hidden={copy === 1 ? "true" : undefined}
             >
-              <span>عرض التفاصيل</span>
-            </button>
-          </article>
-        ))}
+              {projects.map((p, i) => (
+                <article
+                  key={`${copy}-${p.slug}`}
+                  className="pf-card"
+                  style={copy === 0 ? { animationDelay: `${i * 55}ms` } : undefined}
+                >
+                  <span className="pf-card-logo">
+                    {p.logo ? (
+                      <img src={p.logo} alt={`شعار ${p.name}`} loading="lazy" />
+                    ) : (
+                      <span className="pf-card-logo-txt">
+                        {(p.name || "?").trim()[0]}
+                      </span>
+                    )}
+                  </span>
+                  <h2 className="pf-card-name">{p.name}</h2>
+                  <p className="pf-card-sub">{p.subtitle}</p>
+                  {p.desc && <p className="pf-card-desc">{p.desc}</p>}
+                  {(p.shots || []).length > 0 && (
+                    <span className="pf-card-count">{p.shots.length} شاشة</span>
+                  )}
+                  <button
+                    className="pf-card-open"
+                    onClick={() => setActiveSlug(p.slug)}
+                    aria-label={`استعراض ${p.name}`}
+                    tabIndex={copy === 1 ? -1 : 0}
+                  >
+                    <span>عرض التفاصيل</span>
+                  </button>
+                </article>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {project && (
