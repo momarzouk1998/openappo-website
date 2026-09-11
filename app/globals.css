@@ -1243,6 +1243,127 @@ body {
   background-clip: text;
   color: transparent;
 }
+/* ---- Hero motion ---- */
+.pf-hero-title span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) rotateX(-40deg);
+  animation: pfWordIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 65ms + 120ms);
+}
+@keyframes pfWordIn {
+  to { opacity: 1; transform: none; }
+}
+
+.pf-hero-rot {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 2px auto 16px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(61, 218, 210, 0.09);
+  border: 1px solid rgba(61, 218, 210, 0.3);
+  font-size: 13.5px;
+  font-weight: 700;
+  opacity: 0;
+  animation: pfFadeUp 0.7s ease 0.55s forwards;
+}
+.pf-hero-rot-lead { color: rgba(255, 255, 255, 0.72); }
+/* One line tall, the track steps through the sectors and repeats the first
+   entry at the end so the loop closes without a jump. */
+.pf-hero-rot-win {
+  height: 1.55em;
+  overflow: hidden;
+  display: inline-block;
+}
+.pf-hero-rot-track {
+  display: flex;
+  flex-direction: column;
+  animation: pfRoll 11s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+.pf-hero-rot-track span {
+  height: 1.55em;
+  line-height: 1.55em;
+  white-space: nowrap;
+  color: #3ddad2;
+}
+@keyframes pfRoll {
+  0%, 16%   { transform: translateY(0); }
+  20%, 36%  { transform: translateY(-20%); }
+  40%, 56%  { transform: translateY(-40%); }
+  60%, 76%  { transform: translateY(-60%); }
+  80%, 100% { transform: translateY(-80%); }
+}
+
+.pf-stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px auto 14px;
+}
+.pf-stat {
+  min-width: 122px;
+  padding: 13px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0;
+  animation: pfFadeUp 0.7s ease 0.75s forwards;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.pf-stat:hover {
+  transform: translateY(-3px);
+  border-color: rgba(61, 218, 210, 0.45);
+}
+.pf-stat-num {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.pf-stat-num i {
+  font-style: normal;
+  font-size: 16px;
+  color: #3ddad2;
+}
+.pf-stat-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pf-hero-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.42);
+  opacity: 0;
+  animation: pfFadeUp 0.7s ease 0.95s forwards;
+}
+.pf-hero-cue-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3ddad2;
+  box-shadow: 0 0 9px #3ddad2;
+  animation: pfCueDot 1.7s ease-in-out infinite;
+}
+@keyframes pfCueDot {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@keyframes pfFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
 .pf-hero-desc {
   font-size: 14.5px;
   line-height: 1.85;
@@ -1702,4 +1823,167 @@ body {
   .pf-reel-group {
     gap: 14px;
   }
+}
+
+/* ---- Theme toggle ---- */
+.pf-theme {
+  position: fixed;
+  top: 20px;
+  right: 128px;
+  z-index: 6;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.pf-theme-track {
+  display: block;
+  width: 54px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(10, 16, 26, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.pf-theme-knob {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(61, 218, 210, 0.22);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+}
+
+/* ---- Light theme ----
+   Layered as an override rather than a token refactor: the dark palette is
+   already signed off, and this cannot regress it. */
+[data-pf-theme="light"] .pf-theme-track {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(9, 18, 30, 0.16);
+}
+[data-pf-theme="light"] .pf-theme-knob {
+  transform: translateX(-24px);
+  background: rgba(15, 155, 147, 0.2);
+}
+
+[data-pf-theme="light"] .pf-page {
+  background: radial-gradient(1200px 600px at 50% -10%, #eaf6f7 0%, #f6f8fa 55%, #f6f8fa 100%);
+  color: #0b1220;
+}
+[data-pf-theme="light"] .pf-bg {
+  background: #f6f8fa;
+}
+[data-pf-theme="light"] .pf-bg-glow--a {
+  background: radial-gradient(circle, rgba(15, 155, 147, 0.22), transparent 68%);
+}
+[data-pf-theme="light"] .pf-bg-glow--b {
+  background: radial-gradient(circle, rgba(233, 106, 106, 0.16), transparent 68%);
+}
+[data-pf-theme="light"] .pf-bg-grid {
+  background-image:
+    linear-gradient(rgba(11, 18, 32, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 18, 32, 0.06) 1px, transparent 1px);
+}
+
+[data-pf-theme="light"] .pf-back,
+[data-pf-theme="light"] .pf-modal-close,
+[data-pf-theme="light"] .pf-deck-nav {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(9, 18, 30, 0.14);
+  color: #0b1220;
+}
+[data-pf-theme="light"] .pf-hero-title {
+  color: #071018;
+}
+[data-pf-theme="light"] .pf-hero-desc,
+[data-pf-theme="light"] .pf-card-desc,
+[data-pf-theme="light"] .pf-modal-desc {
+  color: rgba(11, 18, 32, 0.66);
+}
+[data-pf-theme="light"] .pf-hero-kicker,
+[data-pf-theme="light"] .pf-card-sub,
+[data-pf-theme="light"] .pf-card-count,
+[data-pf-theme="light"] .pf-flow-count,
+[data-pf-theme="light"] .pf-hero-rot-track span,
+[data-pf-theme="light"] .pf-stat-num i {
+  color: #0f9b93;
+}
+[data-pf-theme="light"] .pf-hero-rot {
+  background: rgba(15, 155, 147, 0.1);
+  border-color: rgba(15, 155, 147, 0.3);
+}
+[data-pf-theme="light"] .pf-hero-rot-lead,
+[data-pf-theme="light"] .pf-hero-cue,
+[data-pf-theme="light"] .pf-stat-label,
+[data-pf-theme="light"] .pf-flow-hint,
+[data-pf-theme="light"] .pf-modal-sub,
+[data-pf-theme="light"] .pf-empty,
+[data-pf-theme="light"] .pf-flow-pending {
+  color: rgba(11, 18, 32, 0.55);
+}
+[data-pf-theme="light"] .pf-card,
+[data-pf-theme="light"] .pf-stat,
+[data-pf-theme="light"] .pf-modal-desc,
+[data-pf-theme="light"] .pf-flow-pending {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(9, 18, 30, 0.1);
+}
+[data-pf-theme="light"] .pf-card:hover {
+  background: #fff;
+  border-color: rgba(15, 155, 147, 0.5);
+  box-shadow: 0 22px 50px -20px rgba(9, 18, 30, 0.3),
+    0 0 30px -14px rgba(15, 155, 147, 0.5);
+}
+[data-pf-theme="light"] .pf-card-name,
+[data-pf-theme="light"] .pf-modal-name,
+[data-pf-theme="light"] .pf-stat-num {
+  color: #071018;
+}
+[data-pf-theme="light"] .pf-card-logo {
+  background: #fff;
+  box-shadow: 0 10px 24px -14px rgba(9, 18, 30, 0.5);
+  border: 1px solid rgba(9, 18, 30, 0.07);
+}
+[data-pf-theme="light"] .pf-card-open {
+  background: rgba(9, 18, 30, 0.05);
+  border-color: rgba(9, 18, 30, 0.14);
+  color: #0b1220;
+}
+[data-pf-theme="light"] .pf-card:hover .pf-card-open {
+  background: rgba(15, 155, 147, 0.14);
+  border-color: rgba(15, 155, 147, 0.45);
+}
+[data-pf-theme="light"] .pf-card-count,
+[data-pf-theme="light"] .pf-flow-count {
+  background: rgba(15, 155, 147, 0.1);
+  border-color: rgba(15, 155, 147, 0.3);
+}
+[data-pf-theme="light"] .pf-modal {
+  background: rgba(232, 238, 244, 0.92);
+}
+[data-pf-theme="light"] .pf-modal-desc {
+  border-right-color: #0f9b93;
+}
+[data-pf-theme="light"] .pf-zoom {
+  background: rgba(232, 238, 244, 0.94);
+}
+[data-pf-theme="light"] .pf-deck-card img {
+  background: #fff;
+  border-color: rgba(9, 18, 30, 0.12);
+  box-shadow: 0 30px 64px -26px rgba(9, 18, 30, 0.45);
+}
+[data-pf-theme="light"] .pf-deck-card.is-front img {
+  border-color: rgba(15, 155, 147, 0.45);
+  box-shadow: 0 40px 84px -24px rgba(9, 18, 30, 0.5),
+    0 0 40px -18px rgba(15, 155, 147, 0.55);
 }

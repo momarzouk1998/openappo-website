@@ -23,6 +23,16 @@ export default function TechBackground() {
     let w = 0, h = 0, link = 150, nodes = [], rafId = 0, running = false;
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
+    // Teal-on-black is invisible on a light page, so the palette follows the
+    // theme the toggle writes onto <html>.
+    let ink = { line: "61,218,210", node: "61,218,210", accent: "255,122,122", lineA: 0.2, nodeA: 0.55 };
+    const readTheme = () => {
+      const light = document.documentElement.dataset.pfTheme === "light";
+      ink = light
+        ? { line: "13,110,105", node: "13,110,105", accent: "214,78,78", lineA: 0.16, nodeA: 0.4 }
+        : { line: "61,218,210", node: "61,218,210", accent: "255,122,122", lineA: 0.2, nodeA: 0.55 };
+    };
+
     const build = () => {
       const perNode = w < 640 ? 15000 : 9500; // px² of canvas per node
       const n = Math.min(110, Math.max(24, Math.round((w * h) / perNode)));
@@ -70,7 +80,7 @@ export default function TechBackground() {
           const d2 = dx * dx + dy * dy;
           if (d2 > max2) continue;
           const t = 1 - Math.sqrt(d2) / link;
-          ctx.strokeStyle = `rgba(61,218,210,${(t * 0.2).toFixed(3)})`;
+          ctx.strokeStyle = `rgba(${ink.line},${(t * ink.lineA).toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(ax, ay);
           ctx.lineTo(b.x + px * b.r * 0.3, b.y + py * b.r * 0.3);
@@ -89,8 +99,8 @@ export default function TechBackground() {
         ctx.beginPath();
         ctx.arc(p.x + px * p.r * 0.3, p.y + py * p.r * 0.3, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.accent
-          ? "rgba(255,122,122,0.7)"
-          : "rgba(61,218,210,0.55)";
+          ? `rgba(${ink.accent},${(ink.nodeA * 1.25).toFixed(2)})`
+          : `rgba(${ink.node},${ink.nodeA})`;
         ctx.fill();
       }
 
@@ -119,6 +129,13 @@ export default function TechBackground() {
       resizeTimer = setTimeout(resize, 150);
     };
 
+    readTheme();
+    const themeWatch = new MutationObserver(readTheme);
+    themeWatch.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-pf-theme"],
+    });
+
     resize();
     start();
     window.addEventListener("resize", onResize);
@@ -127,6 +144,7 @@ export default function TechBackground() {
 
     return () => {
       stop();
+      themeWatch.disconnect();
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);

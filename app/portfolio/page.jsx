@@ -1,5 +1,7 @@
 import PortfolioGallery from "./PortfolioGallery";
 import TechBackground from "./TechBackground";
+import HeroIntro from "./HeroIntro";
+import ThemeToggle from "./ThemeToggle";
 
 const SITE = "https://openappo.com";
 
@@ -98,6 +100,13 @@ export default async function PortfolioPage() {
 
   return (
     <main className="pf-page">
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "try{document.documentElement.dataset.pfTheme=localStorage.getItem('pf-theme')||'dark'}catch(e){document.documentElement.dataset.pfTheme='dark'}",
+        }}
+      />
+
       <TechBackground />
 
       <script
@@ -115,23 +124,13 @@ export default async function PortfolioPage() {
         </a>
       </header>
 
+      <ThemeToggle />
+
       <a href="/" className="pf-back">
         ← الرئيسية
       </a>
 
-      <header className="pf-hero">
-        <span className="pf-hero-kicker">سابقة الأعمال</span>
-        <h1 className="pf-hero-title">
-          أنظمة إدارة أعمال نصمّمها لكل نشاط على حِدة
-        </h1>
-        <p className="pf-hero-desc">
-          نماذج من أنظمة تخطيط الموارد (ERP) وبرامج إدارة الأعمال التي طوّرتها
-          Openappo لعملائها في التجارة والتوزيع والتصنيع والخدمات: إدارة المبيعات
-          والمشتريات والمخزون، والحسابات والخزائن والتحصيلات، والتقارير المالية
-          والتشغيلية — بصلاحيات متعدّدة المستخدمين وتشغيل سحابي آمن. اختر أي نظام
-          لاستعراض شاشاته الفعلية.
-        </p>
-      </header>
+      <HeroIntro projects={projects} />
 
       {projects.length === 0 ? (
         <p className="pf-empty">جارٍ تحديث المعرض — عُد إلينا قريبًا.</p>
