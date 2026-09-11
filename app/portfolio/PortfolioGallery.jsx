@@ -278,11 +278,23 @@ export default function PortfolioGallery({ projects = [] }) {
               </div>
             )}
 
-            <Coverflow
-              key={project.slug}
-              shots={project.shots || []}
-              onZoom={setZoom}
-            />
+            {count > 0 ? (
+              <Coverflow
+                key={project.slug}
+                shots={project.shots}
+                onZoom={setZoom}
+              />
+            ) : (
+              // Without this the modal just stops after the description and
+              // reads as a broken gallery.
+              <div className="pf-soon">
+                <span className="pf-soon-icon">📸</span>
+                <p className="pf-soon-title">الشاشات قيد التجهيز</p>
+                <p className="pf-soon-text">
+                  نعمل على تجهيز شاشات هذا النظام لعرضها هنا قريبًا.
+                </p>
+              </div>
+            )}
           </div>
 
           {zoom && (

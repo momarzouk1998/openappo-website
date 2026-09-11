@@ -1,4 +1,5 @@
 import PortfolioGallery from "./PortfolioGallery";
+import TechBackground from "./TechBackground";
 
 const SITE = "https://openappo.com";
 
@@ -96,7 +97,9 @@ export default async function PortfolioPage() {
   const projects = await getProjects();
 
   return (
-    <main className="pf-page">
+    <>
+      <TechBackground />
+      <main className="pf-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(projects)) }}
@@ -125,6 +128,7 @@ export default async function PortfolioPage() {
       ) : (
         <PortfolioGallery projects={projects} />
       )}
-    </main>
+      </main>
+    </>
   );
 }

@@ -1123,14 +1123,117 @@ body {
    Portfolio page (/portfolio) — "سابقة الأعمال"
    =================================================================== */
 .pf-page {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  background: radial-gradient(1200px 600px at 50% -10%, #10202e 0%, #05080d 55%, #05080d 100%);
   color: #fff;
   direction: rtl;
   padding: 84px clamp(16px, 5vw, 64px) 120px;
   max-width: 1240px;
   margin: 0 auto;
 }
+
+/* ---- Animated tech backdrop ---- */
+.pf-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(1200px 600px at 50% -10%, #10202e 0%, #05080d 55%, #05080d 100%);
+}
+.pf-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Perspective grid receding to the horizon. The scrolling is a transform on
+   an inner layer, not background-position — animating background-position
+   repaints the whole (huge) element every frame instead of compositing it. */
+.pf-bg-grid {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: -30%;
+  height: 90%;
+  transform: perspective(420px) rotateX(62deg);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, #000 0%, transparent 72%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 72%);
+  opacity: 0.8;
+  overflow: hidden;
+}
+.pf-bg-grid-inner {
+  position: absolute;
+  inset: -60px 0 0 0;
+  background-image: linear-gradient(rgba(61, 218, 210, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 218, 210, 0.22) 1px, transparent 1px);
+  background-size: 60px 60px;
+  will-change: transform;
+  animation: pfGridDrift 9s linear infinite;
+}
+@keyframes pfGridDrift {
+  to {
+    transform: translate3d(0, 60px, 0);
+  }
+}
+/* Slow aurora blobs. A radial-gradient, NOT filter:blur() — animating
+   transform on a 46vw blurred element forced a full blur re-raster every
+   frame and measured 12fps vs 55fps without it. Same look, no blur pass. */
+.pf-bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.pf-bg-glow--teal {
+  width: 70vw;
+  height: 70vw;
+  top: -22%;
+  right: -16%;
+  background: radial-gradient(
+    circle,
+    rgba(61, 218, 210, 0.17) 0%,
+    rgba(61, 218, 210, 0.07) 38%,
+    transparent 68%
+  );
+  animation: pfGlowA 22s ease-in-out infinite alternate;
+}
+.pf-bg-glow--coral {
+  width: 58vw;
+  height: 58vw;
+  bottom: -22%;
+  left: -14%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 122, 122, 0.14) 0%,
+    rgba(255, 122, 122, 0.05) 38%,
+    transparent 68%
+  );
+  animation: pfGlowB 27s ease-in-out infinite alternate;
+}
+@keyframes pfGlowA {
+  to {
+    transform: translate3d(-10vw, 8vh, 0) scale(1.15);
+  }
+}
+@keyframes pfGlowB {
+  to {
+    transform: translate3d(8vw, -7vh, 0) scale(1.1);
+  }
+}
+/* Keeps body copy readable over the motion. */
+.pf-bg-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    900px 520px at 50% 18%,
+    rgba(5, 8, 13, 0.2) 0%,
+    rgba(5, 8, 13, 0.62) 62%,
+    rgba(5, 8, 13, 0.82) 100%
+  );
+}
+
 
 .pf-back {
   position: fixed;
@@ -1576,4 +1679,33 @@ body {
     animation-duration: 0.01ms;
     opacity: 1;
   }
+}
+
+/* Shown instead of the gallery while a project's screenshots are pending. */
+.pf-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 42px 24px;
+  border-radius: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+}
+.pf-soon-icon {
+  font-size: 30px;
+  opacity: 0.8;
+}
+.pf-soon-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+}
+.pf-soon-text {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
 }
