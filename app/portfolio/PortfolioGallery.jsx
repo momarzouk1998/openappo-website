@@ -205,23 +205,35 @@ export default function PortfolioGallery({ projects = [] }) {
     <>
       <div className="pf-grid">
         {projects.map((p, i) => (
-          <button
+          // An <article> rather than a <button>: the heading and description
+          // are real, crawlable page content — they used to exist only inside
+          // the click-rendered modal, invisible to search engines.
+          <article
             key={p.slug}
             className="pf-card"
             style={{ animationDelay: `${i * 55}ms` }}
-            onClick={() => setActiveSlug(p.slug)}
           >
             <span className="pf-card-logo">
               {p.logo ? (
-                <img src={p.logo} alt={p.name} loading="lazy" />
+                <img src={p.logo} alt={`شعار ${p.name}`} loading="lazy" />
               ) : (
                 <span className="pf-card-logo-txt">{(p.name || "?").trim()[0]}</span>
               )}
             </span>
-            <span className="pf-card-name">{p.name}</span>
-            <span className="pf-card-sub">{p.subtitle}</span>
-            <span className="pf-card-count">{(p.shots || []).length} شاشة</span>
-          </button>
+            <h2 className="pf-card-name">{p.name}</h2>
+            <p className="pf-card-sub">{p.subtitle}</p>
+            {p.desc && <p className="pf-card-desc">{p.desc}</p>}
+            {(p.shots || []).length > 0 && (
+              <span className="pf-card-count">{p.shots.length} شاشة</span>
+            )}
+            <button
+              className="pf-card-open"
+              onClick={() => setActiveSlug(p.slug)}
+              aria-label={`استعراض ${p.name}`}
+            >
+              <span>عرض التفاصيل</span>
+            </button>
+          </article>
         ))}
       </div>
 

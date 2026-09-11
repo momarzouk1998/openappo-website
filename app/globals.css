@@ -1182,7 +1182,7 @@ body {
 /* ---- Grid ---- */
 .pf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 18px;
 }
 
@@ -1191,14 +1191,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 28px 18px 20px;
+  gap: 9px;
+  padding: 28px 20px 22px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.09);
   color: #fff;
-  font-family: inherit;
-  cursor: pointer;
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
@@ -1241,16 +1239,32 @@ body {
   color: #0b1220;
 }
 .pf-card-name {
+  margin: 2px 0 0;
   font-weight: 800;
-  font-size: 15px;
-}
-.pf-card-sub {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
   line-height: 1.5;
 }
+.pf-card-sub {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #3ddad2;
+  line-height: 1.6;
+}
+/* Full description ships in the HTML for search engines; clamped visually so
+   the cards stay even. */
+.pf-card-desc {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.52);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .pf-card-count {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 10.5px;
   font-weight: 700;
   color: #3ddad2;
@@ -1258,6 +1272,30 @@ body {
   border-radius: 999px;
   background: rgba(61, 218, 210, 0.12);
   border: 1px solid rgba(61, 218, 210, 0.28);
+}
+.pf-card-open {
+  margin-top: 10px;
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.22s ease, border-color 0.22s ease;
+}
+.pf-card:hover .pf-card-open {
+  background: rgba(61, 218, 210, 0.16);
+  border-color: rgba(61, 218, 210, 0.45);
+}
+/* Whole card is the hit area, but only one real control per card. */
+.pf-card-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
 }
 
 /* ---- Modal ---- */
