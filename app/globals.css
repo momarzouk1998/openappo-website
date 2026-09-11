@@ -2520,60 +2520,199 @@ body {
   }
 }
 
+/* ===================================================================
+   HOMEPAGE LIGHT THEME: LUXURY BRAND IDENTITY & HIGH CONTRAST
+   =================================================================== */
 [data-pf-theme="light"],
 [data-pf-theme="light"] body {
   background: #f2f5f8;
   color: #0b1220;
 }
-[data-pf-theme="light"] .openappo-logo-wrap,
-[data-pf-theme="light"] .scroll-hint,
-[data-pf-theme="light"] .video-top-trust-badge,
-[data-pf-theme="light"] .hero-glass-card,
-[data-pf-theme="light"] .hero-bottom-bar,
-[data-pf-theme="light"] .contact-float-menu,
-[data-pf-theme="light"] .contact-float-trigger {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(9, 18, 30, 0.14);
+
+/* 1. Logo with Crisp White Glass Backdrop */
+[data-pf-theme="light"] .openappo-logo-wrap {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(15, 155, 147, 0.4);
+  box-shadow: 0 10px 28px -6px rgba(9, 18, 30, 0.16), 0 0 18px rgba(15, 155, 147, 0.15);
+  padding: 8px 18px;
+  border-radius: 999px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+[data-pf-theme="light"] .hero-title-logo {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 18px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(15, 155, 147, 0.35);
+  box-shadow: 0 8px 24px -4px rgba(9, 18, 30, 0.12), 0 0 16px rgba(15, 155, 147, 0.12);
+}
+
+/* 2. Glass Cards with Logo Brand Borders */
+[data-pf-theme="light"] .hero-glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 2px solid rgba(15, 155, 147, 0.45);
+  box-shadow: 0 24px 60px -15px rgba(9, 18, 30, 0.22),
+              0 0 35px -5px rgba(15, 155, 147, 0.2),
+              0 0 15px rgba(225, 29, 72, 0.1);
   color: #0b1220;
-  box-shadow: 0 16px 40px -14px rgba(9, 18, 30, 0.3);
 }
-[data-pf-theme="light"] .scroll-hint-text,
-[data-pf-theme="light"] .hero-desc,
-[data-pf-theme="light"] .contact-menu-label,
+
+[data-pf-theme="light"] .video-top-trust-badge {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(15, 155, 147, 0.5);
+  box-shadow: 0 12px 32px -8px rgba(9, 18, 30, 0.18), 0 0 18px rgba(15, 155, 147, 0.2);
+  color: #0b1220;
+}
 [data-pf-theme="light"] .video-feature-text {
-  color: rgba(11, 18, 32, 0.72);
+  color: #071018;
+  font-weight: 800;
 }
-[data-pf-theme="light"] .hero-tagline,
-[data-pf-theme="light"] .contact-menu-phone,
+[data-pf-theme="light"] .video-trust-sep {
+  background: rgba(15, 155, 147, 0.25);
+}
+
+[data-pf-theme="light"] .hero-bottom-bar {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1.5px solid rgba(15, 155, 147, 0.4);
+  box-shadow: 0 20px 50px -10px rgba(9, 18, 30, 0.2), 0 0 25px rgba(15, 155, 147, 0.15);
+  color: #0b1220;
+}
+
+[data-pf-theme="light"] .scroll-hint {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1.5px solid rgba(15, 155, 147, 0.4);
+  box-shadow: 0 10px 30px -8px rgba(9, 18, 30, 0.15);
+  color: #0b1220;
+}
+[data-pf-theme="light"] .scroll-hint-text {
+  color: #334155;
+  font-weight: 700;
+}
+[data-pf-theme="light"] .scroll-hint-brand {
+  color: #0f9b93;
+  font-weight: 800;
+}
+[data-pf-theme="light"] .scroll-hint-dot {
+  background: #0f9b93;
+  box-shadow: 0 0 8px #0f9b93;
+}
+[data-pf-theme="light"] .scroll-hint-icon {
+  color: #0f9b93;
+}
+
+/* 3. Typography & Highlight Accents */
+[data-pf-theme="light"] .hero-tagline {
+  color: #0f9b93;
+  font-weight: 800;
+  text-shadow: none;
+}
+[data-pf-theme="light"] .hero-tagline-dot {
+  background: #0f9b93;
+  box-shadow: 0 0 8px #0f9b93;
+}
+
+[data-pf-theme="light"] .hero-custom-slogan {
+  background: linear-gradient(135deg, rgba(15, 155, 147, 0.1) 0%, rgba(225, 29, 72, 0.08) 100%);
+  border: 1.5px solid rgba(15, 155, 147, 0.42);
+  color: #071018;
+  font-weight: 800;
+  text-shadow: none;
+  box-shadow: 0 4px 14px rgba(15, 155, 147, 0.12);
+}
+
+[data-pf-theme="light"] .hero-desc {
+  color: #1e293b;
+  font-weight: 600;
+  line-height: 1.65;
+}
 [data-pf-theme="light"] .hero-desc-highlight {
   color: #0f9b93;
+  font-weight: 800;
   text-shadow: none;
 }
-[data-pf-theme="light"] .hero-custom-slogan {
-  background: rgba(15, 155, 147, 0.1);
-  border-color: rgba(15, 155, 147, 0.32);
-  color: #071018;
-  text-shadow: none;
-  box-shadow: none;
+[data-pf-theme="light"] .hero-desc-bar {
+  background: linear-gradient(90deg, #0f9b93, #e11d48);
+  box-shadow: 0 0 8px rgba(15, 155, 147, 0.4);
 }
-[data-pf-theme="light"] .btn-explore,
-[data-pf-theme="light"] .btn-testimonials,
-[data-pf-theme="light"] .btn-how-it-works,
-[data-pf-theme="light"] .contact-menu-btn {
-  background: rgba(9, 18, 30, 0.05);
-  border-color: rgba(9, 18, 30, 0.14);
+
+/* 4. Buttons in Distinctive Logo Colors */
+[data-pf-theme="light"] .btn-explore {
+  background: linear-gradient(135deg, #0f9b93 0%, #087f78 100%);
+  border: 1px solid #14b8a6;
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px -4px rgba(15, 155, 147, 0.5);
+  font-weight: 800;
+}
+[data-pf-theme="light"] .btn-explore:hover {
+  background: linear-gradient(135deg, #14b8a6 0%, #0f9b93 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -4px rgba(15, 155, 147, 0.65);
+}
+
+[data-pf-theme="light"] .btn-testimonials {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(225, 29, 72, 0.45);
+  color: #071018 !important;
+  box-shadow: 0 6px 18px -4px rgba(225, 29, 72, 0.2);
+  font-weight: 800;
+}
+[data-pf-theme="light"] .btn-testimonials:hover {
+  background: rgba(225, 29, 72, 0.08);
+  border-color: #e11d48;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -4px rgba(225, 29, 72, 0.35);
+}
+[data-pf-theme="light"] .btn-star-icon {
+  color: #f59e0b;
+}
+
+[data-pf-theme="light"] .btn-how-it-works {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(15, 155, 147, 0.45);
+  color: #071018 !important;
+  box-shadow: 0 6px 18px -4px rgba(15, 155, 147, 0.2);
+  font-weight: 800;
+}
+[data-pf-theme="light"] .btn-how-it-works:hover {
+  background: rgba(15, 155, 147, 0.08);
+  border-color: #0f9b93;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -4px rgba(15, 155, 147, 0.35);
+}
+
+/* 5. Contact Floating Widget in Light Mode */
+[data-pf-theme="light"] .contact-float-trigger {
+  background: linear-gradient(135deg, #0f9b93 0%, #087f78 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 24px rgba(15, 155, 147, 0.6);
+}
+[data-pf-theme="light"] .contact-float-menu {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid rgba(15, 155, 147, 0.45);
+  box-shadow: 0 20px 50px -10px rgba(9, 18, 30, 0.25), 0 0 25px rgba(15, 155, 147, 0.18);
   color: #0b1220;
 }
-[data-pf-theme="light"] .btn-explore:hover,
-[data-pf-theme="light"] .btn-testimonials:hover,
-[data-pf-theme="light"] .btn-how-it-works:hover,
-[data-pf-theme="light"] .contact-menu-btn:hover {
-  background: rgba(15, 155, 147, 0.14);
-  border-color: rgba(15, 155, 147, 0.45);
+[data-pf-theme="light"] .contact-menu-label {
+  color: rgba(11, 18, 32, 0.7);
 }
-[data-pf-theme="light"] .openappo-logo-wrap {
-  background: rgba(7, 16, 24, 0.92);
-  border-color: rgba(9, 18, 30, 0.2);
+[data-pf-theme="light"] .contact-menu-phone {
+  color: #0f9b93;
+  font-weight: 800;
+}
+[data-pf-theme="light"] .contact-menu-header {
+  border-bottom-color: rgba(9, 18, 30, 0.1);
+}
+[data-pf-theme="light"] .contact-menu-btn.btn-wa {
+  background: #25D366;
+  border-color: #22c55e;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+}
+[data-pf-theme="light"] .contact-menu-btn.btn-call {
+  background: linear-gradient(135deg, #0f9b93 0%, #087f78 100%);
+  border-color: #14b8a6;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(15, 155, 147, 0.4);
 }
 
 :root { --pf-canvas-bg: #000; }
@@ -2582,12 +2721,4 @@ body {
 [data-pf-theme="light"] .openappo-logo-img {
   content: url("/brand/openappo-wordmark-ink.png");
   filter: none;
-}
-[data-pf-theme="light"] .openappo-logo-wrap {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  animation: none;
 }
