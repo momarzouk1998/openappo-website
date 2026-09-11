@@ -311,8 +311,10 @@ body {
   }
 }
 
-.slogan-sparkle {
-  font-size: 14px;
+.slogan-emoji {
+  font-size: 15px;
+  display: inline-block;
+  line-height: 1;
 }
 
 .hero-desc-container {
@@ -2626,9 +2628,6 @@ body {
   font-weight: 800;
   text-shadow: none !important;
   box-shadow: 0 4px 18px rgba(233, 106, 106, 0.2) !important;
-}
-[data-pf-theme="light"] .slogan-sparkle {
-  color: #e96a6a !important;
 }
 
 [data-pf-theme="light"] .hero-desc {

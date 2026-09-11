@@ -397,8 +397,8 @@ export default function ScrollSequence() {
                 />
               </h1>
               <div className="hero-custom-slogan">
-                <span className="slogan-sparkle">✨</span>
                 <span>بنصمم السيستم حسب طريقة شغلك بالظبط</span>
+                <span className="slogan-emoji">👌</span>
               </div>
             </div>
 
