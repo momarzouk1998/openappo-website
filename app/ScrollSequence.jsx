@@ -472,4 +472,5 @@ export default function ScrollSequence() {
       </div>
     </div>
   );
+}
 
