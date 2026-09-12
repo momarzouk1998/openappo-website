@@ -2822,3 +2822,34 @@ body {
 [data-pf-theme="light"] .pf-hero-kicker {
   color: #0a6a65;
 }
+
+/* ---- Modal: reachable top when the content is taller than the viewport ----
+   align-items:center on a scrollable flex container pushes overflow above the
+   scroll origin, where it cannot be reached — measured headTop -1/-37/-3 px
+   with scrollTop stuck at 0. flex-start + margin:auto still centres when it
+   fits, but keeps the top reachable when it does not. */
+.pf-modal {
+  align-items: flex-start;
+}
+.pf-modal-inner {
+  margin: auto;
+}
+
+/* Let the animated backdrop read through the modal. Text sits on its own
+   cards, and the head keeps a scrim below so it stays legible. */
+.pf-modal {
+  background: rgba(3, 5, 9, 0.82);
+}
+[data-pf-theme="light"] .pf-modal {
+  background: rgba(228, 235, 242, 0.86);
+}
+.pf-modal-head {
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(3, 5, 9, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-pf-theme="light"] .pf-modal-head {
+  background: rgba(255, 255, 255, 0.72);
+}
