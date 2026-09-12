@@ -2754,3 +2754,71 @@ body {
   content: url("/brand/openappo-wordmark-ink.png");
   filter: none;
 }
+
+/* ---- Light mode: the modal shell ----
+   The light overrides flipped the modal's text dark but left the backdrop at
+   rgba(3,5,9,0.9) and the description card at rgba(255,255,255,0.04) — dark
+   text on a dark ground. A contrast audit of every text node inside the modal
+   measured .pf-modal-name, -sub, -desc and .pf-flow-hint all at 1.09:1.
+   The surrounding light palette (.pf-modal-feat-card, .pf-modal-cta-box)
+   already assumed a light modal; this finishes it. */
+[data-pf-theme="light"] .pf-modal {
+  background: rgba(228, 235, 242, 0.93);
+}
+[data-pf-theme="light"] .pf-modal-desc {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(9, 18, 30, 0.1);
+  border-right-color: #0f9b93;
+  color: rgba(11, 18, 32, 0.78);
+}
+[data-pf-theme="light"] .pf-modal-name {
+  color: #071018;
+}
+[data-pf-theme="light"] .pf-modal-sub,
+[data-pf-theme="light"] .pf-flow-hint {
+  color: rgba(11, 18, 32, 0.62);
+}
+[data-pf-theme="light"] .pf-modal-logo--txt {
+  background: #fff;
+  color: #071018;
+}
+
+/* Teal-on-teal-tint measured 2.85:1 once the modal ground went light — the
+   badge needs a deeper ink than the #0f9b93 used elsewhere in light mode. */
+[data-pf-theme="light"] .pf-flow-count {
+  color: #0a5450;
+  background: rgba(15, 155, 147, 0.13);
+  border-color: rgba(15, 155, 147, 0.34);
+}
+
+/* ---- Light mode: the device mockup keeps its dark screen ----
+   .pf-mockup-screen-wrap stays rgb(8,13,23) in both themes — it is a mockup of
+   an app screen, and that is deliberate. But the light overrides darkened the
+   text sitting directly on it: .pf-sim-title measured 1.04:1, i.e. black on
+   black. Anything on the screen chrome keeps light ink; only the inner cards
+   go white in light mode, and their text is already dark. */
+[data-pf-theme="light"] .pf-sim-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+[data-pf-theme="light"] .pf-sim-status {
+  color: rgba(255, 255, 255, 0.6);
+}
+/* These badges sit inside the cards that DO turn white, so their brand inks
+   need deepening — measured 1.73 / 1.92 / 2.77 : 1 against white. */
+[data-pf-theme="light"] .pf-sim-feed-badge {
+  color: #0a5450;
+  background: rgba(15, 155, 147, 0.14);
+}
+[data-pf-theme="light"] .pf-sim-kpi-trend {
+  color: #0b6b4f;
+  background: rgba(16, 122, 90, 0.14);
+}
+[data-pf-theme="light"] .pf-sim-chart-tag {
+  color: #9b2c2c;
+  background: rgba(155, 44, 44, 0.13);
+}
+
+/* #0f9b93 on the light page ground measured 3.13:1 — under AA for body text. */
+[data-pf-theme="light"] .pf-hero-kicker {
+  color: #0a6a65;
+}
