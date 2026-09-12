@@ -3100,3 +3100,44 @@ body {
     font-size: 11px;
   }
 }
+
+/* ---- Phones: video to the ceiling, toggle sits on it ----
+   The frame now draws at y=0, so the dock no longer needs to clear a 56px
+   strip that is not there, and the theme toggle moves onto the image. */
+@media (max-width: 767px) {
+  .bottom-dock-container {
+    top: calc(56.25vw + 10px);
+  }
+  .pf-theme {
+    top: 10px;
+    left: 10px;
+  }
+  .pf-theme-track {
+    width: 44px;
+    height: 25px;
+    background: rgba(10, 16, 26, 0.55);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .pf-theme-knob {
+    width: 19px;
+    height: 19px;
+    font-size: 10px;
+  }
+  [data-pf-theme="light"] .pf-theme-knob {
+    transform: translateX(-19px);
+  }
+  [data-pf-theme="light"] .pf-theme-track {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(9, 18, 30, 0.2);
+  }
+}
+@media (max-width: 767px) and (max-height: 700px) {
+  .bottom-dock-container {
+    top: calc(56.25vw + 6px);
+  }
+}
+@media (max-width: 767px) and (max-height: 600px) {
+  .bottom-dock-container {
+    top: calc(56.25vw + 2px);
+  }
+}

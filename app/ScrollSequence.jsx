@@ -8,7 +8,6 @@ export default function ScrollSequence() {
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
   const heroRef = useRef(null);
-  const videoTrustRef = useRef(null);
   const bottomBarRef = useRef(null);
   const contactWidgetRef = useRef(null);
   const scrollHintRef = useRef(null);
@@ -18,7 +17,6 @@ export default function ScrollSequence() {
     const canvas = canvasRef.current;
     const track = trackRef.current;
     const hero = heroRef.current;
-    const videoTrust = videoTrustRef.current;
     const bottomBar = bottomBarRef.current;
     const contactWidget = contactWidgetRef.current;
     const scrollHint = scrollHintRef.current;
@@ -121,7 +119,8 @@ export default function ScrollSequence() {
         ctx.restore();
 
         // Pin video frame cleanly at the upper section of phone screen
-        const topOffset = Math.max(56, Math.min(68, Math.round(vh * 0.08)));
+        // Flush to the top on phones — the 56px strip above was dead space.
+        const topOffset = 0;
         const scale = vw / imgW;
         const w = vw;
         const h = Math.round(imgH * scale);
@@ -167,11 +166,6 @@ export default function ScrollSequence() {
       const barProgress = Math.min(Math.max((progress - 0.80) / 0.18, 0), 1);
       const hintProgress = Math.max(1 - progress / 0.35, 0);
 
-      if (videoTrust) {
-        videoTrust.style.opacity = barProgress.toFixed(3);
-        videoTrust.style.transform = `translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
-        videoTrust.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
-      }
 
       if (hero) {
         hero.style.opacity = heroProgress.toFixed(3);
@@ -387,27 +381,6 @@ export default function ScrollSequence() {
           </div>
         </div>
 
-        {/* 3. Mid-Left: Video Feature Trust Badges */}
-        <div ref={videoTrustRef} className="video-top-trust-badge">
-          <div className="video-trust-item">
-            <span className="video-feature-icon">☁️</span>
-            <span className="video-feature-text">سحابي 100%</span>
-          </div>
-
-          <span className="video-trust-sep" />
-
-          <div className="video-trust-item">
-            <span className="video-feature-icon">📊</span>
-            <span className="video-feature-text">تقارير لحظية</span>
-          </div>
-
-          <span className="video-trust-sep" />
-
-          <div className="video-trust-item">
-            <span className="video-feature-icon">⚡</span>
-            <span className="video-feature-text">أعلى كفاءة</span>
-          </div>
-        </div>
 
         {/* 4. Left: Floating Contact FAB Widget */}
         <div ref={contactWidgetRef} className="contact-float-widget">
