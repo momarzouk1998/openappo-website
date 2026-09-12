@@ -169,11 +169,7 @@ export default function ScrollSequence() {
 
       if (videoTrust) {
         videoTrust.style.opacity = barProgress.toFixed(3);
-        if (vw < 768) {
-          videoTrust.style.transform = `translateX(-50%) translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
-        } else {
-          videoTrust.style.transform = `translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
-        }
+        videoTrust.style.transform = `translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
         videoTrust.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
@@ -189,11 +185,11 @@ export default function ScrollSequence() {
 
       if (bottomBar) {
         bottomBar.style.opacity = barProgress.toFixed(3);
-        if (vw < 768) {
-          bottomBar.style.transform = `translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
-        } else {
-          bottomBar.style.transform = `translateX(-50%) translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
-        }
+        // Vertical rise only. The dock is a flex row/column that already places
+        // these; a leftover translateX(-50%) from the old left:50% positioning
+        // shifted the bar ~185px off its slot, which is what made the gaps
+        // uneven and dropped it on top of the trust badge.
+        bottomBar.style.transform = `translateY(${(20 * (1 - barProgress)).toFixed(1)}px)`;
         bottomBar.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
