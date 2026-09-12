@@ -286,7 +286,7 @@ body {
   padding: 7px 22px;
   border-radius: 999px;
   background: #ffffff;
-  border: 1.5px solid rgba(61, 218, 210, 0.55);
+  border: 1.5px solid rgba(233, 106, 106, 0.75);
   font-size: 14px;
   font-weight: 800;
   color: #0f9b93;
@@ -2364,9 +2364,10 @@ body {
 /* ---- Theme toggle ---- */
 .pf-theme {
   position: fixed;
-  top: 20px;
-  right: 128px;
-  z-index: 26;
+  top: 24px;
+  left: 28px;
+  right: auto;
+  z-index: 30;
   padding: 0;
   border: 0;
   background: none;
@@ -2623,7 +2624,7 @@ body {
 
 [data-pf-theme="light"] .hero-custom-slogan {
   background: #ffffff !important;
-  border: 1.5px solid rgba(61, 218, 210, 0.6) !important;
+  border: 1.5px solid rgba(233, 106, 106, 0.75) !important;
   color: #0f9b93 !important;
   font-weight: 800;
   text-shadow: none !important;

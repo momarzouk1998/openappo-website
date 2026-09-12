@@ -385,7 +385,7 @@ export default function ScrollSequence() {
           <div className="hero-glass-card">
             <div className="hero-tagline">
               <span className="hero-tagline-dot" />
-              <span>منظومة إدارة وتطوير الأعمال الذكية • <span className="hero-tagline-brand">OPENAPPO</span></span>
+              <span>منظومة إدارة وتطوير الأعمال الذكية</span>
             </div>
 
             <div className="hero-heading-group">
