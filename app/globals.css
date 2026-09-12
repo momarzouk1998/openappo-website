@@ -3237,3 +3237,53 @@ body {
     bottom: 11px;
   }
 }
+
+/* ---- Portfolio on phones: stop the mock dashboard forcing the page wider ----
+   Every spotlight card measured 418-489px wide inside a 390px viewport, so the
+   whole page side-scrolled. The cause is `min-width: auto` — the default for
+   grid and flex items, meaning "never shrink below your content". The fake
+   dashboard's KPI row and chart row therefore imposed their natural width on
+   the card, the section and the document. Letting the chain shrink fixes it at
+   the source; the page needs no overflow band-aid. */
+@media (max-width: 900px) {
+  .pf-spotlight-card,
+  .pf-spotlight-preview,
+  .pf-spotlight-info,
+  .pf-spotlight-mockup-frame,
+  .pf-mockup-screen-wrap,
+  .pf-sim-dashboard,
+  .pf-sim-topbar,
+  .pf-sim-kpis,
+  .pf-sim-kpi-card,
+  .pf-sim-charts-row,
+  .pf-sim-chart-card,
+  .pf-sim-feed-card,
+  .pf-sim-feed-item,
+  .pf-sim-feed-text,
+  .pf-featured-section,
+  .pf-featured-grid {
+    min-width: 0;
+  }
+  /* Three KPI columns and two chart columns are too narrow to read on a phone. */
+  .pf-sim-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pf-sim-charts-row {
+    grid-template-columns: 1fr;
+  }
+  .pf-sim-feed-text,
+  .pf-sim-kpi-val,
+  .pf-sim-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pf-sim-topbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+@media (max-width: 480px) {
+  .pf-sim-kpis {
+    grid-template-columns: 1fr;
+  }
+}
