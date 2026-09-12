@@ -286,10 +286,10 @@ body {
   padding: 7px 22px;
   border-radius: 999px;
   background: #ffffff;
-  border: 1.5px solid rgba(233, 106, 106, 0.45);
+  border: 1.5px solid rgba(61, 218, 210, 0.55);
   font-size: 14px;
   font-weight: 800;
-  color: #e96a6a;
+  color: #0f9b93;
   margin-top: 6px;
   box-shadow: 0 4px 18px rgba(233, 106, 106, 0.22);
   animation: heroSloganPulse 2.4s infinite ease-in-out;
@@ -2623,8 +2623,8 @@ body {
 
 [data-pf-theme="light"] .hero-custom-slogan {
   background: #ffffff !important;
-  border: 1.5px solid rgba(233, 106, 106, 0.45) !important;
-  color: #e96a6a !important;
+  border: 1.5px solid rgba(61, 218, 210, 0.6) !important;
+  color: #0f9b93 !important;
   font-weight: 800;
   text-shadow: none !important;
   box-shadow: 0 4px 18px rgba(233, 106, 106, 0.2) !important;
@@ -2680,14 +2680,14 @@ body {
 }
 
 [data-pf-theme="light"] .btn-testimonials {
-  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  background: #fb6775;
   border: 1px solid #fb7185;
   color: #ffffff !important;
   box-shadow: 0 6px 18px -4px rgba(225, 29, 72, 0.45);
   font-weight: 800;
 }
 [data-pf-theme="light"] .btn-testimonials:hover {
-  background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+  background: #e95563;
   transform: translateY(-2px);
   box-shadow: 0 10px 24px -4px rgba(225, 29, 72, 0.6);
 }
@@ -2852,4 +2852,66 @@ body {
 }
 [data-pf-theme="light"] .pf-modal-head {
   background: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- Modal identity block: head + description in one card ----
+   They were two stacked panels with their own backgrounds, which read as two
+   separate things when they are one block of identity. The card owns the
+   surface now; the parts inside are transparent. */
+.pf-modal-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(10, 16, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 3px solid #3ddad2;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 22px 50px -22px rgba(0, 0, 0, 0.8);
+}
+.pf-modal-card .pf-modal-head {
+  margin: 0;
+  padding: 16px 18px 12px;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.pf-modal-card .pf-modal-desc {
+  margin: 0;
+  padding: 0 18px 16px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+/* A hairline between the two halves instead of a gap. */
+.pf-modal-card .pf-modal-desc::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 0 0 13px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-pf-theme="light"] .pf-modal-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(9, 18, 30, 0.1);
+  border-right-color: #0f9b93;
+  box-shadow: 0 22px 50px -24px rgba(9, 18, 30, 0.35);
+}
+[data-pf-theme="light"] .pf-modal-card .pf-modal-head,
+[data-pf-theme="light"] .pf-modal-card .pf-modal-desc {
+  background: none;
+}
+[data-pf-theme="light"] .pf-modal-card .pf-modal-desc::before {
+  background: rgba(9, 18, 30, 0.1);
+}
+
+/* The toggle at right:128px sat inside the trust badge (measured 1258..1312
+   against the badge's 1039..1412 at the same height). The top-right strip is
+   the badge's; park the toggle just clear of the logo on the left instead. */
+.pf-theme {
+  right: auto;
+  left: 210px;
 }
