@@ -235,12 +235,9 @@ body {
   color: #0f9b93;
 }
 
-/* Hide on mobile completely as requested */
-@media (max-width: 767px) {
-  .scroll-hint-wrapper {
-    display: none !important;
-  }
-}
+/* The wrapper used to be hidden wholesale on phones, back when it only held
+   the desktop mouse indicator. It now also carries the phone swipe mockup, so
+   the wrapper stays and only the mouse indicator is hidden (further down). */
 
 /* ---------- Landscape / Desktop Bottom Dock Container (Equal Spacing & Fluid Scaling) ---------- */
 .bottom-dock-container {
@@ -867,7 +864,7 @@ body {
     height: 26px;
   }
   .scroll-hint-wrapper {
-    top: calc(56px + 56.25vw + 12px);
+    top: calc(56.25vw + 12px);
     bottom: auto;
     left: 50%;
     transform: translateX(-50%);
@@ -3060,9 +3057,6 @@ body {
     padding: 7px 12px;
     font-size: 11.5px;
   }
-  .contact-menu-header {
-    display: none;
-  }
   .contact-menu-btn {
     padding: 8px 10px;
     font-size: 11.5px;
@@ -3139,5 +3133,69 @@ body {
 @media (max-width: 767px) and (max-height: 600px) {
   .bottom-dock-container {
     top: calc(56.25vw + 2px);
+  }
+}
+
+/* The desktop mouse indicator is display:flex at every width, so restoring the
+   phone mockup would have shown both on a phone. */
+@media (max-width: 768px) {
+  .mouse-scroll-indicator {
+    display: none;
+  }
+}
+
+/* ---- Phones: let the dock use the space under the frame ----
+   Measured dead space below the last card: 277px at 430x932, 199px at 390x844,
+   114px at 360x740. The column only occupied its content height. Giving it a
+   bottom edge as well as a top makes it span the gap, and the cards grow into
+   it rather than leaving a void. */
+@media (max-width: 767px) {
+  .bottom-dock-container {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    justify-content: space-between;
+  }
+  .contact-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+  .contact-menu-phone {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+}
+/* Tall phones have the most room — grow the cards, not just the gaps. */
+@media (max-width: 767px) and (min-height: 780px) {
+  .hero-glass-card {
+    padding: 18px 18px 20px;
+  }
+  .hero-desc {
+    font-size: 13px;
+    line-height: 1.95;
+  }
+  .hero-bottom-bar .btn-explore,
+  .hero-bottom-bar .btn-testimonials,
+  .hero-bottom-bar .btn-how-it-works {
+    padding: 13px 16px;
+  }
+  .contact-menu-btn {
+    padding: 13px 14px;
+  }
+  .contact-menu-header {
+    padding-bottom: 10px;
+  }
+}
+
+/* The only display rule for the phone mockup lives inside the max-width:768px
+   query, so outside it the div fell back to display:block and rendered on
+   desktop too. Scoped to the desktop side instead — a bare rule at the end of
+   the file has the same specificity as the one in the media query and, coming
+   later, would have hidden it everywhere. */
+@media (min-width: 769px) {
+  .mobile-swipe-guide {
+    display: none;
   }
 }
