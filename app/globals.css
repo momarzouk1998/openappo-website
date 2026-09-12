@@ -242,24 +242,41 @@ body {
   }
 }
 
-/* ---------- Hero Fixed Overlay Wrapper ---------- */
-.hero-overlay-wrapper {
-  display: contents;
+/* ---------- Landscape / Desktop Bottom Dock Container (Equal Spacing & Fluid Scaling) ---------- */
+.bottom-dock-container {
+  position: fixed;
+  bottom: clamp(14px, 2.2vh, 26px);
+  left: 0;
+  right: 0;
+  width: 100vw;
+  padding: 0 clamp(16px, 2.8vw, 42px);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(10px, 1.4vw, 24px);
+  z-index: 25;
+  pointer-events: none;
+  direction: rtl;
+  box-sizing: border-box;
 }
 
-/* ---------- Hero Fixed Overlay (Glass Card - Extreme Bottom Right Corner) ---------- */
+/* 1. Progressive Hero Overlay (Right Side on Landscape) */
 .hero-overlay {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
+  position: relative;
+  right: auto;
+  bottom: auto;
   top: auto;
+  left: auto;
   z-index: 15;
-  max-width: 490px;
+  width: 100%;
+  max-width: clamp(280px, 25vw, 430px);
   text-align: center;
   direction: rtl;
   opacity: 0;
   pointer-events: none;
   will-change: opacity, transform;
+  flex-shrink: 1;
 }
 
 .hero-glass-card {
@@ -267,8 +284,8 @@ body {
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(28px) saturate(150%);
   -webkit-backdrop-filter: blur(28px) saturate(150%);
-  border-radius: 28px;
-  padding: 28px 34px 22px 34px;
+  border-radius: clamp(18px, 1.8vw, 28px);
+  padding: clamp(12px, 1.3vw, 24px) clamp(14px, 1.6vw, 30px);
   box-shadow: 0 24px 70px -10px rgba(0, 0, 0, 0.85),
               0 0 40px -10px rgba(61, 218, 210, 0.2),
               inset 0 1px 1px rgba(255, 255, 255, 0.2);
@@ -279,22 +296,22 @@ body {
 }
 
 .hero-tagline {
-  font-size: 13.5px;
+  font-size: clamp(10px, 0.92vw, 13px);
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: #3ddad2;
-  margin-bottom: 14px;
+  margin-bottom: clamp(6px, 0.7vw, 12px);
   text-shadow: 0 0 14px rgba(61, 218, 210, 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
 .hero-tagline-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #ff7a7a;
   display: inline-block;
@@ -309,7 +326,7 @@ body {
 }
 
 .hero-heading-group {
-  margin-bottom: 16px;
+  margin-bottom: clamp(6px, 0.7vw, 12px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -318,7 +335,7 @@ body {
 }
 
 .hero-main-title {
-  margin: 4px 0 6px 0;
+  margin: 2px 0 4px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +343,7 @@ body {
 }
 
 .hero-title-logo {
-  height: clamp(50px, 6.5vw, 84px);
+  height: clamp(34px, 4.2vw, 68px);
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.8));
@@ -336,18 +353,19 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 7px 22px;
+  gap: 6px;
+  padding: clamp(3px, 0.4vw, 6px) clamp(10px, 1vw, 20px);
   border-radius: 999px;
   background: #ffffff;
   border: 1.5px solid rgba(233, 106, 106, 0.75);
-  font-size: 14px;
+  font-size: clamp(10.5px, 0.9vw, 13.5px);
   font-weight: 800;
   color: #0f9b93;
-  margin-top: 6px;
+  margin-top: clamp(2px, 0.3vw, 5px);
   box-shadow: 0 4px 18px rgba(233, 106, 106, 0.22);
   animation: heroSloganPulse 2.4s infinite ease-in-out;
   text-shadow: none;
+  white-space: nowrap;
 }
 
 @keyframes heroSloganPulse {
@@ -366,7 +384,7 @@ body {
 }
 
 .slogan-emoji {
-  font-size: 15px;
+  font-size: 14px;
   display: inline-block;
   line-height: 1;
 }
@@ -376,25 +394,25 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: clamp(4px, 0.5vw, 8px);
   margin-bottom: 0;
   width: 100%;
 }
 
 .hero-desc-bar {
-  width: 60px;
-  height: 3.5px;
+  width: clamp(34px, 3.8vw, 50px);
+  height: 3px;
   background: linear-gradient(90deg, #3ddad2, #ff7a7a);
   border-radius: 3px;
   flex-shrink: 0;
   box-shadow: 0 0 12px rgba(61, 218, 210, 0.7);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .hero-desc {
-  font-size: 14.5px;
+  font-size: clamp(10px, 0.85vw, 12.5px);
   font-weight: 600;
-  line-height: 1.75;
+  line-height: 1.45;
   color: #f1f5f9;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   text-align: center;
@@ -405,18 +423,18 @@ body {
   font-weight: 800;
 }
 
-/* ---------- Desktop Video Feature Badges (Bottom between Contact FAB & Action Bar) ---------- */
+/* 3. Feature Trust Badges (Mid-Left on Landscape) */
 .video-top-trust-badge {
-  position: fixed;
-  bottom: 28px;
-  left: 94px;
+  position: relative;
+  bottom: auto;
+  left: auto;
   right: auto;
   top: auto;
   z-index: 25;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
+  gap: clamp(6px, 0.7vw, 12px);
+  padding: clamp(6px, 0.7vw, 9px) clamp(10px, 1vw, 16px);
   border-radius: 999px;
   background: rgba(10, 16, 26, 0.86);
   border: 1.5px solid rgba(255, 255, 255, 0.18);
@@ -428,20 +446,22 @@ body {
   opacity: 0;
   pointer-events: none;
   will-change: opacity, transform;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .video-trust-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .video-feature-icon {
-  font-size: 14px;
+  font-size: clamp(11px, 0.85vw, 14px);
 }
 
 .video-feature-text {
-  font-size: 12.5px;
+  font-size: clamp(10px, 0.82vw, 12px);
   font-weight: 800;
   color: #ffffff;
   white-space: nowrap;
@@ -449,7 +469,7 @@ body {
 
 .video-trust-sep {
   width: 1px;
-  height: 18px;
+  height: 16px;
   background: rgba(255, 255, 255, 0.18);
 }
 
@@ -582,8 +602,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 11px 22px;
+  gap: 8px;
+  padding: clamp(6px, 0.7vw, 10px) clamp(12px, 1.2vw, 20px);
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(61, 218, 210, 0.22) 0%, rgba(32, 184, 176, 0.35) 100%);
   border: 1.5px solid rgba(61, 218, 210, 0.6);
@@ -591,7 +611,7 @@ body {
   -webkit-backdrop-filter: blur(16px);
   color: #ffffff;
   text-decoration: none;
-  font-size: 14.5px;
+  font-size: clamp(11.5px, 0.9vw, 14px);
   font-weight: 800;
   box-shadow: 0 8px 24px -4px rgba(61, 218, 210, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
   transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -607,7 +627,7 @@ body {
 }
 
 .btn-how-icon {
-  font-size: 15px;
+  font-size: clamp(12px, 0.9vw, 15px);
   color: #5ffbf3;
 }
 
@@ -615,24 +635,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: clamp(6px, 0.7vw, 10px);
   width: 100%;
 }
 
-/* ---------- Bottom Floating Action Bar (Bottom Center) ---------- */
+/* 2. Floating Action Buttons Bar (Mid-Right on Landscape) */
 .hero-bottom-bar {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  top: auto;
+  transform: none;
   z-index: 25;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: 26px;
+  gap: clamp(6px, 0.7vw, 10px);
+  padding: clamp(8px, 0.85vw, 12px) clamp(10px, 1.1vw, 16px);
+  border-radius: clamp(18px, 1.6vw, 26px);
   background: rgba(10, 16, 26, 0.86);
   border: 1.5px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(24px) saturate(140%);
@@ -643,24 +665,28 @@ body {
   opacity: 0;
   pointer-events: none;
   will-change: opacity, transform;
-  max-width: calc(100vw - 32px);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-/* ---------- Floating Contact Widget (Bottom Left Corner) ---------- */
+/* 4. Floating Contact Widget (Left on Landscape) */
 .contact-float-widget {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  top: auto;
   z-index: 35;
   direction: rtl;
   opacity: 0;
   pointer-events: none;
   will-change: opacity, transform;
+  flex-shrink: 0;
 }
 
 .contact-float-trigger {
-  width: 56px;
-  height: 56px;
+  width: clamp(44px, 3.8vw, 54px);
+  height: clamp(44px, 3.8vw, 54px);
   border-radius: 50%;
   background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   border: 2px solid #ffffff;
@@ -928,11 +954,14 @@ body {
     height: 40px;
     filter: drop-shadow(0 0 14px rgba(255, 122, 122, 0.95)) drop-shadow(0 0 6px #ff7a7a);
   }
-  .hero-overlay-wrapper {
+  .bottom-dock-container {
     position: fixed;
     top: calc(56px + 56.25vw + 8px);
     left: 12px;
     right: 12px;
+    bottom: auto;
+    width: auto;
+    padding: 0;
     z-index: 15;
     display: flex;
     flex-direction: column;
@@ -2417,13 +2446,13 @@ body {
   }
 }
 
-/* ---- Theme toggle ---- */
+/* ---- Theme toggle (Extreme Top Left) ---- */
 .pf-theme {
   position: fixed;
-  top: 24px;
-  left: 28px;
+  top: 18px;
+  left: 18px;
   right: auto;
-  z-index: 30;
+  z-index: 40;
   padding: 0;
   border: 0;
   background: none;
@@ -2963,12 +2992,4 @@ body {
 }
 [data-pf-theme="light"] .pf-modal-card .pf-modal-desc::before {
   background: rgba(9, 18, 30, 0.1);
-}
-
-/* The toggle at right:128px sat inside the trust badge (measured 1258..1312
-   against the badge's 1039..1412 at the same height). The top-right strip is
-   the badge's; park the toggle just clear of the logo on the left instead. */
-.pf-theme {
-  right: auto;
-  left: 210px;
 }
