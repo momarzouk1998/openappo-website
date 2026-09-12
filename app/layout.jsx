@@ -1,8 +1,41 @@
 import "./globals.css";
 
 export const metadata = {
+  metadataBase: new URL("https://openappo.com"),
   title: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
   description: "نظام سحابي متكامل يجمع كل تفاصيل مشروعك من مبيعات، فواتير، ومخزون في مكان واحد.",
+  applicationName: "Openappo",
+  authors: [{ name: "Openappo Team" }],
+  generator: "Next.js",
+  keywords: ["Openappo", "ERP", "إدارة أعمال", "برنامج محاسبة", "إدارة مخازن", "فواتير سحابية"],
+  openGraph: {
+    title: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
+    description: "نظام سحابي متكامل يجمع كل تفاصيل مشروعك من مبيعات، فواتير، ومخزون في مكان واحد.",
+    url: "https://openappo.com",
+    siteName: "Openappo",
+    locale: "ar_EG",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
+      },
+      {
+        url: "/og-square.png",
+        width: 600,
+        height: 600,
+        alt: "Openappo Icon",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
+    description: "نظام سحابي متكامل يجمع كل تفاصيل مشروعك من مبيعات، فواتير، ومخزون في مكان واحد.",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

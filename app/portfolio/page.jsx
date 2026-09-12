@@ -40,6 +40,21 @@ export const metadata = {
     title: "سابقة الأعمال | أنظمة ERP وبرامج إدارة الأعمال — Openappo",
     description:
       "شاشات فعلية من أنظمة إدارة أعمال نفّذتها Openappo في التجارة والتوزيع والتصنيع والخدمات.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Openappo Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "سابقة الأعمال | أنظمة ERP وبرامج إدارة الأعمال — Openappo",
+    description:
+      "شاشات فعلية من أنظمة إدارة أعمال نفّذتها Openappo في التجارة والتوزيع والتصنيع والخدمات.",
+    images: ["/og-image.png"],
   },
 };
 
