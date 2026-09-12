@@ -168,13 +168,13 @@ export default function ScrollSequence() {
       const hintProgress = Math.max(1 - progress / 0.35, 0);
 
       if (videoTrust) {
-        videoTrust.style.opacity = heroProgress.toFixed(3);
+        videoTrust.style.opacity = barProgress.toFixed(3);
         if (vw < 768) {
-          videoTrust.style.transform = `translateX(-50%) translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+          videoTrust.style.transform = `translateX(-50%) translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
         } else {
-          videoTrust.style.transform = `translateY(${(15 * (1 - heroProgress)).toFixed(1)}px)`;
+          videoTrust.style.transform = `translateY(${(15 * (1 - barProgress)).toFixed(1)}px)`;
         }
-        videoTrust.style.pointerEvents = heroProgress > 0.4 ? "auto" : "none";
+        videoTrust.style.pointerEvents = barProgress > 0.4 ? "auto" : "none";
       }
 
       if (hero) {
