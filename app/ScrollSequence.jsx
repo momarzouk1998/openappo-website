@@ -343,6 +343,7 @@ export default function ScrollSequence() {
                 />
               </svg>
             </div>
+            <span className="swipe-hint-text">اسحب الشاشة</span>
           </div>
           <div className="phone-mockup-homebar" />
         </div>
