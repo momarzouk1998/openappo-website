@@ -3151,8 +3151,13 @@ body {
    it rather than leaving a void. */
 @media (max-width: 767px) {
   .bottom-dock-container {
-    bottom: max(10px, env(safe-area-inset-bottom));
-    justify-content: space-between;
+    /* Group the cards at the foot of the frame. space-between spread them to
+       the extremes instead — 106px gaps on a 412x915 screen — which read as
+       the page drifting upward with the contact card stranded on the very
+       bottom edge, right where the browser and gesture bars sit. */
+    bottom: max(16px, env(safe-area-inset-bottom));
+    justify-content: flex-end;
+    gap: 10px;
   }
   .contact-menu-header {
     display: flex;
