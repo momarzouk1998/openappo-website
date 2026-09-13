@@ -204,13 +204,27 @@ export default function ScrollSequence() {
     const onScroll = () => computeTarget();
 
     let lastW = window.innerWidth;
+    let lastH = window.innerHeight;
+    let resizeTimer = 0;
     const onResize = () => {
-      if (window.innerWidth === lastW) return;
-      lastW = window.innerWidth;
-      setCanvasSize();
-      computeTarget();
-      const r = nearestReady(Math.round(currentFrame));
-      if (r >= 0) drawFrame(r);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // Height-only changes used to be ignored outright, which is wrong on
+      // phones: the first scroll hides the browser's URL bar and the viewport
+      // grows (measured 720 -> 844), while the canvas kept its old height. The
+      // picture then sat 124px short of the bottom and read as the whole screen
+      // lifting away. Small jitter is still ignored — the bar animates, and
+      // resizing the canvas on every pixel of that would thrash.
+      if (w === lastW && Math.abs(h - lastH) < 40) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        lastW = window.innerWidth;
+        lastH = window.innerHeight;
+        setCanvasSize();
+        computeTarget();
+        const r = nearestReady(Math.round(currentFrame));
+        if (r >= 0) drawFrame(r);
+      }, 90);
     };
 
     // Load order matters far more than raw bandwidth here: firing all 60 at
@@ -287,6 +301,7 @@ export default function ScrollSequence() {
 
     return () => {
       cancelled = true;
+      clearTimeout(resizeTimer);
       themeWatch.disconnect();
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
