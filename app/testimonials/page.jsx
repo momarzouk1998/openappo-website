@@ -7,6 +7,9 @@ const SITE = "https://openappo.com";
 const MANIFEST_URL =
   process.env.PORTFOLIO_MANIFEST_URL ||
   "https://admin.openappo.com/api/public/portfolio";
+const TESTIMONIALS_URL =
+  process.env.TESTIMONIALS_URL ||
+  "https://admin.openappo.com/api/public/testimonials";
 
 export const revalidate = 60;
 
@@ -69,6 +72,19 @@ async function getClients() {
   }
 }
 
+// Real reviews entered in the admin panel. While this is empty the page shows
+// its clearly-labelled placeholders — it never invents a quote.
+async function getTestimonials() {
+  try {
+    const res = await fetch(TESTIMONIALS_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.testimonials) ? data.testimonials : [];
+  } catch {
+    return [];
+  }
+}
+
 function jsonLd() {
   return {
     "@context": "https://schema.org",
@@ -95,7 +111,10 @@ function jsonLd() {
 }
 
 export default async function TestimonialsPage() {
-  const clients = await getClients();
+  const [clients, testimonials] = await Promise.all([
+    getClients(),
+    getTestimonials(),
+  ]);
 
   return (
     <main className="pf-page tm-page-wrapper">
@@ -122,7 +141,7 @@ export default async function TestimonialsPage() {
         ← الرئيسية
       </a>
 
-      <TestimonialsClient clients={clients} />
+      <TestimonialsClient clients={clients} testimonials={testimonials} />
     </main>
   );
 }

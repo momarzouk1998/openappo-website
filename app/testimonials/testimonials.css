@@ -114,7 +114,7 @@
 
 .tm-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
   perspective: 1400px;
 }
@@ -291,3 +291,12 @@
   .tm-bubbles { inset: -20px -6vw 0; }
   .tm-hero { margin-bottom: 34px; }
 }
+
+/* Placeholder text is Latin lorem ipsum, so it is laid out LTR. Real client
+   words are Arabic and must flow RTL. */
+.tm-quote.is-real,
+.tm-modal-quote.is-real {
+  direction: rtl;
+  text-align: right;
+}
+.tm-modal-quote.is-real { text-align: center; }

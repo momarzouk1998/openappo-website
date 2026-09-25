@@ -58,7 +58,9 @@ function Bubbles() {
   );
 }
 
-export default function TestimonialsClient({ clients = [] }) {
+export default function TestimonialsClient({ clients = [], testimonials = [] }) {
+  // Real reviews, once any exist, replace the placeholders entirely.
+  const real = testimonials.length > 0;
   const [active, setActive] = useState(null);
   const gridRef = useRef(null);
 
@@ -92,9 +94,35 @@ export default function TestimonialsClient({ clients = [] }) {
     };
   }, [active]);
 
-  const cards = clients.length
-    ? clients
-    : Array.from({ length: 6 }, (_, i) => ({ slug: `demo-${i}`, name: "—", subtitle: "" }));
+  const logoFor = (slug) =>
+    (slug && clients.find((c) => c.slug === slug)?.logo) || "";
+
+  const cards = real
+    ? testimonials.map((t) => ({
+        key: t.id,
+        seed: t.avatarSeed || t.id,
+        variant: t.avatarStyle || "auto",
+        quote: t.quote,
+        name: t.clientName || t.company,
+        role: t.role,
+        company: t.company,
+        logo: logoFor(t.projectSlug),
+        tag: t.company,
+      }))
+    : (clients.length
+        ? clients
+        : Array.from({ length: 6 }, (_, i) => ({ slug: `demo-${i}`, name: "—" }))
+      ).map((c, i) => ({
+        key: c.slug || i,
+        seed: c.slug || `s${i}`,
+        variant: "auto",
+        quote: LOREM[i % LOREM.length],
+        name: ROLES[i % ROLES.length],
+        role: "",
+        company: c.name,
+        logo: c.logo || "",
+        tag: c.subtitle || "",
+      }));
 
   return (
     <>
@@ -104,34 +132,45 @@ export default function TestimonialsClient({ clients = [] }) {
         <h1 className="tm-title">
           <span>ما يقوله</span> <em>شركاؤنا</em> <span>عن العمل معنا</span>
         </h1>
-        <p className="tm-sub">
-          هذه الصفحة جاهزة لاستقبال آراء عملائنا الحقيقية. النصوص الظاهرة الآن
-          نصوص تجريبية (Lorem ipsum) لعرض الشكل النهائي فقط، وتُستبدل من لوحة
-          التحكم فور وصول كل رأي.
-        </p>
-        <span className="tm-placeholder-flag">
-          <b>نماذج عرض</b> — النصوص تجريبية ولم تصدر عن العملاء
-        </span>
+        {real ? (
+          <p className="tm-sub">
+            كلمات نقلناها كما وردت من الجهات التي تعمل على أنظمة Openappo كل يوم.
+          </p>
+        ) : (
+          <>
+            <p className="tm-sub">
+              هذه الصفحة جاهزة لاستقبال آراء عملائنا الحقيقية. النصوص الظاهرة
+              الآن نصوص تجريبية (Lorem ipsum) لعرض الشكل النهائي فقط، وتُستبدل
+              من لوحة التحكم فور وصول كل رأي.
+            </p>
+            <span className="tm-placeholder-flag">
+              <b>نماذج عرض</b> — النصوص تجريبية ولم تصدر عن العملاء
+            </span>
+          </>
+        )}
       </header>
 
       <div className="tm-grid" ref={gridRef}>
         {cards.map((c, i) => (
           <article
             className="tm-card"
-            key={c.slug || i}
+            key={c.key}
             style={{ "--i": i }}
-            onClick={() => setActive({ ...c, i })}
+            onClick={() => setActive(c)}
           >
             <div className="tm-card-glow" aria-hidden="true" />
             <div className="tm-quote-mark" aria-hidden="true">”</div>
 
-            <p className="tm-quote">{LOREM[i % LOREM.length]}</p>
+            <p className={`tm-quote${real ? " is-real" : ""}`}>{c.quote}</p>
 
             <footer className="tm-who">
-              <Avatar3D seed={c.slug || `s${i}`} size={58} />
+              <Avatar3D seed={c.seed} size={58} variant={c.variant} />
               <span className="tm-who-text">
-                <span className="tm-who-name">{ROLES[i % ROLES.length]}</span>
-                <span className="tm-who-co">{c.name}</span>
+                <span className="tm-who-name">
+                  {c.name}
+                  {c.role ? ` · ${c.role}` : ""}
+                </span>
+                <span className="tm-who-co">{c.company}</span>
               </span>
               {c.logo ? (
                 <img className="tm-who-logo" src={c.logo} alt="" loading="lazy" />
@@ -151,14 +190,19 @@ export default function TestimonialsClient({ clients = [] }) {
             >
               ✕
             </button>
-            <Avatar3D seed={active.slug || "x"} size={104} />
-            <p className="tm-modal-quote">{LOREM[active.i % LOREM.length]}</p>
+            <Avatar3D seed={active.seed} size={104} variant={active.variant} />
+            <p className={`tm-modal-quote${real ? " is-real" : ""}`}>
+              {active.quote}
+            </p>
             <div className="tm-modal-who">
-              <b>{ROLES[active.i % ROLES.length]}</b>
-              <span>{active.name}</span>
+              <b>
+                {active.name}
+                {active.role ? ` · ${active.role}` : ""}
+              </b>
+              <span>{active.company}</span>
             </div>
-            {active.subtitle ? (
-              <span className="tm-modal-tag">{active.subtitle}</span>
+            {active.tag && active.tag !== active.company ? (
+              <span className="tm-modal-tag">{active.tag}</span>
             ) : null}
           </div>
         </div>

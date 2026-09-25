@@ -56,7 +56,17 @@ function hash(seed) {
   return Math.abs(h);
 }
 
-export default function Avatar3D({ seed = "", size = 96, className = "" }) {
+/**
+ * `variant` pins the look when the avatar stands for a named real person —
+ * a random draw would happily put a headscarf on "أ. أحمد". Placeholders leave
+ * it "auto" and take whatever the seed gives.
+ */
+export default function Avatar3D({
+  seed = "",
+  size = 96,
+  className = "",
+  variant = "auto",
+}) {
   const h = hash(seed);
   const skin = SKIN[h % SKIN.length];
   const hair = HAIR[(h >> 3) % HAIR.length];
@@ -64,7 +74,15 @@ export default function Avatar3D({ seed = "", size = 96, className = "" }) {
   const back = BACKDROP[(h >> 11) % BACKDROP.length];
 
   // 0 short · 1 quiff · 2 curls · 3 bob · 4 headscarf
-  const style = (h >> 15) % 5;
+  const MEN = [0, 1, 2];
+  const style =
+    variant === "male"
+      ? MEN[(h >> 15) % MEN.length]
+      : variant === "female"
+      ? 3
+      : variant === "hijab"
+      ? 4
+      : (h >> 15) % 5;
   const glasses = ((h >> 19) % 4) === 0;
   const beard = style !== 3 && style !== 4 && ((h >> 22) % 3) === 0;
   const uid = `a${(h % 1000000).toString(36)}`;
