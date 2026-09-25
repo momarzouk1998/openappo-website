@@ -300,3 +300,10 @@
   text-align: right;
 }
 .tm-modal-quote.is-real { text-align: center; }
+
+/* A real client photo takes the drawn avatar's place; width/height are set on
+   the element so the circle does not collapse before the image loads. */
+.tm-photo {
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.06);
+}

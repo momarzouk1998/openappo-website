@@ -102,6 +102,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
         key: t.id,
         seed: t.avatarSeed || t.id,
         variant: t.avatarStyle || "auto",
+        photo: t.photoUrl || "",
         quote: t.quote,
         name: t.clientName || t.company,
         role: t.role,
@@ -116,6 +117,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
         key: c.slug || i,
         seed: c.slug || `s${i}`,
         variant: "auto",
+        photo: "",
         quote: LOREM[i % LOREM.length],
         name: ROLES[i % ROLES.length],
         role: "",
@@ -164,7 +166,18 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
             <p className={`tm-quote${real ? " is-real" : ""}`}>{c.quote}</p>
 
             <footer className="tm-who">
-              <Avatar3D seed={c.seed} size={58} variant={c.variant} />
+              {c.photo ? (
+                <img
+                  className="tm-avatar tm-photo"
+                  src={c.photo}
+                  alt=""
+                  width={58}
+                  height={58}
+                  loading="lazy"
+                />
+              ) : (
+                <Avatar3D seed={c.seed} size={58} variant={c.variant} />
+              )}
               <span className="tm-who-text">
                 <span className="tm-who-name">
                   {c.name}
@@ -190,7 +203,17 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
             >
               ✕
             </button>
-            <Avatar3D seed={active.seed} size={104} variant={active.variant} />
+            {active.photo ? (
+              <img
+                className="tm-avatar tm-photo"
+                src={active.photo}
+                alt=""
+                width={104}
+                height={104}
+              />
+            ) : (
+              <Avatar3D seed={active.seed} size={104} variant={active.variant} />
+            )}
             <p className={`tm-modal-quote${real ? " is-real" : ""}`}>
               {active.quote}
             </p>
