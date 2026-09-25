@@ -3295,3 +3295,15 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* On /portfolio and /testimonials the logo header sits top-left, where the
+   theme toggle also lives — they overlapped. Pair the toggle with the
+   "الرئيسية" button on the right instead. Phones keep the old spot: there the
+   logo is centred, so nothing collides. The home page is untouched. */
+@media (min-width: 769px) {
+  .pf-page .pf-theme {
+    left: auto;
+    right: 132px;
+    top: 20px;
+  }
+}
