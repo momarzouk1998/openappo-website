@@ -2239,7 +2239,10 @@ body {
 .pf-modal-video {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  /* The promos are 1608x884, not 16:9. Forcing 16/9 letterboxed them inside
+     YouTube's player; matching the real ratio lets the picture fill the frame.
+     Overridable per project from the manifest when a video differs. */
+  aspect-ratio: var(--pf-video-aspect, 1608 / 884);
   border-radius: 16px;
   overflow: hidden;
   background: #000;
