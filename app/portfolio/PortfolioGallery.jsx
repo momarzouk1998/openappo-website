@@ -538,8 +538,9 @@ export default function PortfolioGallery({ projects = [] }) {
       {activeProject && (
         <div className="pf-modal" onClick={close}>
           <div className="pf-modal-inner" onClick={(e) => e.stopPropagation()}>
-            {/* Head and description share one card — two stacked panels read as
-                separate things when they are one block of identity. */}
+            {/* Identity only. The description already appears on the grid card
+                behind this modal, so repeating it here just pushed the video
+                below the fold. */}
             <div className="pf-modal-card">
             <div className="pf-modal-head">
               {activeProject.logo ? (
@@ -564,8 +565,6 @@ export default function PortfolioGallery({ projects = [] }) {
                 ✕
               </button>
             </div>
-
-            {activeProject.desc && <p className="pf-modal-desc">{activeProject.desc}</p>}
             </div>
 
             {activeProject.youtubeId && (
