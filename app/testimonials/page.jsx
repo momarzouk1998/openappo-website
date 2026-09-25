@@ -4,6 +4,11 @@ import ThemeToggle from "../ThemeToggle";
 import "./testimonials.css";
 
 const SITE = "https://openappo.com";
+const MANIFEST_URL =
+  process.env.PORTFOLIO_MANIFEST_URL ||
+  "https://admin.openappo.com/api/public/portfolio";
+
+export const revalidate = 60;
 
 export const metadata = {
   metadataBase: new URL(SITE),
@@ -46,6 +51,24 @@ export const metadata = {
   },
 };
 
+// The client list comes from the same manifest the portfolio page uses, so a
+// project added in the admin panel shows up here too without a code change.
+async function getClients() {
+  try {
+    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data?.projects || []).map((p) => ({
+      slug: p.slug,
+      name: p.name,
+      subtitle: p.subtitle,
+      logo: p.logoUrl || "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 function jsonLd() {
   return {
     "@context": "https://schema.org",
@@ -71,7 +94,9 @@ function jsonLd() {
   };
 }
 
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+  const clients = await getClients();
+
   return (
     <main className="pf-page tm-page-wrapper">
       <TechBackground />
@@ -97,7 +122,7 @@ export default function TestimonialsPage() {
         ← الرئيسية
       </a>
 
-      <TestimonialsClient />
+      <TestimonialsClient clients={clients} />
     </main>
   );
 }

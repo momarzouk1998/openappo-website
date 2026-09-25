@@ -1,48 +1,168 @@
 "use client";
 
-import { useState } from "react";
-import TestimonialsHero from "./TestimonialsHero";
-import TrustPillars from "./TrustPillars";
-import FeaturedStory from "./FeaturedStory";
-import TestimonialWall from "./TestimonialWall";
-import IndustryStories from "./IndustryStories";
-import VideoTestimonials from "./VideoTestimonials";
-import TestimonialsCTA from "./TestimonialsCTA";
-import StoryModal from "./StoryModal";
-import { FEATURED_STORY } from "./testimonialsData";
+import { useEffect, useRef, useState } from "react";
+import Avatar3D from "./Avatar3D";
 
-export default function TestimonialsClient() {
-  const [activeStory, setActiveStory] = useState(null);
-  const [activeVideo, setActiveVideo] = useState(null);
+/**
+ * Quote text is lorem ipsum on purpose. Real client words go in from the admin
+ * panel; filler that is obviously filler is the honest placeholder, and it
+ * shows the layout at full length without putting words in a client's mouth.
+ */
+const LOREM = [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.",
+  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor.",
+  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat.",
+  "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis.",
+  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa.",
+  "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione.",
+];
+const ROLES = [
+  "صاحب المنشأة",
+  "المدير التنفيذي",
+  "مدير العمليات",
+  "المدير المالي",
+  "مدير الفروع",
+  "مسؤول المخازن",
+];
 
-  const handleOpenStory = (story) => {
-    setActiveVideo(null);
-    setActiveStory(story);
-  };
+function Bubbles() {
+  // Decorative depth field behind the hero: message cards drifting on an arc.
+  const items = [
+    { x: 8, y: 14, d: 0, s: 1, w: 120 },
+    { x: 72, y: 8, d: 1.4, s: 0.82, w: 96 },
+    { x: 26, y: 62, d: 2.8, s: 0.7, w: 84 },
+    { x: 60, y: 54, d: 4.1, s: 0.92, w: 110 },
+    { x: 44, y: 26, d: 5.3, s: 0.6, w: 72 },
+    { x: 86, y: 44, d: 6.6, s: 0.74, w: 88 },
+  ];
+  return (
+    <div className="tm-bubbles" aria-hidden="true">
+      {items.map((b, i) => (
+        <span
+          key={i}
+          className="tm-bubble"
+          style={{
+            left: `${b.x}%`,
+            top: `${b.y}%`,
+            width: b.w,
+            "--d": `${b.d}s`,
+            "--s": b.s,
+          }}
+        >
+          <i />
+          <i />
+          <i />
+        </span>
+      ))}
+    </div>
+  );
+}
 
-  const handleOpenVideo = (video) => {
-    setActiveStory(null);
-    setActiveVideo(video);
-  };
+export default function TestimonialsClient({ clients = [] }) {
+  const [active, setActive] = useState(null);
+  const gridRef = useRef(null);
 
-  const handleCloseModal = () => {
-    setActiveStory(null);
-    setActiveVideo(null);
-  };
+  // Cards lift in as they enter the viewport.
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    el.querySelectorAll(".tm-card").forEach((c) => io.observe(c));
+    return () => io.disconnect();
+  }, [clients]);
+
+  useEffect(() => {
+    if (!active) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => e.key === "Escape" && setActive(null);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [active]);
+
+  const cards = clients.length
+    ? clients
+    : Array.from({ length: 6 }, (_, i) => ({ slug: `demo-${i}`, name: "—", subtitle: "" }));
 
   return (
-    <div className="tm-container">
-      <TestimonialsHero onOpenStory={handleOpenStory} featuredStory={FEATURED_STORY} />
-      <TrustPillars />
-      <FeaturedStory onOpenStory={handleOpenStory} />
-      <TestimonialWall onOpenQuote={handleOpenStory} />
-      <IndustryStories onOpenStory={handleOpenStory} />
-      <VideoTestimonials onOpenVideo={handleOpenVideo} />
-      <TestimonialsCTA />
+    <>
+      <header className="tm-hero">
+        <Bubbles />
+        <span className="tm-kicker">آراء العملاء</span>
+        <h1 className="tm-title">
+          <span>ما يقوله</span> <em>شركاؤنا</em> <span>عن العمل معنا</span>
+        </h1>
+        <p className="tm-sub">
+          هذه الصفحة جاهزة لاستقبال آراء عملائنا الحقيقية. النصوص الظاهرة الآن
+          نصوص تجريبية (Lorem ipsum) لعرض الشكل النهائي فقط، وتُستبدل من لوحة
+          التحكم فور وصول كل رأي.
+        </p>
+        <span className="tm-placeholder-flag">
+          <b>نماذج عرض</b> — النصوص تجريبية ولم تصدر عن العملاء
+        </span>
+      </header>
 
-      {(activeStory || activeVideo) && (
-        <StoryModal story={activeStory} video={activeVideo} onClose={handleCloseModal} />
+      <div className="tm-grid" ref={gridRef}>
+        {cards.map((c, i) => (
+          <article
+            className="tm-card"
+            key={c.slug || i}
+            style={{ "--i": i }}
+            onClick={() => setActive({ ...c, i })}
+          >
+            <div className="tm-card-glow" aria-hidden="true" />
+            <div className="tm-quote-mark" aria-hidden="true">”</div>
+
+            <p className="tm-quote">{LOREM[i % LOREM.length]}</p>
+
+            <footer className="tm-who">
+              <Avatar3D seed={c.slug || `s${i}`} size={58} />
+              <span className="tm-who-text">
+                <span className="tm-who-name">{ROLES[i % ROLES.length]}</span>
+                <span className="tm-who-co">{c.name}</span>
+              </span>
+              {c.logo ? (
+                <img className="tm-who-logo" src={c.logo} alt="" loading="lazy" />
+              ) : null}
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      {active && (
+        <div className="tm-modal" onClick={() => setActive(null)}>
+          <div className="tm-modal-inner" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="tm-modal-close"
+              onClick={() => setActive(null)}
+              aria-label="إغلاق"
+            >
+              ✕
+            </button>
+            <Avatar3D seed={active.slug || "x"} size={104} />
+            <p className="tm-modal-quote">{LOREM[active.i % LOREM.length]}</p>
+            <div className="tm-modal-who">
+              <b>{ROLES[active.i % ROLES.length]}</b>
+              <span>{active.name}</span>
+            </div>
+            {active.subtitle ? (
+              <span className="tm-modal-tag">{active.subtitle}</span>
+            ) : null}
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
