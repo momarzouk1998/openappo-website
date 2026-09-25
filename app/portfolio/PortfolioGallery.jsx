@@ -571,7 +571,7 @@ export default function PortfolioGallery({ projects = [] }) {
             {activeProject.youtubeId && (
               <div className="pf-modal-video">
                 <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${activeProject.youtubeId}?rel=0&modestbranding=1`}
+                  src={`https://www.youtube-nocookie.com/embed/${activeProject.youtubeId}?rel=0&modestbranding=1&playsinline=1&autoplay=1&mute=1`}
                   title={activeProject.name}
                   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -580,7 +580,7 @@ export default function PortfolioGallery({ projects = [] }) {
               </div>
             )}
 
-            {count > 0 ? (
+            {activeProject.youtubeId ? null : count > 0 ? (
               <Deck
                 key={activeProject.slug}
                 shots={activeProject.shots || []}
