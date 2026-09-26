@@ -1,7 +1,12 @@
+import Script from "next/script";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "";
+const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION || "";
 
 export const metadata = {
   metadataBase: new URL("https://openappo.com"),
+  ...(GSC_VERIFICATION ? { verification: { google: GSC_VERIFICATION } } : {}),
   title: "Openappo — منظومة إدارة وتطوير الأعمال الذكية",
   description: "نظام سحابي متكامل يجمع كل تفاصيل مشروعك من مبيعات، فواتير، ومخزون في مكان واحد.",
   applicationName: "Openappo",
@@ -98,6 +103,23 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd()) }}
         />
+        {/* GA4 stays fully inert (no script tags at all) until
+            NEXT_PUBLIC_GA_ID is set in the environment — no placeholder
+            tracking ID is ever shipped. */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
         {/* Apply the saved theme before the first paint — otherwise the page
             flashes dark, then repaints light. */}
         <script

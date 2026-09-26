@@ -4,13 +4,15 @@
 // props used across components need it for style-src too. img-src is left
 // broad (https:) because project screenshots and logos are served from the
 // admin panel's own domain, decided per-project in the admin, not known here.
+// googletagmanager.com/google-analytics.com are allowed unconditionally so
+// GA4 works the moment NEXT_PUBLIC_GA_ID is set, without another deploy.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.youtube.com",
+  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https:",
-  "connect-src 'self' https://admin.openappo.com",
+  "connect-src 'self' https://admin.openappo.com https://www.google-analytics.com https://www.googletagmanager.com",
   "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
