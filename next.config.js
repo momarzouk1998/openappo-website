@@ -12,7 +12,7 @@ const CSP = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https:",
-  "connect-src 'self' https://admin.openappo.com https://www.google-analytics.com https://www.googletagmanager.com",
+  "connect-src 'self' https://admin.openappo.com https://www.google-analytics.com https://www.googletagmanager.com https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
   "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
@@ -53,4 +53,17 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Safe to include even before a Sentry project exists: without
+// SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT the plugin just skips the
+// source-map upload step at build time — it never blocks or fails the build.
+const { withSentryConfig } = require('@sentry/nextjs/config');
+
+module.exports = withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: true,
+  disableLogger: true,
+  widenClientFileUpload: false,
+  automaticVercelMonitors: false,
+});
