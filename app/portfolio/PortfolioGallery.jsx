@@ -362,10 +362,15 @@ function InlineVideo({ id, title }) {
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
+    // youtube.com rather than youtube-nocookie.com, and with an explicit
+    // `origin`: the privacy domain without a declared origin is what trips
+    // YouTube's "confirm you're not a bot" interstitial on embeds.
+    const origin =
+      typeof window !== "undefined" ? encodeURIComponent(window.location.origin) : "";
     return (
       <div className="pf-inline-video is-playing">
         <iframe
-          src={`https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1&autoplay=1`}
+          src={`https://www.youtube.com/embed/${id}?rel=0&modestbranding=1&playsinline=1&autoplay=1&origin=${origin}`}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -573,16 +578,6 @@ export default function PortfolioGallery({ projects = [] }) {
                       </span>
                     ))}
                   </div>
-
-                  <button
-                    className="pf-spotlight-btn"
-                    onClick={() => setActiveSlug(p.slug)}
-                  >
-                    <span>
-                      {hasShots ? "استعراض شاشات النظام بالكامل" : "عرض تفاصيل وتجهيزات المنظومة"}
-                    </span>
-                    <span className="pf-btn-arrow">←</span>
-                  </button>
                 </div>
               </div>
             );
@@ -626,7 +621,11 @@ export default function PortfolioGallery({ projects = [] }) {
             {activeProject.youtubeId && (
               <div className="pf-modal-video">
                 <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${activeProject.youtubeId}?rel=0&modestbranding=1&playsinline=1&autoplay=1&mute=1`}
+                  src={`https://www.youtube.com/embed/${activeProject.youtubeId}?rel=0&modestbranding=1&playsinline=1&autoplay=1&mute=1&origin=${
+                    typeof window !== "undefined"
+                      ? encodeURIComponent(window.location.origin)
+                      : ""
+                  }`}
                   title={activeProject.name}
                   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

@@ -3385,7 +3385,7 @@ body {
 }
 
 /* On phones the card stacks, and the wanted order is logo → شرح → فيديو →
-   الأزرار. The video is a sibling of the info column, so `display: contents`
+   الفيديو في الآخر. The video is a sibling of the info column, so `display: contents`
    dissolves that wrapper and lets its children be ordered around the video
    individually. The wrapper only carried flex + gap, which the grid supplies. */
 @media (max-width: 900px) {
@@ -3394,11 +3394,16 @@ body {
     text-align: right;
     gap: 14px;
   }
-  .pf-spotlight-card .pf-spotlight-info { display: contents; }
-  .pf-spotlight-card .pf-spotlight-head { order: 1; }
-  .pf-spotlight-card .pf-spotlight-sub { order: 2; }
-  .pf-spotlight-card .pf-spotlight-desc { order: 3; }
-  .pf-spotlight-card .pf-spotlight-preview { order: 4; }
-  .pf-spotlight-card .pf-spotlight-pills { order: 5; }
-  .pf-spotlight-card .pf-spotlight-btn { order: 6; }
+  .pf-spotlight-card .pf-spotlight-info,
+  .pf-spotlight-card.is-reversed .pf-spotlight-info { display: contents; }
+  .pf-spotlight-card .pf-spotlight-head,
+  .pf-spotlight-card.is-reversed .pf-spotlight-head { order: 1; }
+  .pf-spotlight-card .pf-spotlight-sub,
+  .pf-spotlight-card.is-reversed .pf-spotlight-sub { order: 2; }
+  .pf-spotlight-card .pf-spotlight-desc,
+  .pf-spotlight-card.is-reversed .pf-spotlight-desc { order: 3; }
+  .pf-spotlight-card .pf-spotlight-pills,
+  .pf-spotlight-card.is-reversed .pf-spotlight-pills { order: 4; }
+  .pf-spotlight-card .pf-spotlight-preview,
+  .pf-spotlight-card.is-reversed .pf-spotlight-preview { order: 5; }
 }
