@@ -41,5 +41,8 @@ next-env.d.ts
 /ChatGPT Image*.png
 *.wfp
 
+# raw source video (not used in the build)
+*.mp4
+
 _capture/
 _check/
