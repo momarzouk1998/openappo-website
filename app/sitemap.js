@@ -9,11 +9,15 @@ export default function sitemap() {
     { url: `${SITE}/testimonials`, priority: 0.7 },
     { url: `${SITE}/contact`, priority: 0.6 },
     { url: `${SITE}/blog`, priority: 0.8 },
+    { url: `${SITE}/privacy`, priority: 0.3 },
+    { url: `${SITE}/terms`, priority: 0.3 },
     { url: `${SITE}/en`, priority: 0.9 },
     { url: `${SITE}/en/portfolio`, priority: 0.8 },
     { url: `${SITE}/en/testimonials`, priority: 0.6 },
     { url: `${SITE}/en/contact`, priority: 0.5 },
     { url: `${SITE}/en/blog`, priority: 0.7 },
+    { url: `${SITE}/en/privacy`, priority: 0.2 },
+    { url: `${SITE}/en/terms`, priority: 0.2 },
   ].map((p) => ({ ...p, lastModified: new Date(), changeFrequency: "weekly" }));
 
   const blogPages = getAllSlugs().flatMap((slug) => [

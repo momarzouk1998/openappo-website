@@ -133,6 +133,11 @@ export default function SiteNav({ current = "", lang = "ar" }) {
                 : theme === "light" ? "الوضع الداكن" : "الوضع الفاتح"}
             </span>
           </button>
+
+          <div className="site-nav-legal">
+            <a href={localize("/privacy")}>{isEn ? "Privacy" : "الخصوصية"}</a>
+            <a href={localize("/terms")}>{isEn ? "Terms" : "الشروط"}</a>
+          </div>
         </nav>
       </div>
     </header>
