@@ -3407,3 +3407,56 @@ body {
   .pf-spotlight-card .pf-spotlight-preview,
   .pf-spotlight-card.is-reversed .pf-spotlight-preview { order: 5; }
 }
+
+/* Standalone contact widget (every page except the home hero, where the scroll
+   animation lays it out in the dock and fades it in). Pinned to the corner and
+   visible immediately, since there is no scroll animation to reveal it. */
+.contact-float-widget--standalone {
+  position: fixed;
+  inset-inline-start: 22px;
+  bottom: 22px;
+  left: auto;
+  right: auto;
+  top: auto;
+  width: auto;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 45;
+}
+/* The popup is anchored with `left: 0` for the home dock, where the widget sits
+   mid-layout. Pinned to a corner that pushes 230px off the screen edge, so the
+   standalone copy opens inward instead. */
+.contact-float-widget--standalone .contact-float-menu {
+  left: auto;
+  right: auto;
+  inset-inline-start: 0;
+}
+
+@media (max-width: 768px) {
+  /* Phones turn the home-page widget into an always-open inline card that
+     fills the dead space under the dock. A corner-pinned copy must stay a
+     tap-to-open FAB, so the FAB behaviour is restored here. */
+  .contact-float-widget--standalone {
+    position: fixed;
+    inset-inline-start: 14px;
+    bottom: 14px;
+    width: auto;
+  }
+  .contact-float-widget--standalone .contact-float-trigger {
+    display: flex;
+  }
+  .contact-float-widget--standalone .contact-float-menu {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    inset-inline-start: 0;
+    left: auto;
+    right: auto;
+    width: min(260px, calc(100vw - 32px));
+    padding: 14px;
+    border-radius: 18px;
+  }
+  .contact-float-widget--standalone .contact-float-menu--open {
+    display: block;
+  }
+}

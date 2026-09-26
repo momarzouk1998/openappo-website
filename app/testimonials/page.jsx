@@ -1,6 +1,7 @@
 import TestimonialsClient from "./TestimonialsClient";
 import TechBackground from "../portfolio/TechBackground";
 import ThemeToggle from "../ThemeToggle";
+import ContactWidget from "../ContactWidget";
 import "./testimonials.css";
 
 const SITE = "https://openappo.com";
@@ -136,6 +137,7 @@ export default async function TestimonialsPage() {
       </header>
 
       <ThemeToggle />
+      <ContactWidget standalone />
 
       <a href="/" className="pf-back">
         ← الرئيسية

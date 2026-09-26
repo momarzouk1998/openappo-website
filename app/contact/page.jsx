@@ -1,3 +1,5 @@
+import ContactWidget from "../ContactWidget";
+
 export const metadata = { title: "تواصل بينا — Openappo" };
 
 export default function ContactPage() {
@@ -6,6 +8,7 @@ export default function ContactPage() {
       <h1>تواصل بينا</h1>
       <p>الصفحة دي قريبًا هتعرض طرق التواصل معانا.</p>
       <a href="/">← الرئيسية</a>
+      <ContactWidget standalone />
     </main>
   );
 }

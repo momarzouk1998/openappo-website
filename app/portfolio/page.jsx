@@ -2,6 +2,7 @@ import PortfolioGallery from "./PortfolioGallery";
 import TechBackground from "./TechBackground";
 import HeroIntro from "./HeroIntro";
 import ThemeToggle from "../ThemeToggle";
+import ContactWidget from "../ContactWidget";
 
 const SITE = "https://openappo.com";
 
@@ -133,6 +134,7 @@ export default async function PortfolioPage() {
       </header>
 
       <ThemeToggle />
+      <ContactWidget standalone />
 
       <a href="/" className="pf-back">
         ← الرئيسية
