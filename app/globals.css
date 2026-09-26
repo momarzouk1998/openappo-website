@@ -3413,32 +3413,26 @@ body {
    visible immediately, since there is no scroll animation to reveal it. */
 .contact-float-widget--standalone {
   position: fixed;
-  inset-inline-start: 22px;
-  bottom: 22px;
-  left: auto;
+  /* Physical left, not inset-inline-start: the page is RTL, so the logical
+     property would flip it to the right — the home page keeps this widget on
+     the left and it must not move between pages. */
+  left: 22px;
   right: auto;
+  bottom: 22px;
   top: auto;
   width: auto;
   opacity: 1;
   pointer-events: auto;
   z-index: 45;
 }
-/* The popup is anchored with `left: 0` for the home dock, where the widget sits
-   mid-layout. Pinned to a corner that pushes 230px off the screen edge, so the
-   standalone copy opens inward instead. */
-.contact-float-widget--standalone .contact-float-menu {
-  left: auto;
-  right: auto;
-  inset-inline-start: 0;
-}
-
 @media (max-width: 768px) {
   /* Phones turn the home-page widget into an always-open inline card that
      fills the dead space under the dock. A corner-pinned copy must stay a
      tap-to-open FAB, so the FAB behaviour is restored here. */
   .contact-float-widget--standalone {
     position: fixed;
-    inset-inline-start: 14px;
+    left: 14px;
+    right: auto;
     bottom: 14px;
     width: auto;
   }
@@ -3449,8 +3443,7 @@ body {
     display: none;
     position: absolute;
     bottom: 60px;
-    inset-inline-start: 0;
-    left: auto;
+    left: 0;
     right: auto;
     width: min(260px, calc(100vw - 32px));
     padding: 14px;
@@ -3459,4 +3452,187 @@ body {
   .contact-float-widget--standalone .contact-float-menu--open {
     display: block;
   }
+}
+
+/* ---- Inner-page top bar (logo + hamburger menu) ---- */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* The page is RTL, so the first child would land on the right. Reversed so
+     the wordmark stays on the left exactly where the home page keeps it. */
+  flex-direction: row-reverse;
+  gap: 12px;
+  padding: 14px 20px;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+/* Hidden on the way down, back on the way up — it must not cover the reading. */
+.site-nav.is-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+}
+.site-nav-logo,
+.site-nav-menu {
+  pointer-events: auto;
+}
+.site-nav-logo {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  border-radius: 16px;
+  background: rgba(10, 16, 26, 0.84);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+}
+.site-nav-logo img {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+[data-pf-theme="light"] .site-nav-logo {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(9, 18, 30, 0.12);
+}
+
+.site-nav-menu { position: relative; }
+
+.site-nav-burger {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  background: rgba(10, 16, 26, 0.84);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.site-nav-burger:hover { border-color: rgba(61, 218, 210, 0.6); }
+.site-nav-burger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+/* The three bars fold into an ✕ so the button states its own state. */
+.site-nav-burger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.site-nav-burger.is-open span:nth-child(2) { opacity: 0; }
+.site-nav-burger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+[data-pf-theme="light"] .site-nav-burger {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(9, 18, 30, 0.12);
+}
+[data-pf-theme="light"] .site-nav-burger span { background: #0b1220; }
+
+.site-nav-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  /* Physical right: the button sits at the right edge, so the panel hangs from
+     that same edge and grows inward. */
+  right: 0;
+  left: auto;
+  width: 232px;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(10, 16, 26, 0.95);
+  border: 1.5px solid rgba(61, 218, 210, 0.35);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 24px 55px -12px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.97);
+  transform-origin: top right;
+  transition: opacity 0.22s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0.22s;
+}
+.site-nav-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.site-nav-panel ul {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+}
+.site-nav-panel a,
+.site-nav-theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: rgba(255, 255, 255, 0.82);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: start;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.site-nav-panel a:hover,
+.site-nav-theme:hover {
+  background: rgba(61, 218, 210, 0.14);
+  color: #fff;
+}
+.site-nav-panel a.is-current {
+  background: rgba(61, 218, 210, 0.18);
+  color: #7ef0e8;
+}
+.site-nav-ico {
+  width: 22px;
+  text-align: center;
+  font-size: 14px;
+  flex: none;
+}
+.site-nav-theme {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 12px 12px;
+  padding-top: 13px;
+  margin-top: 4px;
+}
+[data-pf-theme="light"] .site-nav-panel {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(15, 155, 147, 0.35);
+  box-shadow: 0 24px 55px -14px rgba(9, 18, 30, 0.3);
+}
+[data-pf-theme="light"] .site-nav-panel a,
+[data-pf-theme="light"] .site-nav-theme { color: rgba(11, 18, 32, 0.78); }
+[data-pf-theme="light"] .site-nav-panel a:hover,
+[data-pf-theme="light"] .site-nav-theme:hover {
+  background: rgba(15, 155, 147, 0.12);
+  color: #06201f;
+}
+[data-pf-theme="light"] .site-nav-panel a.is-current {
+  background: rgba(15, 155, 147, 0.16);
+  color: #0a6a65;
+}
+[data-pf-theme="light"] .site-nav-theme { border-top-color: rgba(9, 18, 30, 0.12); }
+
+@media (max-width: 768px) {
+  .site-nav { padding: 10px 14px; }
+  .site-nav-logo { padding: 3px 10px; }
+  .site-nav-logo img { height: 34px; }
+  .site-nav-burger { width: 42px; height: 42px; }
+  .site-nav-panel { width: 210px; }
 }

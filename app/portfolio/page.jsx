@@ -1,7 +1,7 @@
 import PortfolioGallery from "./PortfolioGallery";
 import TechBackground from "./TechBackground";
 import HeroIntro from "./HeroIntro";
-import ThemeToggle from "../ThemeToggle";
+import SiteNav from "../SiteNav";
 import ContactWidget from "../ContactWidget";
 
 const SITE = "https://openappo.com";
@@ -123,22 +123,10 @@ export default async function PortfolioPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(projects)) }}
       />
 
-      <header className="openappo-nav">
-        <a href="/" className="openappo-logo-wrap" aria-label="Openappo">
-          <img
-            src="/brand/openappo-wordmark-dark.png"
-            alt="Openappo"
-            className="openappo-logo-img"
-          />
-        </a>
-      </header>
 
-      <ThemeToggle />
+      <SiteNav current="/portfolio" />
       <ContactWidget standalone />
 
-      <a href="/" className="pf-back">
-        ← الرئيسية
-      </a>
 
       <HeroIntro projects={projects} />
 

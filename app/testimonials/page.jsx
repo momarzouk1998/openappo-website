@@ -1,6 +1,6 @@
 import TestimonialsClient from "./TestimonialsClient";
 import TechBackground from "../portfolio/TechBackground";
-import ThemeToggle from "../ThemeToggle";
+import SiteNav from "../SiteNav";
 import ContactWidget from "../ContactWidget";
 import "./testimonials.css";
 
@@ -126,22 +126,10 @@ export default async function TestimonialsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }}
       />
 
-      <header className="openappo-nav">
-        <a href="/" className="openappo-logo-wrap" aria-label="Openappo">
-          <img
-            src="/brand/openappo-wordmark-dark.png"
-            alt="Openappo"
-            className="openappo-logo-img"
-          />
-        </a>
-      </header>
 
-      <ThemeToggle />
+      <SiteNav current="/testimonials" />
       <ContactWidget standalone />
 
-      <a href="/" className="pf-back">
-        ← الرئيسية
-      </a>
 
       <TestimonialsClient clients={clients} testimonials={testimonials} />
     </main>
