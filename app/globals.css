@@ -208,36 +208,93 @@ body {
 }
 
 /* Light Theme overrides for mouse mockup */
-[data-theme="light"] .mouse-device {
+[data-pf-theme="light"] .mouse-device {
   background: rgba(255, 255, 255, 0.88);
   border-color: rgba(15, 155, 147, 0.55);
   box-shadow: 0 14px 35px -6px rgba(0, 0, 0, 0.12),
               0 0 22px -2px rgba(15, 155, 147, 0.25);
 }
 
-[data-theme="light"] .mouse-wheel-track {
+[data-pf-theme="light"] .mouse-wheel-track {
   border-color: rgba(15, 155, 147, 0.65);
   background: rgba(15, 155, 147, 0.08);
 }
 
-[data-theme="light"] .mouse-wheel-dot {
+[data-pf-theme="light"] .mouse-wheel-dot {
   background: #0f9b93;
   box-shadow: 0 0 8px rgba(15, 155, 147, 0.8);
 }
 
-[data-theme="light"] .mouse-scroll-text {
+[data-pf-theme="light"] .mouse-scroll-text {
   color: #0d4a46;
   text-shadow: none;
   font-weight: 800;
 }
 
-[data-theme="light"] .mouse-arrow-indicator {
+[data-pf-theme="light"] .mouse-arrow-indicator {
   color: #0f9b93;
 }
 
 /* The wrapper used to be hidden wholesale on phones, back when it only held
    the desktop mouse indicator. It now also carries the phone swipe mockup, so
    the wrapper stays and only the mouse indicator is hidden (further down). */
+
+/* ---------- Mobile-only brand intro (fills the first-screen void) ---------- */
+.mobile-brand-intro {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-brand-intro {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(10, 16, 26, 0.6);
+    border: 1px solid rgba(61, 218, 210, 0.35);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: 0.1px;
+    text-align: center;
+    max-width: calc(100vw - 48px);
+  }
+}
+.mobile-brand-intro-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #3ddad2;
+  box-shadow: 0 0 10px #3ddad2;
+  animation: mouseGlowPulse 2.6s infinite ease-in-out;
+}
+[data-pf-theme="light"] .mobile-brand-intro {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(15, 155, 147, 0.4);
+  color: #0b1220;
+}
+
+/* Bridges the hard edge between the sharp photo band and the blurred canvas
+   backdrop below it — without this the seam reads as a visible cut line. */
+.pf-mobile-seam-fade {
+  display: none;
+}
+@media (max-width: 768px) {
+  .pf-mobile-seam-fade {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: calc(56.25vw - 36px);
+    height: 72px;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--pf-canvas-bg, #000));
+  }
+}
 
 /* ---------- Landscape / Desktop Bottom Dock Container (Equal Spacing & Fluid Scaling) ---------- */
 .bottom-dock-container {
@@ -864,11 +921,15 @@ body {
     height: 26px;
   }
   .scroll-hint-wrapper {
+    /* Spans the whole void between the photo band and the screen edge and
+       centers its content in it, instead of anchoring to the top and
+       leaving all the leftover space stranded below the phone mockup. */
     top: calc(56.25vw + 12px);
-    bottom: auto;
+    bottom: max(24px, env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
-    gap: 12px;
+    justify-content: center;
+    gap: 26px;
     width: 100%;
   }
   .scroll-hint {

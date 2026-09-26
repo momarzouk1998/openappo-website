@@ -353,8 +353,23 @@ export default function ScrollSequence({ lang = "ar" }) {
         }}
       />
 
+      {/* Fades the hard edge between the sharp photo band and the blurred
+          canvas backdrop below it into a soft seam — phones only, the desktop
+          layout never shows a bare blurred void here. */}
+      <div className="pf-mobile-seam-fade" aria-hidden="true" />
+
       {/* Initial Scroll Hint - Windows / Desktop Mouse Mockup */}
       <div ref={scrollHintRef} className="scroll-hint-wrapper">
+        {/* Brand identity for the first screen on phones: at scroll 0 the hero
+            card below hasn't appeared yet (it only fades in past 50% scroll),
+            so without this the whole space between the photo and the swipe
+            mockup reads as empty. Fades out together with the mockup as soon
+            as the user starts scrolling — same ref, same opacity. */}
+        <div className="mobile-brand-intro">
+          <span className="mobile-brand-intro-dot" />
+          <span>{t.tagline}</span>
+        </div>
+
         <div className="mouse-scroll-indicator" aria-label={t.scrollHint}>
           <div className="mouse-device">
             <div className="mouse-wheel-track">
