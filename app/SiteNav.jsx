@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
-  { href: "/", label: "الرئيسية", icon: "⌂" },
-  { href: "/portfolio", label: "سابقة الأعمال", icon: "🏆" },
-  { href: "/testimonials", label: "آراء العملاء", icon: "★" },
-  { href: "/contact", label: "تواصل بينا", icon: "✆" },
+  { href: "/", labelAr: "الرئيسية", labelEn: "Home", icon: "⌂" },
+  { href: "/portfolio", labelAr: "سابقة الأعمال", labelEn: "Portfolio", icon: "🏆" },
+  { href: "/blog", labelAr: "المدونة", labelEn: "Blog", icon: "📝" },
+  { href: "/testimonials", labelAr: "آراء العملاء", labelEn: "Testimonials", icon: "★" },
+  { href: "/contact", labelAr: "تواصل بينا", labelEn: "Contact", icon: "✆" },
 ];
 
 const KEY = "pf-theme";
@@ -19,7 +20,7 @@ const KEY = "pf-theme";
  * The wordmark hides on the way down and comes back on the way up, so it never
  * sits over the content while reading.
  */
-export default function SiteNav({ current = "" }) {
+export default function SiteNav({ current = "", lang = "ar" }) {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [theme, setTheme] = useState("dark");
@@ -76,9 +77,13 @@ export default function SiteNav({ current = "" }) {
     }
   };
 
+  const isEn = lang === "en";
+  const localize = (href) => (isEn ? (href === "/" ? "/en" : `/en${href}`) : href);
+  const otherLangHref = isEn ? current || "/" : current === "/" || !current ? "/en" : `/en${current}`;
+
   return (
     <header className={`site-nav${hidden ? " is-hidden" : ""}`}>
-      <a href="/" className="site-nav-logo" aria-label="Openappo">
+      <a href={localize("/")} className="site-nav-logo" aria-label="Openappo">
         <img src="/brand/openappo-wordmark-dark.png" alt="Openappo" />
       </a>
 
@@ -88,7 +93,7 @@ export default function SiteNav({ current = "" }) {
           className={`site-nav-burger${open ? " is-open" : ""}`}
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
+          aria-label={open ? (isEn ? "Close menu" : "إغلاق القائمة") : isEn ? "Open menu" : "فتح القائمة"}
         >
           <span />
           <span />
@@ -100,24 +105,33 @@ export default function SiteNav({ current = "" }) {
             {LINKS.map((l) => (
               <li key={l.href}>
                 <a
-                  href={l.href}
+                  href={localize(l.href)}
                   className={l.href === current ? "is-current" : ""}
                   aria-current={l.href === current ? "page" : undefined}
                 >
                   <span className="site-nav-ico" aria-hidden="true">
                     {l.icon}
                   </span>
-                  <span>{l.label}</span>
+                  <span>{isEn ? l.labelEn : l.labelAr}</span>
                 </a>
               </li>
             ))}
           </ul>
 
+          <a href={otherLangHref} className="site-nav-lang" lang={isEn ? "ar" : "en"}>
+            <span className="site-nav-ico" aria-hidden="true">🌐</span>
+            <span>{isEn ? "العربية" : "English"}</span>
+          </a>
+
           <button type="button" className="site-nav-theme" onClick={flipTheme}>
             <span className="site-nav-ico" aria-hidden="true">
               {theme === "light" ? "🌙" : "☀️"}
             </span>
-            <span>{theme === "light" ? "الوضع الداكن" : "الوضع الفاتح"}</span>
+            <span>
+              {isEn
+                ? theme === "light" ? "Dark mode" : "Light mode"
+                : theme === "light" ? "الوضع الداكن" : "الوضع الفاتح"}
+            </span>
           </button>
         </nav>
       </div>

@@ -56,10 +56,48 @@ export const viewport = {
   themeColor: "#000000",
 };
 
+const SITE = "https://openappo.com";
+
+function orgJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE}/#org`,
+        name: "Openappo",
+        url: SITE,
+        logo: `${SITE}/icon.png`,
+        description:
+          "تصميم وتطوير أنظمة إدارة الأعمال وتخطيط الموارد (ERP) السحابية المخصصة للشركات.",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+201558282760",
+          contactType: "customer service",
+          areaServed: "EG",
+          availableLanguage: ["ar", "en"],
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE}/#website`,
+        url: SITE,
+        name: "Openappo",
+        inLanguage: "ar",
+        publisher: { "@id": `${SITE}/#org` },
+      },
+    ],
+  };
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd()) }}
+        />
         {/* Apply the saved theme before the first paint — otherwise the page
             flashes dark, then repaints light. */}
         <script
