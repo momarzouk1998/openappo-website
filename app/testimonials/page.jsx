@@ -28,7 +28,7 @@ export const metadata = {
     "Openappo Customer Stories",
     "شهادات عملاء البرمجيات",
   ],
-  alternates: { canonical: "/testimonials" },
+  alternates: { canonical: "/testimonials", languages: { ar: "/testimonials", en: "/en/testimonials" } },
   openGraph: {
     type: "website",
     url: `${SITE}/testimonials`,

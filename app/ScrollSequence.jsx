@@ -5,7 +5,35 @@ import ContactWidget from "./ContactWidget";
 
 const FRAME_COUNT = 60;
 
-export default function ScrollSequence() {
+const STR = {
+  ar: {
+    scrollHint: "مرّر للأسفل",
+    swipeHint: "اسحب الشاشة",
+    tagline: "منظومة إدارة وتطوير الأعمال الذكية",
+    slogan: "بنصمم السيستم حسب طريقة شغلك بالظبط",
+    descBefore: "ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية ",
+    descHighlight: "لحظة بلحظة وبأعلى كفاءة",
+    descAfter: "، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.",
+    howItWorks: "كيف نعمل",
+    portfolio: "سابقة الأعمال",
+    testimonials: "آراء العملاء",
+  },
+  en: {
+    scrollHint: "Scroll down",
+    swipeHint: "Swipe the screen",
+    tagline: "Smart business management & growth platform",
+    slogan: "We design the system around exactly how you work",
+    descBefore: "Say goodbye to messy invoices and scattered spreadsheets. Manage your sales, inventory, and financial reports ",
+    descHighlight: "live and at peak efficiency",
+    descAfter: ", so you can make faster decisions and grow your profits with confidence.",
+    howItWorks: "How we work",
+    portfolio: "Portfolio",
+    testimonials: "Testimonials",
+  },
+};
+
+export default function ScrollSequence({ lang = "ar" }) {
+  const t = STR[lang] || STR.ar;
   const canvasRef = useRef(null);
   const trackRef = useRef(null);
   const heroRef = useRef(null);
@@ -327,12 +355,12 @@ export default function ScrollSequence() {
 
       {/* Initial Scroll Hint - Windows / Desktop Mouse Mockup */}
       <div ref={scrollHintRef} className="scroll-hint-wrapper">
-        <div className="mouse-scroll-indicator" aria-label="مرّر للأسفل">
+        <div className="mouse-scroll-indicator" aria-label={t.scrollHint}>
           <div className="mouse-device">
             <div className="mouse-wheel-track">
               <div className="mouse-wheel-dot" />
             </div>
-            <span className="mouse-scroll-text">مرّر للأسفل</span>
+            <span className="mouse-scroll-text">{t.scrollHint}</span>
             <div className="mouse-arrow-indicator">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 10l5 5 5-5" />
@@ -358,7 +386,7 @@ export default function ScrollSequence() {
                 />
               </svg>
             </div>
-            <span className="swipe-hint-text">اسحب الشاشة</span>
+            <span className="swipe-hint-text">{t.swipeHint}</span>
           </div>
           <div className="phone-mockup-homebar" />
         </div>
@@ -372,7 +400,7 @@ export default function ScrollSequence() {
           <div className="hero-glass-card">
             <div className="hero-tagline">
               <span className="hero-tagline-dot" />
-              <span>منظومة إدارة وتطوير الأعمال الذكية</span>
+              <span>{t.tagline}</span>
             </div>
 
             <div className="hero-heading-group">
@@ -384,7 +412,7 @@ export default function ScrollSequence() {
                 />
               </h1>
               <div className="hero-custom-slogan">
-                <span>بنصمم السيستم حسب طريقة شغلك بالظبط</span>
+                <span>{t.slogan}</span>
                 <span className="slogan-emoji">👌</span>
               </div>
             </div>
@@ -392,8 +420,9 @@ export default function ScrollSequence() {
             <div className="hero-desc-container">
               <div className="hero-desc-bar" />
               <p className="hero-desc">
-                ودّع فوضى الفواتير والإكسل المشتت. أدر مبيعاتك، مخزونك، وتقاريرك المالية والإدارية{" "}
-                <span className="hero-desc-highlight">لحظة بلحظة وبأعلى كفاءة</span>، لاتخاذ قرارات أسرع وتنمية أرباحك بثقة.
+                {t.descBefore}
+                <span className="hero-desc-highlight">{t.descHighlight}</span>
+                {t.descAfter}
               </p>
             </div>
           </div>
@@ -401,27 +430,27 @@ export default function ScrollSequence() {
 
         {/* 2. Mid-Right: Floating Action Buttons Bar */}
         <div ref={bottomBarRef} className="hero-bottom-bar">
-          <a href="/how-it-works" className="btn-how-it-works">
+          <a href={lang === "en" ? "/en/how-it-works" : "/how-it-works"} className="btn-how-it-works">
             <span className="btn-how-icon">⚡</span>
-            <span>كيف نعمل</span>
+            <span>{t.howItWorks}</span>
           </a>
 
           <div className="bottom-bar-subrow">
-            <a href="/portfolio" className="btn-explore">
-              <span>سابقة الأعمال</span>
-              <span className="btn-arrow-icon">←</span>
+            <a href={lang === "en" ? "/en/portfolio" : "/portfolio"} className="btn-explore">
+              <span>{t.portfolio}</span>
+              <span className="btn-arrow-icon">{lang === "en" ? "→" : "←"}</span>
             </a>
 
-            <a href="/testimonials" className="btn-testimonials">
+            <a href={lang === "en" ? "/en/testimonials" : "/testimonials"} className="btn-testimonials">
               <span className="btn-star-icon">★</span>
-              <span>آراء العملاء</span>
+              <span>{t.testimonials}</span>
             </a>
           </div>
         </div>
 
 
         {/* 4. Left: Floating Contact FAB Widget */}
-        <ContactWidget innerRef={contactWidgetRef} />
+        <ContactWidget innerRef={contactWidgetRef} lang={lang} />
       </div>
     </div>
   );

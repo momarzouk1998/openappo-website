@@ -5,6 +5,53 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const AUTO_MS = 1200;
 const BEHIND = 3;
 
+const UI = {
+  ar: {
+    pendingScreens: "الشاشات التفصيلية لهذا النظام قيد الإعداد والإطلاق.",
+    requestDemoWa: "طلب عرض توضيحي مباشر عبر واتساب ←",
+    zoomScreen: "تكبير الشاشة",
+    prev: "السابق",
+    next: "التالي",
+    swipeHint: "مرّر للتنقل بين الشاشات · اضغط على الشاشة لتكبيرها",
+    playVideo: (title) => `تشغيل فيديو ${title}`,
+    watchLive: "شاهد النظام أثناء التشغيل",
+    dashboardTitle: "لوحة التحكم الإدارية",
+    live247: "تشغيل حي 24/7",
+    live: "مباشر",
+    latestActivity: "أحدث الحركات والعمليات",
+    viewSetup: "👁️ اضغط لاستعراض تفاصيل وتجهيزات المنظومة",
+    viewShots: (n) => `👁️ اضغط لاستعراض ${n} شاشة حقيقية`,
+    operationalScreens: (n) => `${n} شاشة تشغيلية`,
+    close: "إغلاق",
+    tryLive: (name) => `هل ترغب في تجربة منظومة ${name} مباشرة؟`,
+    demoOffer: "يمكننا تجهيز نسخة تجريبية حية (Live Demo) وعرض كافة الشاشات والتقارير عبر اجتماع أونلاين أو زيارة عمل.",
+    demoCta: "طلب عرض توضيحي مباشر (Demo) عبر واتساب ←",
+    demoMsg: (name) => "مرحباً، أود حجز موعد لعرض توضيحي مباشر (Demo) لمنظومة: " + name,
+  },
+  en: {
+    pendingScreens: "Detailed screens for this system are being prepared and will launch soon.",
+    requestDemoWa: "Request a live demo via WhatsApp →",
+    zoomScreen: "Zoom screen",
+    prev: "Previous",
+    next: "Next",
+    swipeHint: "Swipe to browse screens · tap a screen to zoom in",
+    playVideo: (title) => `Play video: ${title}`,
+    watchLive: "Watch the system in action",
+    dashboardTitle: "Admin Dashboard",
+    live247: "Live 24/7",
+    live: "Live",
+    latestActivity: "Latest activity",
+    viewSetup: "👁️ Tap to view the system's setup and details",
+    viewShots: (n) => `👁️ Tap to view ${n} real screens`,
+    operationalScreens: (n) => `${n} operational screens`,
+    close: "Close",
+    tryLive: (name) => `Want to try the ${name} system live?`,
+    demoOffer: "We can set up a live demo and walk you through every screen and report over an online meeting or an on-site visit.",
+    demoCta: "Request a live demo via WhatsApp →",
+    demoMsg: (name) => "Hi, I'd like to book a live demo for the system: " + name,
+  },
+};
+
 function rel(i, cur, n) {
   return (i - cur + n) % n;
 }
@@ -22,7 +69,8 @@ function deckStyle(o, n) {
   };
 }
 
-function Deck({ shots, onZoom }) {
+function Deck({ shots, onZoom, lang = "ar" }) {
+  const t = UI[lang] || UI.ar;
   const n = shots.length;
   const [cur, setCur] = useState(0);
   const [held, setHeld] = useState(false);
@@ -83,9 +131,9 @@ function Deck({ shots, onZoom }) {
   if (!n)
     return (
       <div className="pf-flow-pending">
-        <p>الشاشات التفصيلية لهذا النظام قيد الإعداد والإطلاق.</p>
+        <p>{t.pendingScreens}</p>
         <a href="https://wa.me/201558282760" target="_blank" rel="noopener noreferrer" className="pf-demo-cta">
-          طلب عرض توضيحي مباشر عبر واتساب ←
+          {t.requestDemoWa}
         </a>
       </div>
     );
@@ -118,7 +166,7 @@ function Deck({ shots, onZoom }) {
               className={"pf-deck-card" + (o === 0 ? " is-front" : "")}
               style={deckStyle(o, n)}
               onClick={() => o === 0 && onZoom(shots[i])}
-              aria-label="تكبير الشاشة"
+              aria-label={t.zoomScreen}
               tabIndex={o === 0 ? 0 : -1}
               aria-hidden={o !== 0}
             >
@@ -133,10 +181,10 @@ function Deck({ shots, onZoom }) {
           ))}
         </div>
 
-        <button className="pf-deck-nav pf-deck-nav--prev" onClick={() => go(-1)} aria-label="السابق">
+        <button className="pf-deck-nav pf-deck-nav--prev" onClick={() => go(-1)} aria-label={t.prev}>
           ‹
         </button>
-        <button className="pf-deck-nav pf-deck-nav--next" onClick={() => go(1)} aria-label="التالي">
+        <button className="pf-deck-nav pf-deck-nav--next" onClick={() => go(1)} aria-label={t.next}>
           ›
         </button>
       </div>
@@ -145,15 +193,13 @@ function Deck({ shots, onZoom }) {
         <span className="pf-flow-count">
           {cur + 1} / {n}
         </span>
-        <span className="pf-flow-hint">
-          مرّر للتنقل بين الشاشات · اضغط على الشاشة لتكبيرها
-        </span>
+        <span className="pf-flow-hint">{t.swipeHint}</span>
       </div>
     </>
   );
 }
 
-const SYSTEM_CONFIGS = {
+const SYSTEM_CONFIGS_AR = {
   mazaya: {
     badge: "منظومة مصانع ومعارض الأثاث",
     pills: ["سحابي 100%", "تقارير لحظية", "صلاحيات دقيقة", "28 شاشة تشغيلية"],
@@ -336,7 +382,7 @@ const SYSTEM_CONFIGS = {
   },
 };
 
-const DEFAULT_CONFIG = {
+const DEFAULT_CONFIG_AR = {
   badge: "منظومة سحابية متكاملة",
   pills: ["سحابي 100%", "تقارير لحظية", "صلاحيات دقيقة", "حلول مخصصة"],
   kpis: [
@@ -352,13 +398,213 @@ const DEFAULT_CONFIG = {
   ],
 };
 
+const SYSTEM_CONFIGS_EN = {
+  mazaya: {
+    badge: "Furniture Factory & Showroom System",
+    pills: ["100% cloud", "Real-time reports", "Granular permissions", "28 operational screens"],
+    kpis: [
+      { label: "Showroom sales", val: "EGP 145,000", trend: "+18%" },
+      { label: "Production orders", val: "34 active orders", trend: "In progress" },
+      { label: "Inventory movements", val: "1,280 units", trend: "In stock" },
+    ],
+    chartTitle: "Showroom revenue & production orders",
+    activities: [
+      { text: "Sales invoice #4092 — Dokki showroom", status: "Approved" },
+      { text: "Production order #891 — bedroom line", status: "In progress" },
+      { text: "Material issue slip #142 — timber store", status: "Completed" },
+    ],
+  },
+  keshk: {
+    badge: "Household Goods Trade & Distribution",
+    pills: ["100% cloud", "Wholesale & distribution", "Rep management", "9 operational screens"],
+    kpis: [
+      { label: "Wholesale invoices", val: "EGP 82,500", trend: "+14%" },
+      { label: "Rep collections", val: "EGP 64,000", trend: "Live" },
+      { label: "Warehouse SKUs", val: "4,150 items", trend: "Active count" },
+    ],
+    chartTitle: "Daily sales & collections",
+    activities: [
+      { text: "Wholesale invoice #218 — Zagazig customer", status: "Settled" },
+      { text: "Rep route #4 — Mansoura area", status: "Out for delivery" },
+      { text: "Branch cash-drawer reconciliation #12", status: "Approved" },
+    ],
+  },
+  elnazlawy: {
+    badge: "Electrical Appliances & Lighting System",
+    pills: ["100% cloud", "Rep routes", "Cheque tracking", "Precise barcode inventory"],
+    kpis: [
+      { label: "Showroom sales", val: "EGP 96,400", trend: "+12%" },
+      { label: "Cheques due", val: "18 cheques", trend: "Under collection" },
+      { label: "Warehouse balance", val: "890 units", trend: "In stock" },
+    ],
+    chartTitle: "Appliance & lighting movement index",
+    activities: [
+      { text: "Retail appliance invoice #512", status: "Completed" },
+      { text: "Collected cheque batch #88", status: "Collected" },
+      { text: "Supplier goods-receipt note #31", status: "Approved" },
+    ],
+  },
+  elhoot: {
+    badge: "Wholesale Trade & Distribution System",
+    pills: ["100% cloud", "Wholesale trade", "Debt aging & credit", "Cash-drawer collections"],
+    kpis: [
+      { label: "Wholesale sales", val: "EGP 215,000", trend: "+22%" },
+      { label: "Today's collections", val: "EGP 140,000", trend: "Complete" },
+      { label: "Debt aging", val: "98.2% on schedule", trend: "Excellent" },
+    ],
+    chartTitle: "Distribution sales & cash collections",
+    activities: [
+      { text: "Wholesale issue slip #1084 — channel sector", status: "Approved" },
+      { text: "Customer #67 debt settlement", status: "Paid" },
+      { text: "Cable & switch stock received", status: "In warehouse" },
+    ],
+  },
+  elnesr: {
+    badge: "Distribution Fleet & Rep Management",
+    pills: ["100% cloud", "HR management", "Distribution routes", "Mobile stock per rep"],
+    kpis: [
+      { label: "Fleet sales", val: "EGP 132,000", trend: "+16%" },
+      { label: "Active reps", val: "16 routes", trend: "In service" },
+      { label: "Float reconciliation", val: "100%", trend: "Matched" },
+    ],
+    chartTitle: "Route coverage & rep sales",
+    activities: [
+      { text: "Rep #7 float reconciliation — Tanta route", status: "Approved" },
+      { text: "Tax invoice #3319 issued", status: "Completed" },
+      { text: "Warehouse transfer to delivery van #3", status: "Moved" },
+    ],
+  },
+  rtx: {
+    badge: "Manufacturing & Production-Stage Management",
+    pills: ["100% cloud", "3 production stages", "Production-order tracking", "Raw-material costing"],
+    kpis: [
+      { label: "Raw materials received", val: "48 tons", trend: "In stock" },
+      { label: "Active work orders", val: "12 production lines", trend: "Running" },
+      { label: "Finished goods ready", val: "2,400 units", trend: "Ready" },
+    ],
+    chartTitle: "Production lifecycle & running cost",
+    activities: [
+      { text: "Incoming raw material — receipt #94", status: "Inspected" },
+      { text: "Production stage #B12 completed", status: "Ready for sale" },
+      { text: "Finished-goods shipment to distributor", status: "Delivered" },
+    ],
+  },
+  maspero: {
+    badge: "Point of Sale & Digital Services System",
+    pills: ["100% cloud", "POS", "Wallet & shift management", "Multi-branch oversight"],
+    kpis: [
+      { label: "Top-up & wallet transactions", val: "3,450 transactions", trend: "+29%" },
+      { label: "Shift handovers", val: "6 branches", trend: "Balanced precisely" },
+      { label: "Staff commissions", val: "Real-time", trend: "Automatic" },
+    ],
+    chartTitle: "E-wallet & POS transaction volume",
+    activities: [
+      { text: "Shift handover — Maadi branch #2", status: "Balanced" },
+      { text: "E-wallet top-up #8902", status: "Successful" },
+      { text: "Internal support ticket — printer", status: "Resolved" },
+    ],
+  },
+  roknalanaqa: {
+    badge: "Retail Shops & Furnishing Workshop System",
+    pills: ["100% cloud", "Shop & workshop management", "Partner profit accounting", "Fabric & tailoring tracking"],
+    kpis: [
+      { label: "Shop sales", val: "EGP 68,000", trend: "+11%" },
+      { label: "Workshop orders", val: "22 tailoring & installs", trend: "In progress" },
+      { label: "Partner profits", val: "Auto-calculated", trend: "Periodic" },
+    ],
+    chartTitle: "Branch revenue & workshop operations",
+    activities: [
+      { text: "Curtain & furnishing order #114", status: "Being installed" },
+      { text: "Clothing sale invoice — Nozha branch", status: "Completed" },
+      { text: "Quarterly partner profit distribution", status: "Approved" },
+    ],
+  },
+  binqasim: {
+    badge: "Import & Supply Chain System",
+    pills: ["100% cloud", "Shipment cost allocation", "Transport fleet", "Item-level profitability"],
+    kpis: [
+      { label: "Import shipments", val: "6 containers", trend: "At port/warehouse" },
+      { label: "Item costing", val: "Precisely allocated", trend: "Automatic" },
+      { label: "Transport fleet", val: "8 trucks", trend: "Active" },
+    ],
+    chartTitle: "Shipment cost & inventory turnover",
+    activities: [
+      { text: "Import shipment #C-802 unloaded", status: "In warehouse" },
+      { text: "Customs & freight expenses allocated", status: "Calculated" },
+      { text: "Outbound goods-transport order", status: "En route" },
+    ],
+  },
+  opengym: {
+    badge: "Gym & Sports Club Management Platform",
+    pills: ["100% cloud", "Member subscription portal", "Offline-capable PWA", "Trainer & payment management"],
+    kpis: [
+      { label: "Active members", val: "1,240 subscribers", trend: "+15%" },
+      { label: "Renewal rate", val: "88%", trend: "High" },
+      { label: "Today's fingerprint check-ins", val: "310 members", trend: "Instant" },
+    ],
+    chartTitle: "Subscription growth & monthly revenue",
+    activities: [
+      { text: "VIP package renewal — member", status: "Paid" },
+      { text: "Member check-in via barcode/fingerprint", status: "Accepted" },
+      { text: "Personal-training commission payout (PT)", status: "Approved" },
+    ],
+  },
+  riyadalquran: {
+    badge: "Charity & Nursery Management System",
+    pills: ["100% cloud", "Case triage & classification", "Guardian portal", "Spending & donation reports"],
+    kpis: [
+      { label: "Families supported", val: "850 families", trend: "Ongoing care" },
+      { label: "Orphan sponsorships", val: "100% covered", trend: "Consistent" },
+      { label: "Nursery children", val: "145 children", trend: "Daily follow-up" },
+    ],
+    chartTitle: "Aid disbursement & charitable donations",
+    activities: [
+      { text: "Emergency medical aid disbursed #H-301", status: "Paid out" },
+      { text: "Nursery follow-up report — guardian", status: "Sent" },
+      { text: "Monthly sponsorship statement approved", status: "Approved" },
+    ],
+  },
+  vos: {
+    badge: "Volunteer & Team Management System (VOS)",
+    pills: ["100% cloud", "Digital certificate issuance", "Full audit trail per action", "Leaderboards & teams"],
+    kpis: [
+      { label: "Total volunteers", val: "4,800 volunteers", trend: "+24%" },
+      { label: "Documented volunteer hours", val: "32,000 hours", trend: "Logged" },
+      { label: "Digital certificates", val: "1,650 certificates", trend: "QR-verified" },
+    ],
+    chartTitle: "Volunteer hours & field convoy activity",
+    activities: [
+      { text: "QR-verified volunteer certificate issued", status: "Issued" },
+      { text: "Medical convoy #42 participation approved", status: "Approved" },
+      { text: "Leaderboard of top volunteers updated", status: "Updated" },
+    ],
+  },
+};
+
+const DEFAULT_CONFIG_EN = {
+  badge: "Integrated cloud system",
+  pills: ["100% cloud", "Real-time reports", "Granular permissions", "Tailored solutions"],
+  kpis: [
+    { label: "Operational activity", val: "99.8%", trend: "+15%" },
+    { label: "System efficiency", val: "Real-time", trend: "Top performance" },
+    { label: "Active users", val: "Multi-role", trend: "Cloud-based" },
+  ],
+  chartTitle: "Performance & growth indicators",
+  activities: [
+    { text: "Approved e-invoice issued", status: "Completed" },
+    { text: "Warehouse & cash-drawer activity updated", status: "Live" },
+    { text: "Financial & management report generated", status: "Ready" },
+  ],
+};
+
 /**
  * YouTube without the YouTube cost. Until the viewer actually clicks, this is
  * one thumbnail image — no player iframe, no third-party scripts, nothing
  * loaded from Google. The click swaps in the real embed in the same spot, so
  * the video plays in place instead of opening the modal.
  */
-function InlineVideo({ id, title }) {
+function InlineVideo({ id, title, lang = "ar" }) {
+  const t = UI[lang] || UI.ar;
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
@@ -385,7 +631,7 @@ function InlineVideo({ id, title }) {
       type="button"
       className="pf-inline-video"
       onClick={() => setPlaying(true)}
-      aria-label={`تشغيل فيديو ${title}`}
+      aria-label={t.playVideo(title)}
     >
       <img
         src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
@@ -402,22 +648,25 @@ function InlineVideo({ id, title }) {
           <path d="M27 34V14l18 10z" fill="#fff" />
         </svg>
       </span>
-      <span className="pf-inline-video-hint">شاهد النظام أثناء التشغيل</span>
+      <span className="pf-inline-video-hint">{t.watchLive}</span>
     </button>
   );
 }
 
-function SimulatedErpDashboard({ project }) {
-  const config = SYSTEM_CONFIGS[project.slug] || DEFAULT_CONFIG;
+function SimulatedErpDashboard({ project, lang = "ar" }) {
+  const t = UI[lang] || UI.ar;
+  const configs = lang === "en" ? SYSTEM_CONFIGS_EN : SYSTEM_CONFIGS_AR;
+  const fallback = lang === "en" ? DEFAULT_CONFIG_EN : DEFAULT_CONFIG_AR;
+  const config = configs[project.slug] || fallback;
 
   return (
     <div className="pf-sim-dashboard">
       <div className="pf-sim-topbar">
         <div className="pf-sim-brand">
           <span className="pf-sim-pulse-dot" />
-          <span className="pf-sim-title">{project.name} · لوحة التحكم الإدارية</span>
+          <span className="pf-sim-title">{project.name} · {t.dashboardTitle}</span>
         </div>
-        <div className="pf-sim-status">تشغيل حي 24/7</div>
+        <div className="pf-sim-status">{t.live247}</div>
       </div>
 
       <div className="pf-sim-kpis">
@@ -436,7 +685,7 @@ function SimulatedErpDashboard({ project }) {
         <div className="pf-sim-chart-card">
           <div className="pf-sim-chart-header">
             <span>{config.chartTitle}</span>
-            <span className="pf-sim-chart-tag">مباشر</span>
+            <span className="pf-sim-chart-tag">{t.live}</span>
           </div>
           <div className="pf-sim-chart-bars">
             {[65, 82, 45, 95, 75, 90, 100, 85].map((h, i) => (
@@ -449,7 +698,7 @@ function SimulatedErpDashboard({ project }) {
 
         <div className="pf-sim-feed-card">
           <div className="pf-sim-feed-header">
-            <span>أحدث الحركات والعمليات</span>
+            <span>{t.latestActivity}</span>
           </div>
           <div className="pf-sim-feed-list">
             {config.activities.map((act, i) => (
@@ -463,19 +712,22 @@ function SimulatedErpDashboard({ project }) {
       </div>
 
       <div className="pf-mockup-badge">
-        <span>👁️ اضغط لاستعراض تفاصيل وتجهيزات المنظومة</span>
+        <span>{t.viewSetup}</span>
       </div>
     </div>
   );
 }
 
-export default function PortfolioGallery({ projects = [] }) {
+export default function PortfolioGallery({ projects = [], lang = "ar" }) {
+  const t = UI[lang] || UI.ar;
   const [activeSlug, setActiveSlug] = useState(null);
   const [zoom, setZoom] = useState(null);
 
   const activeProject = projects.find((p) => p.slug === activeSlug) || null;
   const count = activeProject ? (activeProject.shots || []).length : 0;
-  const activeConfig = activeProject ? (SYSTEM_CONFIGS[activeProject.slug] || DEFAULT_CONFIG) : DEFAULT_CONFIG;
+  const configs = lang === "en" ? SYSTEM_CONFIGS_EN : SYSTEM_CONFIGS_AR;
+  const fallbackConfig = lang === "en" ? DEFAULT_CONFIG_EN : DEFAULT_CONFIG_AR;
+  const activeConfig = activeProject ? (configs[activeProject.slug] || fallbackConfig) : fallbackConfig;
 
   const close = useCallback(() => {
     setActiveSlug(null);
@@ -504,7 +756,7 @@ export default function PortfolioGallery({ projects = [] }) {
         <div className="pf-featured-grid">
           {projects.map((p, idx) => {
             const hasShots = (p.shots || []).length > 0;
-            const config = SYSTEM_CONFIGS[p.slug] || DEFAULT_CONFIG;
+            const config = configs[p.slug] || fallbackConfig;
 
             return (
               <div
@@ -514,7 +766,7 @@ export default function PortfolioGallery({ projects = [] }) {
                 {/* Left/Interactive Visual Preview Mockup */}
                 {p.youtubeId ? (
                   <div className="pf-spotlight-preview pf-spotlight-preview--video">
-                    <InlineVideo id={p.youtubeId} title={p.name} />
+                    <InlineVideo id={p.youtubeId} title={p.name} lang={lang} />
                   </div>
                 ) : (
                 <div className="pf-spotlight-preview" onClick={() => setActiveSlug(p.slug)}>
@@ -537,11 +789,11 @@ export default function PortfolioGallery({ projects = [] }) {
                             />
                           )}
                           <div className="pf-mockup-badge">
-                            <span>👁️ اضغط لاستعراض {p.shots.length} شاشة حقيقية</span>
+                            <span>{t.viewShots(p.shots.length)}</span>
                           </div>
                         </>
                       ) : (
-                        <SimulatedErpDashboard project={p} />
+                        <SimulatedErpDashboard project={p} lang={lang} />
                       )}
                     </div>
                   </div>
@@ -609,10 +861,10 @@ export default function PortfolioGallery({ projects = [] }) {
                 <div className="pf-modal-name">{activeProject.name}</div>
                 <div className="pf-modal-sub">
                   {activeProject.subtitle}
-                  {count ? ` · ${count} شاشة تشغيلية` : ""}
+                  {count ? ` · ${t.operationalScreens(count)}` : ""}
                 </div>
               </div>
-              <button className="pf-modal-close" onClick={close} aria-label="إغلاق">
+              <button className="pf-modal-close" onClick={close} aria-label={t.close}>
                 ✕
               </button>
             </div>
@@ -639,6 +891,7 @@ export default function PortfolioGallery({ projects = [] }) {
                 key={activeProject.slug}
                 shots={activeProject.shots || []}
                 onZoom={setZoom}
+                lang={lang}
               />
             ) : (
               <div className="pf-modal-no-shots">
@@ -653,15 +906,15 @@ export default function PortfolioGallery({ projects = [] }) {
                 </div>
 
                 <div className="pf-modal-cta-box">
-                  <h4>هل ترغب في تجربة منظومة {activeProject.name} مباشرة؟</h4>
-                  <p>يمكننا تجهيز نسخة تجريبية حية (Live Demo) وعرض كافة الشاشات والتقارير عبر اجتماع أونلاين أو زيارة عمل.</p>
+                  <h4>{t.tryLive(activeProject.name)}</h4>
+                  <p>{t.demoOffer}</p>
                   <a
-                    href={`https://wa.me/201558282760?text=${encodeURIComponent("مرحباً، أود حجز موعد لعرض توضيحي مباشر (Demo) لمنظومة: " + activeProject.name)}`}
+                    href={`https://wa.me/201558282760?text=${encodeURIComponent(t.demoMsg(activeProject.name))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="pf-demo-cta"
                   >
-                    طلب عرض توضيحي مباشر (Demo) عبر واتساب ←
+                    {t.demoCta}
                   </a>
                 </div>
               </div>
@@ -677,7 +930,7 @@ export default function PortfolioGallery({ projects = [] }) {
               }}
             >
               <img src={zoom} alt="" />
-              <button className="pf-zoom-close" aria-label="إغلاق">
+              <button className="pf-zoom-close" aria-label={t.close}>
                 ✕
               </button>
             </div>

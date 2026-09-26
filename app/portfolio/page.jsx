@@ -32,7 +32,7 @@ export const metadata = {
     "شركة برمجة أنظمة إدارية",
     "Openappo",
   ],
-  alternates: { canonical: "/portfolio" },
+  alternates: { canonical: "/portfolio", languages: { ar: "/portfolio", en: "/en/portfolio" } },
   openGraph: {
     type: "website",
     url: `${SITE}/portfolio`,

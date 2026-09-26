@@ -1,32 +1,32 @@
 import { notFound } from "next/navigation";
-import SiteNav from "../../SiteNav";
-import ContactWidget from "../../ContactWidget";
-import TechBackground from "../../portfolio/TechBackground";
-import BlogPostBody from "../BlogPostBody";
-import { POSTS, getPostBySlug, getAllSlugs } from "../posts";
-import "../blog.css";
+import SiteNav from "../../../SiteNav";
+import ContactWidget from "../../../ContactWidget";
+import TechBackground from "../../../portfolio/TechBackground";
+import BlogPostBody from "../../../blog/BlogPostBody";
+import { POSTS_EN, getPostBySlugEn, getAllSlugsEn } from "../../../blog/posts.en";
+import "../../../blog/blog.css";
 
 const SITE = "https://openappo.com";
 
 export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+  return getAllSlugsEn().map((slug) => ({ slug }));
 }
 
 export function generateMetadata({ params }) {
-  const post = getPostBySlug(params.slug);
+  const post = getPostBySlugEn(params.slug);
   if (!post) return {};
-  const url = `${SITE}/blog/${post.slug}`;
+  const url = `${SITE}/en/blog/${post.slug}`;
   return {
     metadataBase: new URL(SITE),
-    title: `${post.title} | مدونة Openappo`,
+    title: `${post.title} | Openappo Blog`,
     description: post.description,
     keywords: post.tags,
-    alternates: { canonical: url, languages: { ar: url, en: `/en/blog/${post.slug}` } },
+    alternates: { canonical: url, languages: { ar: `/blog/${post.slug}`, en: url } },
     openGraph: {
       type: "article",
       url,
       siteName: "Openappo",
-      locale: "ar_EG",
+      locale: "en_US",
       title: post.title,
       description: post.description,
       publishedTime: post.date,
@@ -42,16 +42,11 @@ export function generateMetadata({ params }) {
 }
 
 function jsonLd(post) {
-  const url = `${SITE}/blog/${post.slug}`;
+  const url = `${SITE}/en/blog/${post.slug}`;
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${SITE}/#org`,
-        name: "Openappo",
-        url: SITE,
-      },
+      { "@type": "Organization", "@id": `${SITE}/#org`, name: "Openappo", url: SITE },
       {
         "@type": "BlogPosting",
         "@id": `${url}#article`,
@@ -60,7 +55,7 @@ function jsonLd(post) {
         url,
         datePublished: post.date,
         dateModified: post.date,
-        inLanguage: "ar",
+        inLanguage: "en",
         author: { "@id": `${SITE}/#org` },
         publisher: { "@id": `${SITE}/#org` },
         mainEntityOfPage: url,
@@ -69,8 +64,8 @@ function jsonLd(post) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-          { "@type": "ListItem", position: 2, name: "المدونة", item: `${SITE}/blog` },
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/en` },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/en/blog` },
           { "@type": "ListItem", position: 3, name: post.title, item: url },
         ],
       },
@@ -78,28 +73,25 @@ function jsonLd(post) {
   };
 }
 
-export default function BlogPostPage({ params }) {
-  const post = getPostBySlug(params.slug);
+export default function BlogPostPageEn({ params }) {
+  const post = getPostBySlugEn(params.slug);
   if (!post) notFound();
 
-  const related = POSTS.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
+  const related = POSTS_EN.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
 
   return (
     <main className="pf-page">
       <TechBackground />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(post)) }}
-      />
-      <SiteNav current="/blog" />
-      <ContactWidget standalone />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(post)) }} />
+      <SiteNav current="/blog" lang="en" />
+      <ContactWidget standalone lang="en" />
 
       <article className="blog-article">
         <div className="blog-article-inner">
-          <nav className="blog-breadcrumb" aria-label="مسار التنقل">
-            <a href="/">الرئيسية</a>
+          <nav className="blog-breadcrumb" aria-label="Breadcrumb">
+            <a href="/en">Home</a>
             <span>/</span>
-            <a href="/blog">المدونة</a>
+            <a href="/en/blog">Blog</a>
             <span>/</span>
             <span>{post.title}</span>
           </nav>
@@ -114,14 +106,14 @@ export default function BlogPostPage({ params }) {
           <BlogPostBody content={post.content} />
 
           <div className="blog-cta">
-            <p>عايز منظومة مصممة على مقاس نشاطك زي دي بالظبط؟</p>
-            <a href="/contact">تواصل بينا</a>
+            <p>Want a system built exactly like this one, for your business?</p>
+            <a href="/en/contact">Get in touch</a>
           </div>
 
           {related.length > 0 && (
             <div className="blog-grid" style={{ marginTop: 48 }}>
               {related.map((p) => (
-                <a key={p.slug} href={`/blog/${p.slug}`} className="blog-card">
+                <a key={p.slug} href={`/en/blog/${p.slug}`} className="blog-card">
                   <span className="blog-card-badge">{p.category}</span>
                   <h2>{p.title}</h2>
                   <p>{p.excerpt}</p>

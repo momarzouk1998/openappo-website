@@ -1,7 +1,10 @@
 import ContactWidget from "../ContactWidget";
 import SiteNav from "../SiteNav";
 
-export const metadata = { title: "تواصل بينا — Openappo" };
+export const metadata = {
+  title: "تواصل بينا — Openappo",
+  alternates: { canonical: "/contact", languages: { ar: "/contact", en: "/en/contact" } },
+};
 
 export default function ContactPage() {
   return (

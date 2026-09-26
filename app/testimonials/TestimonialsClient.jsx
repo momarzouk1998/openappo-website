@@ -16,14 +16,31 @@ const LOREM = [
   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa.",
   "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione.",
 ];
-const ROLES = [
-  "صاحب المنشأة",
-  "المدير التنفيذي",
-  "مدير العمليات",
-  "المدير المالي",
-  "مدير الفروع",
-  "مسؤول المخازن",
-];
+const ROLES = {
+  ar: ["صاحب المنشأة", "المدير التنفيذي", "مدير العمليات", "المدير المالي", "مدير الفروع", "مسؤول المخازن"],
+  en: ["Business Owner", "CEO", "Operations Manager", "CFO", "Branch Manager", "Warehouse Manager"],
+};
+
+const STR = {
+  ar: {
+    kicker: "آراء العملاء",
+    titleParts: [["ما يقوله", ""], ["شركاؤنا", "em"], ["عن العمل معنا", ""]],
+    subReal: "كلمات نقلناها كما وردت من الجهات التي تعمل على أنظمة Openappo كل يوم.",
+    subDemo: "هذه الصفحة جاهزة لاستقبال آراء عملائنا الحقيقية. النصوص الظاهرة الآن نصوص تجريبية (Lorem ipsum) لعرض الشكل النهائي فقط، وتُستبدل من لوحة التحكم فور وصول كل رأي.",
+    demoFlag: "نماذج عرض",
+    demoFlagRest: "— النصوص تجريبية ولم تصدر عن العملاء",
+    close: "إغلاق",
+  },
+  en: {
+    kicker: "Customer Testimonials",
+    titleParts: [["What", ""], ["our partners", "em"], ["say about working with us", ""]],
+    subReal: "Words shared exactly as given by the organizations running their operations on Openappo every day.",
+    subDemo: "This page is ready to receive our clients' real testimonials. The text shown now is placeholder (Lorem ipsum) to preview the final layout, and will be replaced from the admin panel as soon as each review comes in.",
+    demoFlag: "Sample preview",
+    demoFlagRest: "— placeholder text, not from actual clients",
+    close: "Close",
+  },
+};
 
 function Bubbles() {
   // Decorative depth field behind the hero: message cards drifting on an arc.
@@ -58,9 +75,11 @@ function Bubbles() {
   );
 }
 
-export default function TestimonialsClient({ clients = [], testimonials = [] }) {
+export default function TestimonialsClient({ clients = [], testimonials = [], lang = "ar" }) {
   // Real reviews, once any exist, replace the placeholders entirely.
   const real = testimonials.length > 0;
+  const t = STR[lang] || STR.ar;
+  const roles = ROLES[lang] || ROLES.ar;
   const [active, setActive] = useState(null);
   const gridRef = useRef(null);
 
@@ -119,7 +138,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
         variant: "auto",
         photo: "",
         quote: LOREM[i % LOREM.length],
-        name: ROLES[i % ROLES.length],
+        name: roles[i % roles.length],
         role: "",
         company: c.name,
         logo: c.logo || "",
@@ -130,23 +149,19 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
     <>
       <header className="tm-hero">
         <Bubbles />
-        <span className="tm-kicker">آراء العملاء</span>
+        <span className="tm-kicker">{t.kicker}</span>
         <h1 className="tm-title">
-          <span>ما يقوله</span> <em>شركاؤنا</em> <span>عن العمل معنا</span>
+          {t.titleParts.map(([text, tag], i) =>
+            tag === "em" ? <em key={i}>{text}</em> : <span key={i}>{text}</span>
+          )}
         </h1>
         {real ? (
-          <p className="tm-sub">
-            كلمات نقلناها كما وردت من الجهات التي تعمل على أنظمة Openappo كل يوم.
-          </p>
+          <p className="tm-sub">{t.subReal}</p>
         ) : (
           <>
-            <p className="tm-sub">
-              هذه الصفحة جاهزة لاستقبال آراء عملائنا الحقيقية. النصوص الظاهرة
-              الآن نصوص تجريبية (Lorem ipsum) لعرض الشكل النهائي فقط، وتُستبدل
-              من لوحة التحكم فور وصول كل رأي.
-            </p>
+            <p className="tm-sub">{t.subDemo}</p>
             <span className="tm-placeholder-flag">
-              <b>نماذج عرض</b> — النصوص تجريبية ولم تصدر عن العملاء
+              <b>{t.demoFlag}</b> {t.demoFlagRest}
             </span>
           </>
         )}
@@ -199,7 +214,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [] }) 
             <button
               className="tm-modal-close"
               onClick={() => setActive(null)}
-              aria-label="إغلاق"
+              aria-label={t.close}
             >
               ✕
             </button>
