@@ -3307,3 +3307,98 @@ body {
     top: 20px;
   }
 }
+
+/* ---- Inline project video (replaces the static mockup on the grid card) ---- */
+.pf-spotlight-preview--video {
+  cursor: default;
+  perspective: none;
+}
+.pf-inline-video {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1.5px solid rgba(61, 218, 210, 0.35);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #080d17;
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(61, 218, 210, 0.15);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+}
+.pf-inline-video:hover { border-color: rgba(61, 218, 210, 0.7); transform: translateY(-4px); }
+.pf-inline-video.is-playing { cursor: default; }
+.pf-inline-video.is-playing:hover { transform: none; }
+.pf-inline-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+/* hqdefault is 4:3 with letterbox bars — crop to the 16:9 frame. */
+.pf-inline-video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+.pf-inline-video:hover .pf-inline-video-thumb {
+  transform: scale(1.04);
+  filter: brightness(1.08);
+}
+.pf-inline-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 0;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+  transition: transform 0.25s ease;
+}
+.pf-inline-video:hover .pf-inline-video-play {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.pf-inline-video-hint {
+  position: absolute;
+  inset-inline-start: 12px;
+  bottom: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(8, 13, 23, 0.82);
+  border: 1px solid rgba(61, 218, 210, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+[data-pf-theme="light"] .pf-inline-video {
+  border-color: rgba(15, 155, 147, 0.35);
+  background: #eef3f7;
+}
+[data-pf-theme="light"] .pf-inline-video-hint {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0b1220;
+  border-color: rgba(15, 155, 147, 0.4);
+}
+
+/* On phones the card stacks, and the wanted order is logo → شرح → فيديو →
+   الأزرار. The video is a sibling of the info column, so `display: contents`
+   dissolves that wrapper and lets its children be ordered around the video
+   individually. The wrapper only carried flex + gap, which the grid supplies. */
+@media (max-width: 900px) {
+  .pf-spotlight-card,
+  .pf-spotlight-card.is-reversed {
+    text-align: right;
+    gap: 14px;
+  }
+  .pf-spotlight-card .pf-spotlight-info { display: contents; }
+  .pf-spotlight-card .pf-spotlight-head { order: 1; }
+  .pf-spotlight-card .pf-spotlight-sub { order: 2; }
+  .pf-spotlight-card .pf-spotlight-desc { order: 3; }
+  .pf-spotlight-card .pf-spotlight-preview { order: 4; }
+  .pf-spotlight-card .pf-spotlight-pills { order: 5; }
+  .pf-spotlight-card .pf-spotlight-btn { order: 6; }
+}

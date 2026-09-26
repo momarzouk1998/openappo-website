@@ -352,6 +352,56 @@ const DEFAULT_CONFIG = {
   ],
 };
 
+/**
+ * YouTube without the YouTube cost. Until the viewer actually clicks, this is
+ * one thumbnail image — no player iframe, no third-party scripts, nothing
+ * loaded from Google. The click swaps in the real embed in the same spot, so
+ * the video plays in place instead of opening the modal.
+ */
+function InlineVideo({ id, title }) {
+  const [playing, setPlaying] = useState(false);
+
+  if (playing) {
+    return (
+      <div className="pf-inline-video is-playing">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1&autoplay=1`}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className="pf-inline-video"
+      onClick={() => setPlaying(true)}
+      aria-label={`تشغيل فيديو ${title}`}
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+        alt=""
+        loading="lazy"
+        className="pf-inline-video-thumb"
+      />
+      <span className="pf-inline-video-play" aria-hidden="true">
+        <svg viewBox="0 0 68 48" width="62" height="44">
+          <path
+            d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.7a8.6 8.6 0 0 0-6 6A89 89 0 0 0 0 24a89 89 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.7a8.6 8.6 0 0 0 6-6A89 89 0 0 0 68 24a89 89 0 0 0-1.5-16.3z"
+            fill="#f00"
+          />
+          <path d="M27 34V14l18 10z" fill="#fff" />
+        </svg>
+      </span>
+      <span className="pf-inline-video-hint">شاهد النظام أثناء التشغيل</span>
+    </button>
+  );
+}
+
 function SimulatedErpDashboard({ project }) {
   const config = SYSTEM_CONFIGS[project.slug] || DEFAULT_CONFIG;
 
@@ -457,6 +507,11 @@ export default function PortfolioGallery({ projects = [] }) {
                 className={`pf-spotlight-card ${idx % 2 === 1 ? "is-reversed" : ""}`}
               >
                 {/* Left/Interactive Visual Preview Mockup */}
+                {p.youtubeId ? (
+                  <div className="pf-spotlight-preview pf-spotlight-preview--video">
+                    <InlineVideo id={p.youtubeId} title={p.name} />
+                  </div>
+                ) : (
                 <div className="pf-spotlight-preview" onClick={() => setActiveSlug(p.slug)}>
                   <div className="pf-spotlight-mockup-frame">
                     <div className="pf-mockup-screen-wrap">
@@ -486,6 +541,7 @@ export default function PortfolioGallery({ projects = [] }) {
                     </div>
                   </div>
                 </div>
+                )}
 
                 {/* Right/Info Column */}
                 <div className="pf-spotlight-info">
