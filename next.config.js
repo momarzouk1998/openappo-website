@@ -53,17 +53,20 @@ const nextConfig = {
   },
 };
 
-// Safe to include even before a Sentry project exists: without
-// SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT the plugin just skips the
-// source-map upload step at build time — it never blocks or fails the build.
-const { withSentryConfig } = require('@sentry/nextjs/config');
+let exportedConfig = nextConfig;
+try {
+  const { withSentryConfig } = require('@sentry/nextjs');
+  exportedConfig = withSentryConfig(nextConfig, {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    silent: true,
+    disableLogger: true,
+    widenClientFileUpload: false,
+    automaticVercelMonitors: false,
+  });
+} catch (_) {
+  // @sentry/nextjs not installed or optional
+}
 
-module.exports = withSentryConfig(nextConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  silent: true,
-  disableLogger: true,
-  widenClientFileUpload: false,
-  automaticVercelMonitors: false,
-});
+module.exports = exportedConfig;

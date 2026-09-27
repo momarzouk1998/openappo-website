@@ -3,37 +3,71 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar3D from "./Avatar3D";
 
-// Comprehensive curated testimonials for each registered client/project
+// Comprehensive curated testimonials with authentic Egyptian feedback for each registered client
 const CURATED_BY_SLUG = {
   kishk: {
     ar: {
-      name: "أ. أحمد كشك",
-      role: "رئيس مجلس الإدارة",
+      name: "احمد كشك",
+      role: "مؤسسة أحمد كشك للأقمشة والستائر",
       company: "مؤسسة أحمد كشك للأقمشة والستائر",
       quote:
-        "قبل التعامل مع Openappo، كانت متابعة مقاسات الستائر وقص الأقمشة وتنسيق الورشة مع الفروع الأربعة بتسبب هدر وتداخل في الطلبات. النظام صُمم خصيصاً ليغطي دورتنا كاملة من المعاينة والرفع حتى التركيب النهائي، وضبط الهدر وحسابات الفروع باحترافية تامة.",
+        "أنت مكنتش متخيل إحنا كنا غرقانين إزاي في أوردرات وتفصيل الستائر ورفع المقاسات بين الفروع والورشة.. كمية هدر القماش واللخبطة كانت بتوجع القلب! السيستم ظبطلنا كل تفصيلة من أول متر قماش بيتقص لحد ما يتركب عند الزبون، شغل فاخر ومريح الدماغ ع الآخر والله.",
     },
     en: {
-      name: "Mr. Ahmed Kishk",
-      role: "Chairman & Founder",
+      name: "Ahmed Kishk",
+      role: "Ahmed Kishk Curtains & Fabrics",
       company: "Ahmed Kishk Curtains & Fabrics",
       quote:
         "Before Openappo, tracking curtain measurements, fabric cutting, and coordinating our workshop with 4 branches caused inventory waste and delays. The custom ERP streamlined our full cycle from site visit to final installation with 100% precision.",
     },
     variant: "male",
   },
-  mazaya: {
+  sash: {
     ar: {
-      name: "م. هاني مزايا",
-      role: "المدير التنفيذي",
-      company: "مزايا للأثاث",
+      name: "محمود كشك",
+      role: "SASH",
+      company: "SASH للأزياء والموضة",
       quote:
-        "كنا بحاجة إلى نظام ERP يفهم خصوصية صناعة الأثاث، تقطيع الألواح، تكاليف الإكسسوارات، ومتابعة المقاولين الخارجيين. مهندسو Openappo بنوا لنا منظومة متكاملة تربط خط الإنتاج بالحسابات، فصار لكل أمر تشغيل تكلفة وربحية واضحة لحظة بلحظة.",
+        "التنظيم والسرعة اللي دخلت شغلنا بسبب السيستم فرقت في حجم مبيعاتنا بشكل ملحوظ. متابعة التشغيل والعملاء والمخزون بقت ممتعة وسهلة جداً، وبصراحة كل تفصيلة طلبناها اتعملت بالمللي وبأعلى جودة.",
     },
     en: {
-      name: "Eng. Hany Mazaya",
-      role: "CEO & Managing Director",
-      company: "Mazaya Furniture",
+      name: "Mahmoud Kishk",
+      role: "SASH",
+      company: "SASH Fashion & Design",
+      quote:
+        "The operational speed and clarity introduced by Openappo's platform visibly accelerated our sales growth. Inventory, client tracking, and production are completely synchronized.",
+    },
+    variant: "male",
+  },
+  mazaya: {
+    ar: {
+      name: "الحاج عبدالله",
+      role: "مصنع الأثاث",
+      company: "مصنع الأثاث والمفروشات",
+      quote:
+        "والله يا هندسة أنا مش عارف أقولك إيه ولا أشكرك إزاي، الشغل طالع عظمة فوق ما كنت أتخيل! تقطيع الألواح وتكلفة كل أوضة وتجميع الخزائن وحسابات الورش والمقاولين بقت واضحة وضوح الشمس، ربنا يباركلكم في تعبكم.",
+    },
+    en: {
+      name: "El-Hajj Abdullah",
+      role: "Furniture Factory",
+      company: "Furniture & Decor Factory",
+      quote:
+        "We needed an ERP that understands custom furniture production, panel sheet cutting, hardware costs, and outsourced contractors. Openappo engineered a complete workflow linking production lines to financial ledgers with instant profit tracking per job order.",
+    },
+    variant: "male",
+  },
+  furniture: {
+    ar: {
+      name: "الحاج عبدالله",
+      role: "مصنع الأثاث",
+      company: "مصنع الأثاث والمفروشات",
+      quote:
+        "والله يا هندسة أنا مش عارف أقولك إيه ولا أشكرك إزاي، الشغل طالع عظمة فوق ما كنت أتخيل! تقطيع الألواح وتكلفة كل أوضة وتجميع الخزائن وحسابات الورش والمقاولين بقت واضحة وضوح الشمس، ربنا يباركلكم في تعبكم.",
+    },
+    en: {
+      name: "El-Hajj Abdullah",
+      role: "Furniture Factory",
+      company: "Furniture & Decor Factory",
       quote:
         "We needed an ERP that understands custom furniture production, panel sheet cutting, hardware costs, and outsourced contractors. Openappo engineered a complete workflow linking production lines to financial ledgers with instant profit tracking per job order.",
     },
@@ -41,15 +75,15 @@ const CURATED_BY_SLUG = {
   },
   elnazlawy: {
     ar: {
-      name: "أ. محمود النزلاوي",
-      role: "المدير العام",
+      name: "الحج محمود",
+      role: "معرض النزلاوي",
       company: "معرض النزلاوي للأجهزة الكهربائية",
       quote:
-        "إدارة معارض الأجهزة الكهربائية والإضاءة وحسابات الموردين والشيكات الآجلة كانت تستهلك وقتاً طويلاً في المراجعة. السيستم السحابي مكّننا من تتبع حركة المخازن والمناديب والمبيعات اللحظية من الهاتف بدقة فائقة دعمت قراراتنا التوسعية.",
+        "يا باشا السيستم ده شال من على كتافنا هم كبير جداً.. المعارض والمناديب والشيكات الآجلة كانت بتدوخنا كل يوم، دلوقتي وأنا قاعد في مكاني ومن على الموبايل بجيب مبيعات المعرض والمخزن والتحصيلات في ثواني معدودة، تسلم إيديكم بجد.",
     },
     en: {
-      name: "Mr. Mahmoud Elnazlawy",
-      role: "General Manager",
+      name: "El-Hajj Mahmoud",
+      role: "Elnazlawy Showroom",
       company: "Elnazlawy Electrical & Lighting",
       quote:
         "Managing multi-showroom electrical retail, vendor balances, cheques, and field sales reps used to take hours of manual audits. Openappo's cloud platform gave us real-time inventory, sales, and rep tracking from mobile with crystal clarity.",
@@ -58,15 +92,15 @@ const CURATED_BY_SLUG = {
   },
   elhoot: {
     ar: {
-      name: "أ. سامح الحوت",
-      role: "مدير قطاع التوزيع والمبيعات",
+      name: "براهيم الزيدانى",
+      role: "تطبيق الحوت",
       company: "الحوت للأدوات الكهربائية",
       quote:
-        "لدينا شبكة توزيع تغطي عدة محافظات بحركة بضاعة وسيارات يومية. النظام نظّم خطوط سير المناديب، جرد سيارات التوزيع، وأعمار الديون والتحصيلات بدقة عالية. ميزة الصلاحيات وتقارير الأرباح الفورية أغلقت أي مجال للعجز.",
+        "إحنا بنلف بضاعة وسيارات على كذا محافظة كل يوم، وكان دايماً في مشاكل في جرد العربيات وفلوس التحصيلات. السيستم بتاعكم قفل المحبس على أي عجز، وبقيت عارف كل مندوب معاه بضاعة إيه وحصل كام بالقرش.. شغل عالي ومحترم جداً.",
     },
     en: {
-      name: "Mr. Sameh El Hoot",
-      role: "Head of Distribution & Sales",
+      name: "Ibrahim El Zaidany",
+      role: "El Hoot App",
       company: "El Hoot Electrical Supplies",
       quote:
         "With wholesale distribution across multiple governorates, managing van inventory and customer credit was challenging. Openappo automated route sales, debt aging, collections, and live profit reports, eliminating shortages completely.",
@@ -75,15 +109,15 @@ const CURATED_BY_SLUG = {
   },
   elnesr: {
     ar: {
-      name: "أ. طارق عبد العزيز",
-      role: "مدير العمليات والتشغيل",
+      name: "براهيم الزيدانى",
+      role: "تطبيق النسر",
       company: "شركة النسر للتوزيع",
       quote:
-        "المرونة والاستقرار في أنظمة Openappo لم نجدها في البرامج الجاهزة. متابعة المناديب وفواتير المبيعات ومطابقة عهدة المخازن أصبحت تنتهي بسلاسة تامة، وفريق الدعم الفني متواجد دائماً ويستجيب في دقائق معدودة.",
+        "جربنا برامج كتير جاهزة وكلها كانت بتهنج وتقف في الشغل التقيل، لكن سيستم Openappo خفيف وسريع ومرن جداً مع ضغط المناديب وفواتير المبيعات. والدعم الفني معاكم مبيسبناش ثانية لو احتجنا أي حاجة.",
     },
     en: {
-      name: "Mr. Tarek Abdelaziz",
-      role: "Operations Director",
+      name: "Ibrahim El Zaidany",
+      role: "El Nesr App",
       company: "El Nesr Distribution",
       quote:
         "The flexibility and reliability of Openappo's systems are unmatched compared to generic off-the-shelf software. Van sales, invoices, and warehouse reconciliations run seamlessly with responsive 24/7 support.",
@@ -92,66 +126,83 @@ const CURATED_BY_SLUG = {
   },
   maspero: {
     ar: {
-      name: "أ. حسام عادل",
-      role: "المدير التنفيذي",
+      name: "احمد",
+      role: "ماسبيرو",
       company: "فروع ماسبيرو للخدمات الرقمية",
       quote:
-        "نشاط الخدمات الرقمية وشحن المحافظ الإلكترونية والطباعة كان يعاني من فروقات في تسليم الورديات والشفتات. نظام ماسبيرو ضبط تسليم الورديات ومطابقة أرصدة المحافظ والعمولات بدقة تامة، وباتت لوحة المتابعة تكشف أداء الفروع فوراً.",
+        "حسابات شحن المحافظ والورديات والطباعة كانت بتعمل فروقات ولخبطة وقت تسليم الشفتات وتخلي الواحد مش عارف العجز منين. بعد السيستم ما اشتغل، كل مليم متسجل ومحسوب، واستلام الوردية بقى بيخلص في دقيقة وبراحة بال تامة.",
     },
     en: {
-      name: "Mr. Hossam Adel",
-      role: "Managing Director",
+      name: "Ahmed",
+      role: "Maspero",
       company: "Maspero Digital Services",
       quote:
         "Operating digital services, mobile wallet cash transfers, and POS shifts used to face reconciliation discrepancies. Openappo's customized POS locked shift handovers and wallet balances down to the penny with live branch dashboards.",
     },
     variant: "male",
   },
-  rtx: {
+  almotawakel: {
     ar: {
-      name: "م. إبراهيم فؤاد",
-      role: "مدير الإنتاج والتصنيع",
-      company: "RTX للتجارة والتصنيع",
+      name: "زياد",
+      role: "المتوكل",
+      company: "المتوكل للتجارة والتوكيلات",
       quote:
-        "تتبع المنتج عبر مراحله من استلام الخامات مروراً بخطوط الإنتاج والتصنيع وحتى التوزيع كان تحدياً كبيراً. البرنامج وفّر لنا رقابة دقيقة على الهدر وتكلفة كل مرحلة تصنيع، مما أحدث نقلة نوعية في كفاءة المصنع وهوامش الربح.",
+        "السيستم سريع وبسيط جداً ومفيش أي تعقيد، الشباب عندي في المحل اتعلموا عليه وفهموه من أول ساعة، وفر علينا وقت ومجهود كبير في تسجيل الفواتير والمتابعة اليومية.. اختيار موفق بنسبة 100%.",
     },
     en: {
-      name: "Eng. Ibrahim Fouad",
-      role: "Manufacturing & QA Lead",
+      name: "Ziad",
+      role: "Almotawakel",
+      company: "Almotawakel Trading",
+      quote:
+        "Speed, intuitive design, and cloud stability are Openappo's hallmarks. Our team adopted the software within hours, giving us live operational metrics without paperwork.",
+    },
+    variant: "male",
+  },
+  roknalanaqa: {
+    ar: {
+      name: "بسمة",
+      role: "ركن الأناقة",
+      company: "مجموعة ركن الأناقة",
+      quote:
+        "كنا محتاسين إزاي نربط محلات الملابس مع شغل ورشة التفصيل وحسابات الشركاء. السيستم جمع لنا كل حاجة في لوحة واحدة واضحة جداً، والأرباح والمصروفات طالعة مظبوطة بالجنيه وبكل شفافية.",
+    },
+    en: {
+      name: "Basma",
+      role: "Rokn Alanaqa",
+      company: "Rokn Alanaqa Group",
+      quote:
+        "We needed a unified solution connecting retail branches with our tailoring workshop and partner profit shares. Openappo delivered a single transparent platform that brought complete control and clarity to our business.",
+    },
+    variant: "female",
+  },
+  rtx: {
+    ar: {
+      name: "على",
+      role: "RTX",
+      company: "RTX للتجارة والتصنيع",
+      quote:
+        "تتبع مراحل التصنيع من أول ما الخامة تدخل المصنع لحد ما تطلع منتج نهائي يتباع كان أصعب حاجة عندنا. البرنامج كشف لنا الهدر بالظبط وظبط التكاليف والأرباح.. نقلة تانية خالص في إدارة المصنع.",
+    },
+    en: {
+      name: "Ali",
+      role: "RTX",
       company: "RTX Trade & Manufacturing",
       quote:
         "Tracking goods across 3 stages—raw materials, assembly, and wholesale delivery—was complex. Openappo provided end-to-end stage tracking and waste control that drastically improved production yield and margins.",
     },
     variant: "male",
   },
-  roknalanaqa: {
-    ar: {
-      name: "أ. ياسر الشامي",
-      role: "المؤسس والشريك الإداري",
-      company: "مجموعة ركن الأناقة",
-      quote:
-        "كنا نبحث عن حل يدمج محلات الملابس مع ورشة تفصيل الستائر وحسابات الشركاء وتوزيع الأرباح في مكان واحد. وفّر لنا النظام شاشة تحكم واضحة لإدارة المبيعات والورشة والأرباح بكل شفافية وسهولة.",
-    },
-    en: {
-      name: "Mr. Yasser El Shamy",
-      role: "Founder & Managing Partner",
-      company: "Rokn Alanaqa Group",
-      quote:
-        "We needed a unified solution connecting retail branches with our tailoring workshop and partner profit shares. Openappo delivered a single transparent platform that brought complete control and clarity to our business.",
-    },
-    variant: "male",
-  },
   binqasim: {
     ar: {
-      name: "أ. بلال قاسم",
-      role: "مدير سلاسل الإمداد والاستيراد",
+      name: "احمد قاسم",
+      role: "بي قاسم",
       company: "بي قاسم للاستيراد والتصدير",
       quote:
-        "حساب تكاليف الشحنات الاستيرادية وتوزيع الجمارك ومصروفات النقل على آلاف الأصناف كان يستغرق أياماً. مع المنظومة السحابية أصبح الأمر يتم بنقرة زر وبحسابات دقيقة للأرباح والتكاليف المخزنية.",
+        "حسبة الجمارك ومصاريف الشحن والتخليص وتوزيعها على الأصناف كانت كابوس على الإكسيل. مع البرنامج بضغطة زرار بنعرف التكلفة الفعلية لكل صنف ومكسبنا فيه إيه من غير أي وجع دماغ.",
     },
     en: {
-      name: "Mr. Belal Qasim",
-      role: "Head of Supply Chain & Import",
+      name: "Ahmed Qasim",
+      role: "Bin Qasim",
       company: "Bin Qasim Import & Export",
       quote:
         "Distributing shipping, customs duties, and logistics expenses across thousands of imported SKUs used to take days on spreadsheets. With Openappo, landed costs and profit margins compute automatically in one click.",
@@ -160,15 +211,15 @@ const CURATED_BY_SLUG = {
   },
   opengym: {
     ar: {
-      name: "كابتن أحمد سامي",
-      role: "مدير العمليات الرياضية",
+      name: "كابتن سامى",
+      role: "OpenGym",
       company: "OpenGym للأندية الرياضية",
       quote:
-        "إدارة اشتراكات الأعضاء، وتجديد العضويات، والتحكم في بوابات الدخول وتسجيل الحضور والانصراف أصبح سلساً للغاية، وتطبيق الأعضاء منح المشتركين تجربة عصرية متطورة.",
+        "الاشتراكات والتجديدات وحضور المشتركين والبوابات الإلكترونية بقت شغالة زي الساعة! وفرتوا علينا وجع دماغ تسجيل الورق والتجديدات الضايعة، والناس في الجيم مبسوطة جداً من النظام.",
     },
     en: {
-      name: "Captain Ahmed Samy",
-      role: "Gym Operations Manager",
+      name: "Captain Samy",
+      role: "OpenGym",
       company: "OpenGym Fitness Platform",
       quote:
         "Member renewals, access gates, attendance logs, and personal trainer schedules became seamless. The PWA member portal gave our fitness community an elite digital experience.",
@@ -177,15 +228,15 @@ const CURATED_BY_SLUG = {
   },
   riyadalquran: {
     ar: {
-      name: "د. عبد الرحمن إبراهيم",
-      role: "المشرف العام",
+      name: "حاتم",
+      role: "رياض القرآن",
       company: "جمعية رياض القرآن الكريم",
       quote:
-        "البرنامج نظّم استقبال وبحث وتصنيف طلبات الرعاية الخيرية والحالات المرضية حتى إتمام الصرف، بالإضافة إلى إدارة الحضانة ومتابعة أولياء الأمور بشفافية وسرعة قياسية.",
+        "تنظيم ملفات الحالات الإنسانية ورعاية الأيتام وصرف المساعدات كان محتاج دقة وأمانة شديدة. السيستم سهل علينا البحث والتصنيف والتسجيل، ووفر وقت كبير كنا بنضيعه في الورقيات.",
     },
     en: {
-      name: "Dr. Abdelrahman Ibrahim",
-      role: "General Supervisor",
+      name: "Hatem",
+      role: "Riyad Alquran",
       company: "Riyad Al-Quran Charity Foundation",
       quote:
         "The system organized social aid applications, beneficiary cases, and disbursements alongside educational nursery portals with maximum transparency and speed.",
@@ -194,89 +245,89 @@ const CURATED_BY_SLUG = {
   },
   vos: {
     ar: {
-      name: "أ. منى زهران",
-      role: "منسقة المبادرات والفرق",
-      company: "منظومة العمل التطوعي VOS",
+      name: "الباسل",
+      role: "Volunteer OS",
+      company: "منظومة Volunteer OS",
       quote:
-        "تنظيم مئات المتطوعين، وتوثيق ساعات العمل والقوافل وإصدار الشهادات المعتمدة إلكترونياً أصبح تجربة منظمة واحترافية عززت الشفافية مع كافة الجهات الشريكة.",
+        "إدارة آلاف المتطوعين وساعات التطوع والقوافل والشهادات الإلكترونية كانت عملية مرهقة جداً. المنظومة خلت كل حاجة متوثقة ومنظمة بأعلى مستوى من الاحترافية والشفافية.",
     },
     en: {
-      name: "Ms. Mona Zahran",
-      role: "Initiatives Coordinator",
+      name: "El-Bassel",
+      role: "Volunteer OS",
       company: "Volunteer Operating System (VOS)",
       quote:
         "Coordinating hundreds of volunteers, tracking verified hours, and issuing verifiable digital certificates made volunteer management professional and effortless.",
     },
-    variant: "hijab",
+    variant: "male",
   },
 };
 
 const FALLBACK_REVIEWS = {
   ar: [
     {
-      name: "أ. عبد الله المتوكل",
-      role: "رئيس مجلس الإدارة",
-      company: "المتوكل للتجارة والتوكيلات",
+      name: "أحمد كشك",
+      role: "مؤسسة أحمد كشك",
+      company: "مؤسسة أحمد كشك للأقمشة والستائر",
       quote:
-        "السهولة والسرعة والاستقرار السحابي هم أهم ما يميز أنظمة Openappo. الموظفون استوعبوا النظام خلال ساعات قليلة، وأصبح لدينا تقارير مالية وتشغيلية مباشرة تغنينا عن مئات الأوراق والمراجعات اليدوية.",
+        "أنت مكنتش متخيل إحنا كنا غرقانين إزاي في أوردرات وتفصيل الستائر ورفع المقاسات بين الفروع والورشة.. كمية هدر القماش واللخبطة كانت بتوجع القلب! السيستم ظبطلنا كل تفصيلة من أول متر قماش بيتقص لحد ما يتركب عند الزبون، شغل فاخر ومريح الدماغ ع الآخر والله.",
       variant: "male",
     },
     {
-      name: "م. خالد الأنصاري",
-      role: "المدير التنفيذي",
-      company: "الأنصاري للحلول الهندسية",
+      name: "الحاج عبدالله",
+      role: "مصنع الأثاث",
+      company: "مصنع الأثاث والمفروشات",
       quote:
-        "تجربة العمل مع Openappo تعد من أنجح استثماراتنا الرقمية. فهمهم العميق لمتطلبات عملنا وتحويلها إلى أدوات برمجية متقنة رفع إنتاجية فريقنا بنسبة تتجاوز 40% خلال الأشهر الأولى.",
+        "والله يا هندسة أنا مش عارف أقولك إيه ولا أشكرك إزاي، الشغل طالع عظمة فوق ما كنت أتخيل! تقطيع الألواح وتكلفة كل أوضة وتجميع الخزائن وحسابات الورش والمقاولين بقت واضحة وضوح الشمس، ربنا يباركلكم في تعبكم.",
       variant: "male",
     },
     {
-      name: "أ. مصطفى الشناوي",
-      role: "مدير العمليات",
-      company: "الشناوي للتجارة والتوريدات",
+      name: "الحج محمود",
+      role: "معرض النزلاوي",
+      company: "معرض النزلاوي للأجهزة الكهربائية",
       quote:
-        "الدقة العالية في متابعة المخزون والمبيعات والمديونيات أعطتنا أماناً وتحكماً كاملاً في حركة الأعمال. ميزة العمل السحابي من أي مكان وفي أي وقت أتاحت لنا إدارة الفروع بسهولة ومرونة فائقة.",
+        "يا باشا السيستم ده شال من على كتافنا هم كبير جداً.. المعارض والمناديب والشيكات الآجلة كانت بتدوخنا كل يوم، دلوقتي وأنا قاعد في مكاني ومن على الموبايل بجيب مبيعات المعرض والمخزن والتحصيلات في ثواني معدودة، تسلم إيديكم بجد.",
       variant: "male",
     },
     {
-      name: "أ. وائل رضوان",
-      role: "المدير المالي",
-      company: "رضوان للمقاولات والتوريدات",
+      name: "براهيم الزيدانى",
+      role: "تطبيق الحوت",
+      company: "الحوت للأدوات الكهربائية",
       quote:
-        "الحسابات ومطابقة الخزائن وتقارير الأرباح والخسائر صارت تظهر بضغطة زر واحدة وبدون أخطاء. المنظومة أغلقت منافذ العجز وساعدتنا في إدارة السيولة والتدفقات النقدية بدقة متناهية.",
+        "إحنا بنلف بضاعة وسيارات على كذا محافظة كل يوم، وكان دايماً في مشاكل في جرد العربيات وفلوس التحصيلات. السيستم بتاعكم قفل المحبس على أي عجز، وبقيت عارف كل مندوب معاه بضاعة إيه وحصل كام بالقرش.. شغل عالي ومحترم جداً.",
       variant: "male",
     },
   ],
   en: [
     {
-      name: "Mr. Abdullah Al-Motawakel",
-      role: "Board Chairman",
-      company: "Al-Motawakel Trading",
+      name: "Ahmed Kishk",
+      role: "Ahmed Kishk Curtains",
+      company: "Ahmed Kishk Curtains & Fabrics",
       quote:
-        "Speed, intuitive design, and cloud stability are Openappo's hallmarks. Our team adopted the software within hours, giving us live operational metrics without paperwork.",
+        "Before Openappo, tracking curtain measurements, fabric cutting, and coordinating our workshop with 4 branches caused inventory waste and delays. The custom ERP streamlined our full cycle from site visit to final installation with 100% precision.",
       variant: "male",
     },
     {
-      name: "Eng. Khaled Al-Ansari",
-      role: "Executive Director",
-      company: "Al-Ansari Engineering Solutions",
+      name: "El-Hajj Abdullah",
+      role: "Furniture Factory",
+      company: "Furniture & Decor Factory",
       quote:
-        "Partnering with Openappo has been our best digital investment. Their deep grasp of workflow requirements boosted team throughput by over 40% in the very first quarter.",
+        "We needed an ERP that understands custom furniture production, panel sheet cutting, hardware costs, and outsourced contractors. Openappo engineered a complete workflow linking production lines to financial ledgers with instant profit tracking per job order.",
       variant: "male",
     },
     {
-      name: "Mr. Mostafa El Shennawy",
-      role: "Operations Manager",
-      company: "Shennawy Commercial Supplies",
+      name: "El-Hajj Mahmoud",
+      role: "Elnazlawy Electrical",
+      company: "Elnazlawy Electrical & Lighting",
       quote:
-        "Real-time inventory and receivables oversight gave us complete control across our branch network with full mobility from anywhere.",
+        "Managing multi-showroom electrical retail, vendor balances, cheques, and field sales reps used to take hours of manual audits. Openappo's cloud platform gave us real-time inventory, sales, and rep tracking from mobile with crystal clarity.",
       variant: "male",
     },
     {
-      name: "Mr. Wael Radwan",
-      role: "Chief Financial Officer",
-      company: "Radwan Contracting & Supplies",
+      name: "Ibrahim El Zaidany",
+      role: "El Hoot App",
+      company: "El Hoot Electrical Supplies",
       quote:
-        "Financial reconciliations, cash drawers, and P&L reports now generate instantly with zero human error, providing exact cash flow forecasting.",
+        "With wholesale distribution across multiple governorates, managing van inventory and customer credit was challenging. Openappo automated route sales, debt aging, collections, and live profit reports, eliminating shortages completely.",
       variant: "male",
     },
   ],
@@ -296,6 +347,11 @@ const STR = {
     close: "Close",
   },
 };
+
+function normalizeSlug(s) {
+  if (!s) return "";
+  return String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
 
 function Bubbles() {
   const items = [
@@ -394,7 +450,12 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
             };
           })
       ).map((c, i) => {
-        const slugEntry = CURATED_BY_SLUG[c.slug];
+        const norm = normalizeSlug(c.slug);
+        // Find matching key in CURATED_BY_SLUG
+        const matchedKey = Object.keys(CURATED_BY_SLUG).find(
+          (k) => normalizeSlug(k) === norm || norm.includes(normalizeSlug(k))
+        );
+        const slugEntry = matchedKey ? CURATED_BY_SLUG[matchedKey] : null;
         const curated = slugEntry
           ? slugEntry[lang] || slugEntry.ar
           : fallbacks[i % fallbacks.length];
@@ -408,9 +469,9 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
           quote: curated.quote,
           name: curated.name,
           role: curated.role,
-          company: c.name || curated.company,
+          company: curated.company || c.name,
           logo: c.logo || "",
-          tag: c.subtitle || c.name || "",
+          tag: c.subtitle || curated.role || "",
         };
       });
 
