@@ -1,337 +1,426 @@
 "use client";
 
 /**
- * Cartoon avatar drawn as SVG and shaded to read as 3D.
+ * AvatarChar — Premium Memoji-style SVG character avatars
  *
- * What makes it read as volume rather than a flat sticker: a key light from the
- * upper left, blurred occlusion shadows where forms meet (hair on forehead, jaw
- * on neck, head on shoulders), a rim light on the shadow side, and a specular
- * highlight on the forehead. Every shape is a smooth path — no hard strokes
- * outlining the silhouette, which is what made the first version look flat.
- *
- * These are illustrations, not portraits: nothing here depicts a real person,
- * which is the point. Every feature is picked deterministically from the seed,
- * so a given client always gets the same face.
+ * Design language: Apple Memoji / Notion faces — big expressive head,
+ * compact shoulders, bold clean features, flat-with-depth shading.
+ * Deterministic per seed so each client always gets the same face.
  */
 
-const SKIN = [
-  { lit: "#ffd9b8", mid: "#f0b98c", dark: "#cf9063", line: "#a86f45" },
-  { lit: "#f6c49a", mid: "#e0a273", dark: "#b87c4f", line: "#8f5c33" },
-  { lit: "#e0a878", mid: "#c78652", dark: "#a1653a", line: "#7c4a27" },
-  { lit: "#b9825a", mid: "#9a6440", dark: "#77492c", line: "#56331d" },
-  { lit: "#8d5f40", mid: "#70452b", dark: "#54321e", line: "#3a2214" },
-];
-const HAIR = [
-  { lit: "#4a3a2c", mid: "#2f241a", dark: "#1b140e" },
-  { lit: "#2d2d38", mid: "#1b1b24", dark: "#101017" },
-  { lit: "#7a5433", mid: "#573a22", dark: "#3a2614" },
-  { lit: "#6b6b76", mid: "#4c4c56", dark: "#32323a" },
-  { lit: "#3c2a3a", mid: "#281c28", dark: "#181018" },
-];
-const SHIRT = [
-  { lit: "#5ee6de", mid: "#2bb3ac", dark: "#17807b" },
-  { lit: "#7ba6ff", mid: "#4a72d6", dark: "#2f4d9b" },
-  { lit: "#ff9a9a", mid: "#e06b6b", dark: "#a94747" },
-  { lit: "#ffc95e", mid: "#e0a22b", dark: "#a8741a" },
-  { lit: "#b79cff", mid: "#8768e8", dark: "#5c44a8" },
-  { lit: "#6fdb9a", mid: "#3fae6c", dark: "#277a49" },
-  { lit: "#dfe6ef", mid: "#b8c3d1", dark: "#8794a5" },
-];
-const BACKDROP = [
-  ["#134d55", "#06232c"],
-  ["#15395c", "#071a2e"],
-  ["#4a2338", "#1e0d19"],
-  ["#1d3e26", "#0b1a10"],
-  ["#3d3320", "#1a1409"],
+// ─── Palettes ────────────────────────────────────────────────────────────────
+const BACKDROPS = [
+  { from: "#1e3a5f", to: "#0f2035", rim: "#3b82f6" },  // Deep Blue
+  { from: "#1a3a2a", to: "#0d2016", rim: "#22c55e" },  // Forest Green
+  { from: "#3b1f4e", to: "#1e0e2c", rim: "#a855f7" },  // Deep Violet
+  { from: "#3a1a1a", to: "#1e0d0d", rim: "#ef4444" },  // Burgundy
+  { from: "#1f3040", to: "#0d1b28", rim: "#06b6d4" },  // Teal Steel
+  { from: "#2d2014", to: "#180e08", rim: "#f59e0b" },  // Warm Amber
 ];
 
-/** Small deterministic hash so the same name always yields the same avatar. */
-function hash(seed) {
-  let h = 2166136261;
-  const s = String(seed || "openappo");
+const SKINS = [
+  { base: "#f8d5a8", shade: "#e0a96a", deep: "#b5753a", lip: "#c0604a" },
+  { base: "#f5c990", shade: "#d8955a", deep: "#a8642e", lip: "#b85040" },
+  { base: "#e8b078", shade: "#c47c40", deep: "#8f5022", lip: "#a84032" },
+  { base: "#d09060", shade: "#a65c30", deep: "#783010", lip: "#9a3828" },
+  { base: "#b87848", shade: "#8c4e20", deep: "#5e2c08", lip: "#8c3020" },
+];
+
+const HAIR_COLORS = [
+  { hi: "#5a4030", mid: "#2c1a0c", dark: "#160c04" },  // Dark brown
+  { hi: "#2a2a38", mid: "#16161e", dark: "#0a0a10" },  // Black
+  { hi: "#c8a060", mid: "#8c6428", dark: "#4c3010" },  // Chestnut
+  { hi: "#d0c8b8", mid: "#a09080", dark: "#685848" },  // Salt & Pepper
+  { hi: "#a08878", mid: "#685848", dark: "#3c2c20" },  // Dark grey
+];
+
+const SUIT_COLORS = [
+  { coat: "#1e3a5f", lapel: "#162a47", shirt: "#f0f4f8", tieA: "#c53030", tieB: "#7f1d1d" },
+  { coat: "#1a2e1a", lapel: "#122012", shirt: "#f0f4f0", tieA: "#b45309", tieB: "#78350f" },
+  { coat: "#2d1f40", lapel: "#1e1230", shirt: "#f4f0f8", tieA: "#2563eb", tieB: "#1e3a8a" },
+  { coat: "#1a1a2a", lapel: "#12121e", shirt: "#f0f0f8", tieA: "#059669", tieB: "#064e3b" },
+  { coat: "#2a1a10", lapel: "#1c1008", shirt: "#fdf8f0", tieA: "#9333ea", tieB: "#581c87" },
+];
+
+const HIJAB_COLORS = [
+  { main: "#fde68a", shade: "#d97706", deep: "#92400e" }, // Gold
+  { main: "#dbeafe", shade: "#3b82f6", deep: "#1e3a8a" }, // Blue
+  { main: "#fce7f3", shade: "#ec4899", deep: "#9d174d" }, // Rose
+  { main: "#d1fae5", shade: "#10b981", deep: "#064e3b" }, // Mint
+  { main: "#f5f5f4", shade: "#a8a29e", deep: "#57534e" }, // Pearl
+];
+
+// ─── Deterministic hash — always returns a safe positive integer ──────────────
+function hash(str) {
+  let h = 2166136261 >>> 0;
+  const s = String(str || "openappo");
   for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
+    h = (h ^ s.charCodeAt(i)) >>> 0;
+    h = Math.imul(h, 16777619) >>> 0;
   }
-  return Math.abs(h);
+  return h >>> 0;
 }
 
-/**
- * `variant` pins the look when the avatar stands for a named real person —
- * a random draw would happily put a headscarf on "أ. أحمد". Placeholders leave
- * it "auto" and take whatever the seed gives.
- */
-export default function Avatar3D({
-  seed = "",
-  size = 96,
-  className = "",
-  variant = "auto",
-}) {
+function pick(arr, n) {
+  const idx = Math.abs(Number(n) || 0) % arr.length;
+  return arr[idx] || arr[0];
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+export default function Avatar3D({ seed = "", size = 96, className = "", variant = "auto" }) {
   const h = hash(seed);
-  const skin = SKIN[h % SKIN.length];
-  const hair = HAIR[(h >> 3) % HAIR.length];
-  const shirt = SHIRT[(h >> 7) % SHIRT.length];
-  const back = BACKDROP[(h >> 11) % BACKDROP.length];
+  const uid = `mc${(h % 99999999).toString(36)}`;
 
-  // 0 short · 1 quiff · 2 curls · 3 bob · 4 headscarf
-  const MEN = [0, 1, 2];
-  const style =
-    variant === "male"
-      ? MEN[(h >> 15) % MEN.length]
-      : variant === "female"
-      ? 3
-      : variant === "hijab"
-      ? 4
-      : (h >> 15) % 5;
-  const glasses = ((h >> 19) % 4) === 0;
-  const beard = style !== 3 && style !== 4 && ((h >> 22) % 3) === 0;
-  const uid = `a${(h % 1000000).toString(36)}`;
+  const isFemale  = variant === "female" || variant === "hijab";
+  const isHijab   = variant === "hijab";
+  const isElder   = seed.includes("mazaya") || seed.includes("elnazlawy") || seed.includes("riyad") || seed.includes("furniture");
+  const hasGlasses = !isFemale && (seed.includes("rtx") || ((h >> 14) % 5 === 0));
+  const hasBeard  = !isFemale && (isElder || ((h >> 9) % 3 !== 2));
+  const isAthletic = seed.includes("opengym");
 
-  const scarf = SHIRT[(h >> 25) % SHIRT.length];
+  const bd   = pick(BACKDROPS,   h);
+  const skin = pick(SKINS,       h >> 5);
+  const hair = pick(HAIR_COLORS, h >> 10);
+  const suit = pick(SUIT_COLORS, h >> 18);
+  const hj   = pick(HIJAB_COLORS, h >> 22);
+
+  const hairStyle = !isFemale ? Math.abs((h >> 15) % 3) : -1; // 0=short 1=side-part 2=quiff
 
   return (
     <svg
-      viewBox="0 0 120 120"
+      viewBox="0 0 200 200"
       width={size}
       height={size}
       className={`tm-avatar ${className}`}
       role="img"
-      aria-label="صورة رمزية توضيحية"
+      aria-label="Avatar"
+      style={{ display: "block", borderRadius: "50%", overflow: "hidden" }}
     >
       <defs>
-        <linearGradient id={`${uid}bg`} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor={back[0]} />
-          <stop offset="100%" stopColor={back[1]} />
-        </linearGradient>
-        <radialGradient id={`${uid}glow`} cx="30%" cy="22%" r="62%">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        {/* Background */}
+        <radialGradient id={`${uid}bg`} cx="45%" cy="35%" r="75%">
+          <stop offset="0%" stopColor={bd.from} />
+          <stop offset="100%" stopColor={bd.to} />
+        </radialGradient>
+        <radialGradient id={`${uid}rim`} cx="80%" cy="15%" r="55%">
+          <stop offset="0%" stopColor={bd.rim} stopOpacity="0.5" />
+          <stop offset="100%" stopColor={bd.rim} stopOpacity="0" />
         </radialGradient>
 
-        {/* Key light from upper-left: lit -> mid -> dark across the form. */}
-        <linearGradient id={`${uid}skin`} x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-          <stop offset="0%" stopColor={skin.lit} />
-          <stop offset="48%" stopColor={skin.mid} />
-          <stop offset="100%" stopColor={skin.dark} />
-        </linearGradient>
-        <linearGradient id={`${uid}hair`} x1="0.15" y1="0" x2="0.85" y2="1">
-          <stop offset="0%" stopColor={hair.lit} />
-          <stop offset="45%" stopColor={hair.mid} />
+        {/* Face */}
+        <radialGradient id={`${uid}face`} cx="38%" cy="32%" r="65%">
+          <stop offset="0%" stopColor={skin.base} />
+          <stop offset="60%" stopColor={skin.shade} />
+          <stop offset="100%" stopColor={skin.deep} />
+        </radialGradient>
+
+        {/* Hair */}
+        <linearGradient id={`${uid}hair`} x1="0.2" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stopColor={hair.hi} />
+          <stop offset="50%" stopColor={hair.mid} />
           <stop offset="100%" stopColor={hair.dark} />
         </linearGradient>
-        <linearGradient id={`${uid}shirt`} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor={shirt.lit} />
-          <stop offset="50%" stopColor={shirt.mid} />
-          <stop offset="100%" stopColor={shirt.dark} />
+
+        {/* Hijab */}
+        <linearGradient id={`${uid}hj`} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor={hj.main} />
+          <stop offset="55%" stopColor={hj.shade} />
+          <stop offset="100%" stopColor={hj.deep} />
         </linearGradient>
-        <linearGradient id={`${uid}scarf`} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor={scarf.lit} />
-          <stop offset="50%" stopColor={scarf.mid} />
-          <stop offset="100%" stopColor={scarf.dark} />
+
+        {/* Suit */}
+        <linearGradient id={`${uid}coat`} x1="0.1" y1="0" x2="0.9" y2="1">
+          <stop offset="0%" stopColor={suit.coat} />
+          <stop offset="100%" stopColor={suit.lapel} />
         </linearGradient>
-        <radialGradient id={`${uid}spec`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        <linearGradient id={`${uid}tie`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={suit.tieA} />
+          <stop offset="100%" stopColor={suit.tieB} />
+        </linearGradient>
+
+        {/* Iris */}
+        <radialGradient id={`${uid}iris`} cx="40%" cy="38%" r="60%">
+          <stop offset="0%" stopColor="#7c4f22" />
+          <stop offset="55%" stopColor="#3b1e08" />
+          <stop offset="100%" stopColor="#0f0704" />
         </radialGradient>
 
-        {/* Soft contact shadows — this is most of the 3D read. */}
-        <filter id={`${uid}soft`} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="3" />
-        </filter>
-        <filter id={`${uid}soft2`} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="1.6" />
+        {/* Soft blur filters */}
+        <filter id={`${uid}blur3`}><feGaussianBlur stdDeviation="3"/></filter>
+        <filter id={`${uid}blur2`}><feGaussianBlur stdDeviation="2"/></filter>
+        <filter id={`${uid}blur1`}><feGaussianBlur stdDeviation="1"/></filter>
+        <filter id={`${uid}dropshadow`}>
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000" floodOpacity="0.35"/>
         </filter>
 
-        <clipPath id={`${uid}clip`}>
-          <circle cx="60" cy="60" r="60" />
-        </clipPath>
+        <clipPath id={`${uid}circle`}><circle cx="100" cy="100" r="99"/></clipPath>
       </defs>
 
-      <g clipPath={`url(#${uid}clip)`}>
-        <circle cx="60" cy="60" r="60" fill={`url(#${uid}bg)`} />
-        <circle cx="60" cy="60" r="60" fill={`url(#${uid}glow)`} />
+      <g clipPath={`url(#${uid}circle)`}>
+        {/* ── Background ─────────────────────────────────────────────── */}
+        <circle cx="100" cy="100" r="100" fill={`url(#${uid}bg)`}/>
+        <circle cx="100" cy="100" r="100" fill={`url(#${uid}rim)`}/>
+        {/* Floor glow */}
+        <ellipse cx="100" cy="195" rx="75" ry="18" fill={bd.rim} opacity="0.12"/>
 
-        {/* Shadow the figure casts on the backdrop. */}
-        <ellipse
-          cx="64"
-          cy="96"
-          rx="46"
-          ry="26"
-          fill="#000"
-          opacity="0.28"
-          filter={`url(#${uid}soft)`}
-        />
-
-        {/* ---- Torso ---- */}
-        <path
-          d="M60 84c-24 0-42 13-46 36h92c-4-23-22-36-46-36z"
-          fill={`url(#${uid}shirt)`}
-        />
-        {/* collar opening + the shadow the neck drops into it */}
-        <path
-          d="M49 87c4 7 7 11 11 11s7-4 11-11c-4-2-7-3-11-3s-7 1-11 3z"
-          fill="#000"
-          opacity="0.22"
-          filter={`url(#${uid}soft2)`}
-        />
-        <path d="M50 86l10 10 10-10-4-2-6 6-6-6z" fill="#fff" opacity="0.2" />
-        {/* rim light along the shaded shoulder */}
-        <path
-          d="M94 104c6 5 10 10 12 16h-5c-2-6-5-11-9-16z"
-          fill="#fff"
-          opacity="0.16"
-        />
-
-        {/* ---- Neck ---- */}
-        <path d="M51 68h18v18c0 6-18 6-18 0z" fill={skin.mid} />
-        <ellipse
-          cx="60"
-          cy="70"
-          rx="13"
-          ry="7"
-          fill={skin.dark}
-          opacity="0.75"
-          filter={`url(#${uid}soft2)`}
-        />
-
-        {/* hair that falls behind the head */}
-        {style === 3 && (
+        {/* ── Body / Suit ─────────────────────────────────────────────── */}
+        <g filter={`url(#${uid}dropshadow)`}>
+          {/* Shoulders */}
           <path
-            d="M27 50c0 24 3 34 5 40h12c-6-12-8-26-6-40zM93 50c0 24-3 34-5 40H76c6-12 8-26 6-40z"
+            d={isAthletic
+              ? "M30 210 C32 158 60 142 100 142 C140 142 168 158 170 210 Z"
+              : "M28 210 C30 155 58 138 100 138 C142 138 170 155 172 210 Z"
+            }
+            fill={`url(#${uid}coat)`}
+          />
+          {/* Left Lapel */}
+          <path d="M82 142 L62 165 L82 195 L90 142 Z" fill={suit.lapel}/>
+          {/* Right Lapel */}
+          <path d="M118 142 L138 165 L118 195 L110 142 Z" fill={suit.lapel} opacity="0.85"/>
+          {/* Shirt & Collar */}
+          {!isAthletic && (
+            <>
+              <polygon points="90,142 110,142 100,185" fill={suit.shirt}/>
+              <polygon points="90,142 82,155 100,150 Z" fill={`color-mix(in srgb, ${suit.shirt} 80%, ${suit.coat})`} opacity="0.7"/>
+              <polygon points="110,142 118,155 100,150 Z" fill={suit.coat} opacity="0.4"/>
+              {/* Tie */}
+              <polygon points="96,150 104,150 107,200 100,208 93,200" fill={`url(#${uid}tie)`}/>
+              <polygon points="94,145 106,145 104,154 96,154" fill={`url(#${uid}tie)`}/>
+              {/* Tie dimple */}
+              <ellipse cx="100" cy="153" rx="3" ry="1.5" fill={suit.tieB} opacity="0.7"/>
+              {/* Tie bar */}
+              <line x1="95" y1="175" x2="105" y2="175" stroke="#d4a017" strokeWidth="2" strokeLinecap="round"/>
+            </>
+          )}
+          {isAthletic && (
+            /* Polo collar for athletic variant */
+            <>
+              <rect x="88" y="142" width="24" height="16" rx="4" fill={suit.coat} opacity="0.9"/>
+              <line x1="100" y1="142" x2="100" y2="158" stroke={suit.shirt} strokeWidth="2" opacity="0.6"/>
+            </>
+          )}
+        </g>
+
+        {/* ── Neck ────────────────────────────────────────────────────── */}
+        <rect x="87" y="118" width="26" height="30" rx="5" fill={skin.shade}/>
+        <ellipse cx="100" cy="122" rx="16" ry="7" fill={skin.deep} opacity="0.6" filter={`url(#${uid}blur2)`}/>
+        <rect x="89" y="118" width="10" height="26" rx="4" fill={skin.base} opacity="0.4"/>
+
+        {/* ── Head ─────────────────────────────────────────────────────── */}
+        {/* Drop shadow */}
+        <ellipse cx="102" cy="125" rx="52" ry="10" fill="#000" opacity="0.25" filter={`url(#${uid}blur3)`}/>
+
+        {/* Hijab back (behind head) */}
+        {isHijab && (
+          <path
+            d="M42 80 C42 28 68 18 100 18 C132 18 158 28 158 80 C158 128 144 152 100 156 C56 152 42 128 42 80 Z"
+            fill={`url(#${uid}hj)`}
+          />
+        )}
+
+        {/* Hair behind head (for non-hijab) */}
+        {!isFemale && (
+          <path
+            d={hairStyle === 2
+              ? "M48 72 C48 35 68 22 100 22 C132 22 152 35 152 72 C148 48 130 36 100 36 C70 36 52 48 48 72 Z"
+              : "M50 70 C50 36 68 22 100 22 C132 22 150 36 150 70 C146 48 128 36 100 36 C72 36 54 48 50 70 Z"
+            }
             fill={`url(#${uid}hair)`}
           />
         )}
-        {style === 4 && (
-          <path
-            d="M26 52c0 26 4 36 7 44h54c3-8 7-18 7-44 0-20-15-34-34-34S26 32 26 52z"
-            fill={`url(#${uid}scarf)`}
-          />
-        )}
 
-        {/* ---- Head ---- */}
-        <path
-          d="M60 20c17 0 28 12 28 29 0 13-5 24-13 31-5 4-10 6-15 6s-10-2-15-6c-8-7-13-18-13-31 0-17 11-29 28-29z"
-          fill={`url(#${uid}skin)`}
+        {/* ── Face Oval ─────────────────────────────────────────────── */}
+        <ellipse
+          cx="100" cy="85"
+          rx="52" ry="60"
+          fill={`url(#${uid}face)`}
         />
 
-        {/* ears (hidden under the scarf) */}
-        {style !== 4 && (
+        {/* Ears */}
+        {!isHijab && (
           <>
-            <path d="M33 50c-4 0-6 3-5 7s4 7 7 6z" fill={skin.mid} />
-            <path d="M87 50c4 0 6 3 5 7s-4 7-7 6z" fill={skin.dark} />
-            <path d="M34 53c-2 1-2 4-1 6" stroke={skin.line} strokeWidth="1.4" fill="none" strokeLinecap="round" opacity="0.7" />
+            <path d="M48 80 C42 80 40 96 46 100 C50 102 52 98 50 88 Z" fill={skin.shade}/>
+            <path d="M45 85 C43 85 43 92 46 94" stroke={skin.deep} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+            <path d="M152 80 C158 80 160 96 154 100 C150 102 148 98 150 88 Z" fill={skin.deep}/>
           </>
         )}
 
-        {/* ---- Hair ---- */}
-        {style === 0 && (
-          <path
-            d="M32 50c-1-19 11-30 28-30s29 11 28 30c-2-3-3-8-4-11-6 5-18 7-28 5-7-1-13-4-16-8-3 3-6 8-8 14z"
-            fill={`url(#${uid}hair)`}
-          />
-        )}
-        {style === 1 && (
-          <path
-            d="M32 50c-2-16 6-27 19-30 4-1 5 1 4 4 8-2 17 1 22 7 6 7 8 13 7 19-2-4-4-8-6-10-6 5-19 7-29 5-6-1-11-4-14-7-2 3-3 7-3 12z"
-            fill={`url(#${uid}hair)`}
-          />
-        )}
-        {style === 2 && (
-          <g fill={`url(#${uid}hair)`}>
-            <path d="M32 50c-1-19 11-30 28-30s29 11 28 30c-2-3-3-8-4-11-6 5-18 7-28 5-7-1-13-4-16-8-3 3-6 8-8 14z" />
-            <circle cx="40" cy="30" r="9" />
-            <circle cx="55" cy="23" r="10" />
-            <circle cx="71" cy="25" r="9" />
-            <circle cx="83" cy="35" r="8" />
-          </g>
-        )}
-        {style === 3 && (
-          <path
-            d="M30 52c-2-21 12-32 30-32s32 11 30 32c-2-5-4-9-6-12-7 6-20 8-31 6-7-2-13-5-16-9-3 4-5 9-7 15z"
-            fill={`url(#${uid}hair)`}
-          />
-        )}
-        {style === 4 && (
-          <path
-            d="M31 52c-1-20 12-32 29-32s30 12 29 32c-3-6-6-10-9-13-7 4-14 6-21 6s-14-2-20-6c-4 3-6 7-8 13z"
-            fill={`url(#${uid}scarf)`}
-          />
-        )}
+        {/* Chin shadow */}
+        <ellipse cx="100" cy="135" rx="28" ry="6" fill={skin.deep} opacity="0.4" filter={`url(#${uid}blur2)`}/>
 
-        {/* occlusion the hairline casts on the forehead */}
+        {/* Cheek blush */}
+        <ellipse cx="66" cy="95" rx="12" ry="8" fill="#f43f5e" opacity="0.13" filter={`url(#${uid}blur3)`}/>
+        <ellipse cx="134" cy="95" rx="12" ry="8" fill="#f43f5e" opacity="0.11" filter={`url(#${uid}blur3)`}/>
+
+        {/* ── Eyebrows ────────────────────────────────────────────────── */}
         <path
-          d="M34 48c4-6 12-9 26-9s22 3 26 9c-4 3-13 5-26 5s-22-2-26-5z"
-          fill="#000"
-          opacity="0.24"
-          filter={`url(#${uid}soft2)`}
+          d="M68 64 Q80 59 90 63"
+          stroke={hair.dark} strokeWidth={isFemale ? "2.5" : "4"}
+          strokeLinecap="round" fill="none"
+          opacity={isFemale ? "1" : "0.9"}
+        />
+        <path
+          d="M110 63 Q120 59 132 64"
+          stroke={hair.dark} strokeWidth={isFemale ? "2.5" : "4"}
+          strokeLinecap="round" fill="none"
+          opacity={isFemale ? "1" : "0.9"}
         />
 
-        {/* ---- Brows ---- */}
-        <path d="M43 50c4-3 9-3 12-1" stroke={hair.dark} strokeWidth="2.6" fill="none" strokeLinecap="round" />
-        <path d="M65 49c3-2 8-2 12 1" stroke={hair.dark} strokeWidth="2.6" fill="none" strokeLinecap="round" />
-
-        {/* ---- Eyes ---- */}
+        {/* ── Eyes ────────────────────────────────────────────────────── */}
         <g>
-          <ellipse cx="49" cy="58" rx="6.2" ry="5" fill="#fff" />
-          <ellipse cx="71" cy="58" rx="6.2" ry="5" fill="#fff" />
-          <ellipse cx="49" cy="56.4" rx="6.2" ry="2.6" fill="#000" opacity="0.14" />
-          <ellipse cx="71" cy="56.4" rx="6.2" ry="2.6" fill="#000" opacity="0.14" />
-          <circle cx="50" cy="58.5" r="3.3" fill="#4a3b2f" />
-          <circle cx="72" cy="58.5" r="3.3" fill="#4a3b2f" />
-          <circle cx="50" cy="58.5" r="1.7" fill="#14101a" />
-          <circle cx="72" cy="58.5" r="1.7" fill="#14101a" />
-          <circle cx="48.5" cy="57" r="1.3" fill="#fff" />
-          <circle cx="70.5" cy="57" r="1.3" fill="#fff" />
-          {/* upper lash line gives the eye a lid, not a pasted circle */}
-          <path d="M43 56c3-3 9-3 12 0" stroke="#2a2028" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-          <path d="M65 56c3-3 9-3 12 0" stroke="#2a2028" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          {/* Left eye */}
+          <ellipse cx="80" cy="78" rx="12" ry="9" fill="#fff" opacity="0.97"/>
+          <ellipse cx="80" cy="76" rx="12" ry="3.5" fill={skin.deep} opacity="0.18" filter={`url(#${uid}blur1)`}/>
+          <circle cx="80" cy="78" r="6" fill={`url(#${uid}iris)`}/>
+          <circle cx="80" cy="78" r="3.5" fill="#0c0705"/>
+          {/* Catchlight */}
+          <circle cx="77" cy="75" r="2" fill="#fff"/>
+          <circle cx="82" cy="80" r="1.1" fill="#fff" opacity="0.7"/>
+          {/* Upper lash */}
+          <path d="M68 74 C72 70 87 70 92 74" stroke="#1a0d06" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+
+          {/* Right eye */}
+          <ellipse cx="120" cy="78" rx="12" ry="9" fill="#fff" opacity="0.97"/>
+          <ellipse cx="120" cy="76" rx="12" ry="3.5" fill={skin.deep} opacity="0.18" filter={`url(#${uid}blur1)`}/>
+          <circle cx="120" cy="78" r="6" fill={`url(#${uid}iris)`}/>
+          <circle cx="120" cy="78" r="3.5" fill="#0c0705"/>
+          {/* Catchlight */}
+          <circle cx="117" cy="75" r="2" fill="#fff"/>
+          <circle cx="122" cy="80" r="1.1" fill="#fff" opacity="0.7"/>
+          {/* Upper lash */}
+          <path d="M108 74 C112 70 127 70 132 74" stroke="#1a0d06" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
         </g>
 
-        {glasses && (
-          <g opacity="0.95">
-            <circle cx="49" cy="58" r="10" fill="#cfefee" opacity="0.14" />
-            <circle cx="71" cy="58" r="10" fill="#cfefee" opacity="0.14" />
-            <g stroke="#2a3238" strokeWidth="2" fill="none" strokeLinecap="round">
-              <circle cx="49" cy="58" r="10" />
-              <circle cx="71" cy="58" r="10" />
-              <path d="M59 57c1-1 1-1 2 0M39 55l-6-2M81 55l6-2" />
-            </g>
-            <path d="M43 52l5 4" stroke="#fff" strokeWidth="1.6" opacity="0.6" strokeLinecap="round" />
-            <path d="M65 52l5 4" stroke="#fff" strokeWidth="1.6" opacity="0.6" strokeLinecap="round" />
-          </g>
-        )}
-
-        {/* ---- Nose: a lit plane with a shadow under it ---- */}
-        <path d="M60 60c-2 4-3 7-2 8 1 1 3 1 4 0" fill="none" stroke={skin.line} strokeWidth="1.8" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="60" cy="69" rx="5" ry="2" fill={skin.dark} opacity="0.5" filter={`url(#${uid}soft2)`} />
-
-        {/* ---- Mouth ---- */}
-        <path d="M52 75c4 5 12 5 16 0-4 2-12 2-16 0z" fill="#6d3230" />
-        <path d="M52 75c4 5 12 5 16 0" stroke="#7d3b38" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 76c3 1 9 1 12 0" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.75" />
-
-        {/* cheeks */}
-        <ellipse cx="41" cy="67" rx="5" ry="3" fill="#e8756f" opacity="0.22" filter={`url(#${uid}soft2)`} />
-        <ellipse cx="79" cy="67" rx="5" ry="3" fill="#e8756f" opacity="0.18" filter={`url(#${uid}soft2)`} />
-
-        {beard && (
+        {/* ── Glasses ─────────────────────────────────────────────────── */}
+        {hasGlasses && (
           <g>
-            <path
-              d="M35 56c0 9 2 17 7 23 5 6 11 9 18 9s13-3 18-9c5-6 7-14 7-23-2 12-6 18-11 21-4 2-9 3-14 3s-10-1-14-3c-5-3-9-9-11-21z"
-              fill={`url(#${uid}hair)`}
-              opacity="0.92"
-            />
-            <path d="M52 71h16c0 2-1 3-2 3H54c-1 0-2-1-2-3z" fill={`url(#${uid}hair)`} opacity="0.9" />
+            <rect x="66" y="68" width="28" height="20" rx="6" fill="none" stroke="#0f172a" strokeWidth="2.8"/>
+            <rect x="106" y="68" width="28" height="20" rx="6" fill="none" stroke="#0f172a" strokeWidth="2.8"/>
+            <line x1="94" y1="76" x2="106" y2="76" stroke="#0f172a" strokeWidth="2.8"/>
+            <line x1="52" y1="72" x2="66" y2="74" stroke="#0f172a" strokeWidth="2.4" strokeLinecap="round"/>
+            <line x1="148" y1="72" x2="134" y2="74" stroke="#0f172a" strokeWidth="2.4" strokeLinecap="round"/>
+            {/* Lens glare */}
+            <path d="M69 70 L77 77" stroke="#7dd3fc" strokeWidth="1.5" opacity="0.55" strokeLinecap="round"/>
+            <path d="M109 70 L117 77" stroke="#7dd3fc" strokeWidth="1.5" opacity="0.55" strokeLinecap="round"/>
           </g>
         )}
 
-        {/* forehead specular + rim light down the shaded cheek */}
-        <ellipse cx="48" cy="46" rx="12" ry="8" fill={`url(#${uid}spec)`} />
+        {/* ── Nose ─────────────────────────────────────────────────────── */}
         <path
-          d="M86 48c2 12-1 24-8 32 4-9 6-20 5-32z"
-          fill="#fff"
-          opacity="0.2"
+          d="M100 82 C98 90 96 95 98 98 C100 100 102 99 104 98 C106 95 104 90 100 82"
+          fill={skin.shade} opacity="0.55"
         />
+        <ellipse cx="100" cy="98" rx="7" ry="3" fill={skin.deep} opacity="0.35" filter={`url(#${uid}blur1)`}/>
+        {/* Nostril highlights */}
+        <circle cx="96" cy="97" r="2.5" fill={skin.deep} opacity="0.5"/>
+        <circle cx="104" cy="97" r="2.5" fill={skin.deep} opacity="0.5"/>
+        <circle cx="96.5" cy="96.5" r="1" fill={skin.shade} opacity="0.4"/>
+
+        {/* ── Mouth ─────────────────────────────────────────────────────── */}
+        {/* Smile */}
+        <path
+          d="M84 111 Q100 123 116 111"
+          fill={skin.lip} opacity="0.9"
+        />
+        {/* Teeth */}
+        <path
+          d="M87 111 Q100 118 113 111 Q100 108 87 111"
+          fill="#fff" opacity="0.95"
+        />
+        {/* Upper lip definition */}
+        <path d="M84 111 Q92 108 100 110 Q108 108 116 111" fill={skin.lip} opacity="0.7"/>
+        {/* Smile creases */}
+        <path d="M82 108 Q80 115 84 119" stroke={skin.deep} strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4"/>
+        <path d="M118 108 Q120 115 116 119" stroke={skin.deep} strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4"/>
+
+        {/* ── Beard ─────────────────────────────────────────────────────── */}
+        {hasBeard && (
+          <g opacity="0.88">
+            <path
+              d={isElder
+                ? "M52 92 C50 110 58 128 100 134 C142 128 150 110 148 92 C148 106 136 128 100 128 C64 128 52 106 52 92 Z"
+                : "M58 98 C56 112 64 126 100 130 C136 126 144 112 142 98 C140 112 128 124 100 124 C72 124 60 112 58 98 Z"
+              }
+              fill={`url(#${uid}hair)`}
+              opacity={isElder ? "0.92" : "0.65"}
+            />
+            {/* Moustache */}
+            <path
+              d="M88 110 Q94 107 100 109 Q106 107 112 110 Q106 113 100 112 Q94 113 88 110"
+              fill={hair.mid} opacity={isElder ? "0.9" : "0.7"}
+            />
+          </g>
+        )}
+
+        {/* ── Hair (Men's Styles) ────────────────────────────────────── */}
+        {!isFemale && (
+          <>
+            {hairStyle === 0 && (
+              /* Short corporate cut */
+              <path
+                d="M50 70 C50 36 68 22 100 22 C132 22 150 36 150 70 C145 46 128 34 100 34 C72 34 55 46 50 70 Z"
+                fill={`url(#${uid}hair)`}
+              />
+            )}
+            {hairStyle === 1 && (
+              /* Side-part executive */
+              <g fill={`url(#${uid}hair)`}>
+                <path d="M50 70 C50 36 68 22 100 22 C132 22 150 36 150 70 C145 46 128 34 100 34 C72 34 55 46 50 70 Z"/>
+                {/* Side part highlight */}
+                <path d="M72 26 C80 24 88 24 90 32 C84 28 76 28 72 26 Z" fill={hair.hi} opacity="0.7"/>
+              </g>
+            )}
+            {hairStyle === 2 && (
+              /* Modern quiff */
+              <g fill={`url(#${uid}hair)`}>
+                <path d="M50 70 C50 36 68 22 100 22 C132 22 150 36 150 70 C145 46 128 34 100 34 C72 34 55 46 50 70 Z"/>
+                {/* Quiff front volume */}
+                <path d="M80 24 C84 14 100 10 110 18 C102 14 90 16 80 24 Z" fill={hair.hi}/>
+                <path d="M84 22 C88 12 100 10 106 16 C100 12 90 14 84 22 Z"/>
+              </g>
+            )}
+            {/* Sideburns */}
+            <rect x="50" y="64" width="8" height="22" rx="3" fill={hair.mid} opacity="0.8"/>
+            <rect x="142" y="64" width="8" height="22" rx="3" fill={hair.dark} opacity="0.7"/>
+          </>
+        )}
+
+        {/* ── Hijab (Women's) ────────────────────────────────────────── */}
+        {isHijab && (
+          <g>
+            {/* Top cap */}
+            <path
+              d="M48 82 C46 38 66 20 100 20 C134 20 154 38 152 82 C148 52 130 38 100 38 C70 38 52 52 48 82 Z"
+              fill={`url(#${uid}hj)`}
+            />
+            {/* Frame around face */}
+            <path
+              d="M49 82 C49 40 68 26 100 26 C132 26 151 40 151 82"
+              fill="none"
+              stroke={`url(#${uid}hj)`}
+              strokeWidth="16"
+              strokeLinecap="round"
+            />
+            {/* Drape wrapping under chin */}
+            <path
+              d="M50 95 C46 120 55 148 100 154 C145 148 154 120 150 95 C148 118 134 144 100 148 C66 144 52 118 50 95 Z"
+              fill={`url(#${uid}hj)`}
+              opacity="0.9"
+            />
+            {/* Fabric fold highlights */}
+            <path d="M52 70 C60 55 80 46 100 44" stroke={hj.main} strokeWidth="3" fill="none" opacity="0.45" strokeLinecap="round"/>
+            <path d="M148 70 C140 55 120 46 100 44" stroke={hj.main} strokeWidth="2" fill="none" opacity="0.3" strokeLinecap="round"/>
+            {/* Pin / brooch */}
+            <circle cx="100" cy="145" r="3" fill="#f59e0b" opacity="0.8"/>
+            <circle cx="100" cy="145" r="1.5" fill="#fef3c7"/>
+          </g>
+        )}
+
+        {/* ── Forehead specular highlight ─────────────────────────────── */}
+        <ellipse cx="94" cy="52" rx="16" ry="9" fill="#fff" opacity="0.18" filter={`url(#${uid}blur2)`}/>
+
+        {/* ── Rim light on cheek ──────────────────────────────────────── */}
+        <path d="M148 62 C152 80 148 100 140 116" stroke={bd.rim} strokeWidth="8" fill="none" opacity="0.18" strokeLinecap="round"/>
       </g>
     </svg>
   );
