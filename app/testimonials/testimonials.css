@@ -180,11 +180,11 @@
   flex: 1;
   font-size: 13.5px;
   line-height: 2;
-  color: rgba(255, 255, 255, 0.62);
-  direction: ltr;
-  text-align: left;
+  color: rgba(255, 255, 255, 0.78);
+  direction: rtl;
+  text-align: right;
 }
-[data-pf-theme="light"] .tm-quote { color: rgba(11, 18, 32, 0.6); }
+[data-pf-theme="light"] .tm-quote { color: rgba(11, 18, 32, 0.78); }
 
 .tm-who {
   display: flex;
