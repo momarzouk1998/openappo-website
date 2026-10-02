@@ -3,18 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar3D from "./Avatar3D";
 
-// Comprehensive curated testimonials with authentic Egyptian feedback for each registered client
+// Comprehensive curated testimonials with authentic Egyptian feedback and respectful titles
 const CURATED_BY_SLUG = {
   kishk: {
     ar: {
-      name: "احمد كشك",
+      name: "مستر أحمد كشك",
       role: "مؤسسة أحمد كشك للأقمشة والستائر",
       company: "مؤسسة أحمد كشك للأقمشة والستائر",
       quote:
         "أنت مكنتش متخيل إحنا كنا غرقانين إزاي في أوردرات وتفصيل الستائر ورفع المقاسات بين الفروع والورشة.. كمية هدر القماش واللخبطة كانت بتوجع القلب! السيستم ظبطلنا كل تفصيلة من أول متر قماش بيتقص لحد ما يتركب عند الزبون، شغل فاخر ومريح الدماغ ع الآخر والله.",
     },
     en: {
-      name: "Ahmed Kishk",
+      name: "Mr. Ahmed Kishk",
       role: "Ahmed Kishk Curtains & Fabrics",
       company: "Ahmed Kishk Curtains & Fabrics",
       quote:
@@ -24,14 +24,14 @@ const CURATED_BY_SLUG = {
   },
   sash: {
     ar: {
-      name: "محمود كشك",
+      name: "مستر محمود كشك",
       role: "SASH",
       company: "SASH للأزياء والموضة",
       quote:
         "التنظيم والسرعة اللي دخلت شغلنا بسبب السيستم فرقت في حجم مبيعاتنا بشكل ملحوظ. متابعة التشغيل والعملاء والمخزون بقت ممتعة وسهلة جداً، وبصراحة كل تفصيلة طلبناها اتعملت بالمللي وبأعلى جودة.",
     },
     en: {
-      name: "Mahmoud Kishk",
+      name: "Mr. Mahmoud Kishk",
       role: "SASH",
       company: "SASH Fashion & Design",
       quote:
@@ -41,7 +41,7 @@ const CURATED_BY_SLUG = {
   },
   mazaya: {
     ar: {
-      name: "الحاج عبدالله",
+      name: "الحاج عبد الله",
       role: "مصنع الأثاث",
       company: "مصنع الأثاث والمفروشات",
       quote:
@@ -58,7 +58,7 @@ const CURATED_BY_SLUG = {
   },
   furniture: {
     ar: {
-      name: "الحاج عبدالله",
+      name: "الحاج عبد الله",
       role: "مصنع الأثاث",
       company: "مصنع الأثاث والمفروشات",
       quote:
@@ -75,7 +75,7 @@ const CURATED_BY_SLUG = {
   },
   elnazlawy: {
     ar: {
-      name: "الحج محمود",
+      name: "الحاج محمود",
       role: "معرض النزلاوي",
       company: "معرض النزلاوي للأجهزة الكهربائية",
       quote:
@@ -92,14 +92,14 @@ const CURATED_BY_SLUG = {
   },
   elhoot: {
     ar: {
-      name: "براهيم الزيدانى",
+      name: "أستاذ إبراهيم الزيداني",
       role: "تطبيق الحوت",
       company: "الحوت للأدوات الكهربائية",
       quote:
         "إحنا بنلف بضاعة وسيارات على كذا محافظة كل يوم، وكان دايماً في مشاكل في جرد العربيات وفلوس التحصيلات. السيستم بتاعكم قفل المحبس على أي عجز، وبقيت عارف كل مندوب معاه بضاعة إيه وحصل كام بالقرش.. شغل عالي ومحترم جداً.",
     },
     en: {
-      name: "Ibrahim El Zaidany",
+      name: "Mr. Ibrahim El Zaidany",
       role: "El Hoot App",
       company: "El Hoot Electrical Supplies",
       quote:
@@ -109,14 +109,14 @@ const CURATED_BY_SLUG = {
   },
   elnesr: {
     ar: {
-      name: "براهيم الزيدانى",
+      name: "أستاذ إبراهيم الزيداني",
       role: "تطبيق النسر",
       company: "شركة النسر للتوزيع",
       quote:
         "جربنا برامج كتير جاهزة وكلها كانت بتهنج وتقف في الشغل التقيل، لكن سيستم Openappo خفيف وسريع ومرن جداً مع ضغط المناديب وفواتير المبيعات. والدعم الفني معاكم مبيسبناش ثانية لو احتجنا أي حاجة.",
     },
     en: {
-      name: "Ibrahim El Zaidany",
+      name: "Mr. Ibrahim El Zaidany",
       role: "El Nesr App",
       company: "El Nesr Distribution",
       quote:
@@ -126,14 +126,14 @@ const CURATED_BY_SLUG = {
   },
   maspero: {
     ar: {
-      name: "احمد",
+      name: "أستاذ أحمد",
       role: "ماسبيرو",
       company: "فروع ماسبيرو للخدمات الرقمية",
       quote:
         "حسابات شحن المحافظ والورديات والطباعة كانت بتعمل فروقات ولخبطة وقت تسليم الشفتات وتخلي الواحد مش عارف العجز منين. بعد السيستم ما اشتغل، كل مليم متسجل ومحسوب، واستلام الوردية بقى بيخلص في دقيقة وبراحة بال تامة.",
     },
     en: {
-      name: "Ahmed",
+      name: "Mr. Ahmed",
       role: "Maspero",
       company: "Maspero Digital Services",
       quote:
@@ -143,14 +143,14 @@ const CURATED_BY_SLUG = {
   },
   almotawakel: {
     ar: {
-      name: "زياد",
+      name: "أستاذ زياد",
       role: "المتوكل",
       company: "المتوكل للتجارة والتوكيلات",
       quote:
         "السيستم سريع وبسيط جداً ومفيش أي تعقيد، الشباب عندي في المحل اتعلموا عليه وفهموه من أول ساعة، وفر علينا وقت ومجهود كبير في تسجيل الفواتير والمتابعة اليومية.. اختيار موفق بنسبة 100%.",
     },
     en: {
-      name: "Ziad",
+      name: "Mr. Ziad",
       role: "Almotawakel",
       company: "Almotawakel Trading",
       quote:
@@ -160,14 +160,14 @@ const CURATED_BY_SLUG = {
   },
   roknalanaqa: {
     ar: {
-      name: "بسمة",
+      name: "أستاذة بسمة",
       role: "ركن الأناقة",
       company: "مجموعة ركن الأناقة",
       quote:
         "كنا محتاسين إزاي نربط محلات الملابس مع شغل ورشة التفصيل وحسابات الشركاء. السيستم جمع لنا كل حاجة في لوحة واحدة واضحة جداً، والأرباح والمصروفات طالعة مظبوطة بالجنيه وبكل شفافية.",
     },
     en: {
-      name: "Basma",
+      name: "Ms. Basma",
       role: "Rokn Alanaqa",
       company: "Rokn Alanaqa Group",
       quote:
@@ -177,14 +177,14 @@ const CURATED_BY_SLUG = {
   },
   rtx: {
     ar: {
-      name: "على",
+      name: "الباشمهندس علي",
       role: "RTX",
       company: "RTX للتجارة والتصنيع",
       quote:
         "تتبع مراحل التصنيع من أول ما الخامة تدخل المصنع لحد ما تطلع منتج نهائي يتباع كان أصعب حاجة عندنا. البرنامج كشف لنا الهدر بالظبط وظبط التكاليف والأرباح.. نقلة تانية خالص في إدارة المصنع.",
     },
     en: {
-      name: "Ali",
+      name: "Eng. Ali",
       role: "RTX",
       company: "RTX Trade & Manufacturing",
       quote:
@@ -194,14 +194,14 @@ const CURATED_BY_SLUG = {
   },
   binqasim: {
     ar: {
-      name: "احمد قاسم",
+      name: "أستاذ أحمد قاسم",
       role: "بي قاسم",
       company: "بي قاسم للاستيراد والتصدير",
       quote:
         "حسبة الجمارك ومصاريف الشحن والتخليص وتوزيعها على الأصناف كانت كابوس على الإكسيل. مع البرنامج بضغطة زرار بنعرف التكلفة الفعلية لكل صنف ومكسبنا فيه إيه من غير أي وجع دماغ.",
     },
     en: {
-      name: "Ahmed Qasim",
+      name: "Mr. Ahmed Qasim",
       role: "Bin Qasim",
       company: "Bin Qasim Import & Export",
       quote:
@@ -211,7 +211,7 @@ const CURATED_BY_SLUG = {
   },
   opengym: {
     ar: {
-      name: "كابتن سامى",
+      name: "كابتن سامي",
       role: "OpenGym",
       company: "OpenGym للأندية الرياضية",
       quote:
@@ -228,14 +228,14 @@ const CURATED_BY_SLUG = {
   },
   riyadalquran: {
     ar: {
-      name: "حاتم",
+      name: "مستر حاتم",
       role: "رياض القرآن",
       company: "جمعية رياض القرآن الكريم",
       quote:
         "تنظيم ملفات الحالات الإنسانية ورعاية الأيتام وصرف المساعدات كان محتاج دقة وأمانة شديدة. السيستم سهل علينا البحث والتصنيف والتسجيل، ووفر وقت كبير كنا بنضيعه في الورقيات.",
     },
     en: {
-      name: "Hatem",
+      name: "Mr. Hatem",
       role: "Riyad Alquran",
       company: "Riyad Al-Quran Charity Foundation",
       quote:
@@ -245,14 +245,14 @@ const CURATED_BY_SLUG = {
   },
   vos: {
     ar: {
-      name: "الباسل",
+      name: "الباشمهندس الباسل",
       role: "Volunteer OS",
       company: "منظومة Volunteer OS",
       quote:
         "إدارة آلاف المتطوعين وساعات التطوع والقوافل والشهادات الإلكترونية كانت عملية مرهقة جداً. المنظومة خلت كل حاجة متوثقة ومنظمة بأعلى مستوى من الاحترافية والشفافية.",
     },
     en: {
-      name: "El-Bassel",
+      name: "Eng. El-Bassel",
       role: "Volunteer OS",
       company: "Volunteer Operating System (VOS)",
       quote:
@@ -265,7 +265,7 @@ const CURATED_BY_SLUG = {
 const FALLBACK_REVIEWS = {
   ar: [
     {
-      name: "أحمد كشك",
+      name: "مستر أحمد كشك",
       role: "مؤسسة أحمد كشك",
       company: "مؤسسة أحمد كشك للأقمشة والستائر",
       quote:
@@ -273,7 +273,7 @@ const FALLBACK_REVIEWS = {
       variant: "male",
     },
     {
-      name: "الحاج عبدالله",
+      name: "الحاج عبد الله",
       role: "مصنع الأثاث",
       company: "مصنع الأثاث والمفروشات",
       quote:
@@ -281,7 +281,7 @@ const FALLBACK_REVIEWS = {
       variant: "male",
     },
     {
-      name: "الحج محمود",
+      name: "الحاج محمود",
       role: "معرض النزلاوي",
       company: "معرض النزلاوي للأجهزة الكهربائية",
       quote:
@@ -289,7 +289,7 @@ const FALLBACK_REVIEWS = {
       variant: "male",
     },
     {
-      name: "براهيم الزيدانى",
+      name: "أستاذ إبراهيم الزيداني",
       role: "تطبيق الحوت",
       company: "الحوت للأدوات الكهربائية",
       quote:
@@ -299,7 +299,7 @@ const FALLBACK_REVIEWS = {
   ],
   en: [
     {
-      name: "Ahmed Kishk",
+      name: "Mr. Ahmed Kishk",
       role: "Ahmed Kishk Curtains",
       company: "Ahmed Kishk Curtains & Fabrics",
       quote:
@@ -323,7 +323,7 @@ const FALLBACK_REVIEWS = {
       variant: "male",
     },
     {
-      name: "Ibrahim El Zaidany",
+      name: "Mr. Ibrahim El Zaidany",
       role: "El Hoot App",
       company: "El Hoot Electrical Supplies",
       quote:
@@ -451,7 +451,6 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
           })
       ).map((c, i) => {
         const norm = normalizeSlug(c.slug);
-        // Find matching key in CURATED_BY_SLUG
         const matchedKey = Object.keys(CURATED_BY_SLUG).find(
           (k) => normalizeSlug(k) === norm || norm.includes(normalizeSlug(k))
         );
@@ -517,7 +516,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
               <span className="tm-who-text">
                 <span className="tm-who-name">
                   {c.name}
-                  {c.role ? ` · ${c.role}` : ""}
+                  {c.role && c.role !== c.name ? ` · ${c.role}` : ""}
                 </span>
                 <span className="tm-who-co">{c.company}</span>
               </span>
@@ -556,7 +555,7 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
             <div className="tm-modal-who">
               <b>
                 {active.name}
-                {active.role ? ` · ${active.role}` : ""}
+                {active.role && active.role !== active.name ? ` · ${active.role}` : ""}
               </b>
               <span>{active.company}</span>
             </div>

@@ -365,6 +365,36 @@ const SYSTEM_CONFIGS_AR = {
       { text: "اعتماد كشف الكفالات الشهرية", status: "معتمد" },
     ],
   },
+  sash: {
+    badge: "منظومة تصنيع وتجارة الأزياء والمفروشات",
+    pills: ["سحابي 100%", "دورة المعاينات والتفصيل", "إدارة المشاغل والتوريدات", "تقارير تشغيلية لحظية"],
+    kpis: [
+      { label: "أوامر التفصيل", val: "٢٦ أمر نشط", trend: "قيد التشغيل" },
+      { label: "مبيعات المعرض", val: "٧٨,٠٠٠ ج.م", trend: "+١٦%" },
+      { label: "أقمشة ومستلزمات", val: "١,٤٥٠ متر", trend: "بالمخزن" },
+    ],
+    chartTitle: "مؤشر دورة الطلبات ومبيعات الأزياء",
+    activities: [
+      { text: "أمر تفصيل ستائر ومفروشات #184", status: "قيد التنفيذ" },
+      { text: "فاتورة بيع وتوريد أقمشة فاخرة", status: "مكتمل" },
+      { text: "تسوية حسابات المشغل والعملاء", status: "معتمد" },
+    ],
+  },
+  almotawakel: {
+    badge: "منظومة إدارة التجارة والتوزيع والمخازن",
+    pills: ["سحابي 100%", "إدارة المبيعات والمخازن", "حسابات العملاء والموردين", "متابعة الخزينة والتحصيلات"],
+    kpis: [
+      { label: "حجم المبيعات", val: "١١٥,٠٠٠ ج.م", trend: "+٢٠%" },
+      { label: "حركات المخزن", val: "٢,٣٠٠ حركة", trend: "جرد نشط" },
+      { label: "تحصيلات الخزينة", val: "٩٤,٠٠٠ ج.م", trend: "لحظي" },
+    ],
+    chartTitle: "حركة التوزيع والتحصيلات اليومية",
+    activities: [
+      { text: "إصدار فاتورة بيع جملة #1042", status: "مسددة" },
+      { text: "إذن استلام بضاعة ومطابقة أرصدة", status: "معتمد" },
+      { text: "تقرير كشف حساب مورد #54", status: "جاهز" },
+    ],
+  },
   vos: {
     badge: "نظام إدارة الفرق والمتطوعين (VOS)",
     pills: ["سحابي 100%", "توثيق الشهادات إلكترونياً", "سجل تدقيق كامل لكل إجراء", "لوحات المتصدرين والفرق"],
@@ -562,6 +592,36 @@ const SYSTEM_CONFIGS_EN = {
       { text: "Emergency medical aid disbursed #H-301", status: "Paid out" },
       { text: "Nursery follow-up report — guardian", status: "Sent" },
       { text: "Monthly sponsorship statement approved", status: "Approved" },
+    ],
+  },
+  sash: {
+    badge: "Fashion & Textile Manufacturing System",
+    pills: ["100% cloud", "Measurement & tailoring cycle", "Workshop & supply tracking", "Real-time ops reports"],
+    kpis: [
+      { label: "Tailoring orders", val: "26 active orders", trend: "In production" },
+      { label: "Showroom sales", val: "EGP 78,000", trend: "+16%" },
+      { label: "Fabrics & supplies", val: "1,450 meters", trend: "In stock" },
+    ],
+    chartTitle: "Order cycle & fashion sales index",
+    activities: [
+      { text: "Curtain & upholstery order #184", status: "In progress" },
+      { text: "Luxury fabric supply invoice", status: "Completed" },
+      { text: "Workshop & client settlement", status: "Approved" },
+    ],
+  },
+  almotawakel: {
+    badge: "Trade, Distribution & Warehouse System",
+    pills: ["100% cloud", "Sales & inventory management", "Client & vendor accounts", "Cash-drawer collections"],
+    kpis: [
+      { label: "Sales volume", val: "EGP 115,000", trend: "+20%" },
+      { label: "Warehouse transactions", val: "2,300 movements", trend: "Active" },
+      { label: "Collections", val: "EGP 94,000", trend: "Live" },
+    ],
+    chartTitle: "Distribution & daily collections",
+    activities: [
+      { text: "Wholesale sales invoice #1042", status: "Settled" },
+      { text: "Goods receipt & stock matching", status: "Approved" },
+      { text: "Vendor statement of account #54", status: "Ready" },
     ],
   },
   vos: {
