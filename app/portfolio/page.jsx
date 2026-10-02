@@ -4,6 +4,8 @@ import HeroIntro from "./HeroIntro";
 import SiteNav from "../SiteNav";
 import ContactWidget from "../ContactWidget";
 
+import { FALLBACK_PROJECTS_AR } from "./fallbackProjects";
+
 const SITE = "https://openappo.com";
 
 // Content is managed from the admin panel and published as a manifest.
@@ -62,11 +64,21 @@ export const metadata = {
 async function getProjects() {
   try {
     const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
+    if (!res.ok) return FALLBACK_PROJECTS_AR;
     const data = await res.json();
-    return Array.isArray(data?.projects) ? data.projects : [];
+    if (Array.isArray(data?.projects) && data.projects.length > 0) {
+      return data.projects.map((p) => {
+        const fallback = FALLBACK_PROJECTS_AR.find((f) => f.slug === p.slug);
+        return {
+          ...(fallback || {}),
+          ...p,
+          logo: p.logo || fallback?.logo || `/logos/${p.slug}.png`,
+        };
+      });
+    }
+    return FALLBACK_PROJECTS_AR;
   } catch {
-    return [];
+    return FALLBACK_PROJECTS_AR;
   }
 }
 

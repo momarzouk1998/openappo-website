@@ -4,6 +4,8 @@ import HeroIntro from "../../portfolio/HeroIntro";
 import SiteNav from "../../SiteNav";
 import ContactWidget from "../../ContactWidget";
 
+import { FALLBACK_PROJECTS_EN } from "../../portfolio/fallbackProjects";
+
 const SITE = "https://openappo.com";
 
 const MANIFEST_URL =
@@ -52,11 +54,21 @@ export const metadata = {
 async function getProjects() {
   try {
     const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
+    if (!res.ok) return FALLBACK_PROJECTS_EN;
     const data = await res.json();
-    return Array.isArray(data?.projects) ? data.projects : [];
+    if (Array.isArray(data?.projects) && data.projects.length > 0) {
+      return data.projects.map((p) => {
+        const fallback = FALLBACK_PROJECTS_EN.find((f) => f.slug === p.slug);
+        return {
+          ...(fallback || {}),
+          ...p,
+          logo: p.logo || fallback?.logo || `/logos/${p.slug}.png`,
+        };
+      });
+    }
+    return FALLBACK_PROJECTS_EN;
   } catch {
-    return [];
+    return FALLBACK_PROJECTS_EN;
   }
 }
 

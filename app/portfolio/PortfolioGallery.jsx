@@ -215,19 +215,34 @@ const SYSTEM_CONFIGS_AR = {
       { text: "إذن صرف خامات #142 - مخزن الأخشاب", status: "مكتمل" },
     ],
   },
-  keshk: {
-    badge: "منظومة تجارة الأدوات المنزلية والتوزيع",
-    pills: ["سحابي 100%", "توزيع وجملة", "إدارة المناديب", "9 شاشات تشغيلية"],
+  kishk: {
+    badge: "منظومة تصنيع وتركيب الستائر والمفروشات",
+    pills: ["سحابي 100%", "رفع المقاسات والمعاينات", "أوامر المشغل والتفصيل", "إدارة 4 فروع"],
     kpis: [
-      { label: "فواتير الجملة", val: "٨٢,٥٠٠ ج.م", trend: "+١٤%" },
-      { label: "تحصيلات المناديب", val: "٦٤,٠٠٠ ج.م", trend: "لحظي" },
-      { label: "أصناف المخزن", val: "٤,١٥٠ صنف", trend: "جرد نشط" },
+      { label: "أوامر التفصيل", val: "٤٢ أمر نشط", trend: "قيد التشغيل" },
+      { label: "معاينات وتركيبات", val: "١٨ موعد", trend: "جدول اليوم" },
+      { label: "مخزون الأقمشة", val: "٥,٢٠٠ متر", trend: "جرد نشط" },
     ],
-    chartTitle: "حركة المبيعات والتحصيلات اليومية",
+    chartTitle: "مؤشر أوامر المشغل وحركات الفروع",
     activities: [
-      { text: "فاتورة جملة #218 - عميل الزقازيق", status: "مسددة" },
-      { text: "خط سير مندوب #4 - منطقة المنصورة", status: "قيد التوزيع" },
-      { text: "تسوية خزينة فرعية #12", status: "معتمد" },
+      { text: "معاينة ورفع مقاسات فيلا - التجمع الخامس", status: "معتمد" },
+      { text: "أمر قص وتفصيل شيفون وبلاك أوت #308", status: "بالمشغل" },
+      { text: "إذن صرف إكسسوارات ومجاري ستائر", status: "مكتمل" },
+    ],
+  },
+  keshk: {
+    badge: "منظومة تصنيع وتركيب الستائر والمفروشات",
+    pills: ["سحابي 100%", "رفع المقاسات والمعاينات", "أوامر المشغل والتفصيل", "إدارة 4 فروع"],
+    kpis: [
+      { label: "أوامر التفصيل", val: "٤٢ أمر نشط", trend: "قيد التشغيل" },
+      { label: "معاينات وتركيبات", val: "١٨ موعد", trend: "جدول اليوم" },
+      { label: "مخزون الأقمشة", val: "٥,٢٠٠ متر", trend: "جرد نشط" },
+    ],
+    chartTitle: "مؤشر أوامر المشغل وحركات الفروع",
+    activities: [
+      { text: "معاينة ورفع مقاسات فيلا - التجمع الخامس", status: "معتمد" },
+      { text: "أمر قص وتفصيل شيفون وبلاك أوت #308", status: "بالمشغل" },
+      { text: "إذن صرف إكسسوارات ومجاري ستائر", status: "مكتمل" },
     ],
   },
   elnazlawy: {
@@ -444,19 +459,34 @@ const SYSTEM_CONFIGS_EN = {
       { text: "Material issue slip #142 — timber store", status: "Completed" },
     ],
   },
-  keshk: {
-    badge: "Household Goods Trade & Distribution",
-    pills: ["100% cloud", "Wholesale & distribution", "Rep management", "9 operational screens"],
+  kishk: {
+    badge: "Curtains & Luxury Fabrics Manufacturing System",
+    pills: ["100% cloud", "Field measurements", "Atelier workshop orders", "4 branch sync"],
     kpis: [
-      { label: "Wholesale invoices", val: "EGP 82,500", trend: "+14%" },
-      { label: "Rep collections", val: "EGP 64,000", trend: "Live" },
-      { label: "Warehouse SKUs", val: "4,150 items", trend: "Active count" },
+      { label: "Tailoring orders", val: "42 active orders", trend: "In production" },
+      { label: "Field installations", val: "18 scheduled", trend: "On schedule" },
+      { label: "Fabric inventory", val: "5,200 meters", trend: "Active stock" },
     ],
-    chartTitle: "Daily sales & collections",
+    chartTitle: "Workshop orders & branch performance",
     activities: [
-      { text: "Wholesale invoice #218 — Zagazig customer", status: "Settled" },
-      { text: "Rep route #4 — Mansoura area", status: "Out for delivery" },
-      { text: "Branch cash-drawer reconciliation #12", status: "Approved" },
+      { text: "Site inspection & measurement slip #412", status: "Approved" },
+      { text: "Curtain tailoring order #308 — atelier", status: "In progress" },
+      { text: "Curtain accessories & track dispatch note", status: "Completed" },
+    ],
+  },
+  keshk: {
+    badge: "Curtains & Luxury Fabrics Manufacturing System",
+    pills: ["100% cloud", "Field measurements", "Atelier workshop orders", "4 branch sync"],
+    kpis: [
+      { label: "Tailoring orders", val: "42 active orders", trend: "In production" },
+      { label: "Field installations", val: "18 scheduled", trend: "On schedule" },
+      { label: "Fabric inventory", val: "5,200 meters", trend: "Active stock" },
+    ],
+    chartTitle: "Workshop orders & branch performance",
+    activities: [
+      { text: "Site inspection & measurement slip #412", status: "Approved" },
+      { text: "Curtain tailoring order #308 — atelier", status: "In progress" },
+      { text: "Curtain accessories & track dispatch note", status: "Completed" },
     ],
   },
   elnazlawy: {
