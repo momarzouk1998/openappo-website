@@ -22,6 +22,8 @@ const UI = {
     viewSetup: "👁️ اضغط لاستعراض تفاصيل وتجهيزات المنظومة",
     viewShots: (n) => `👁️ اضغط لاستعراض ${n} شاشة حقيقية`,
     operationalScreens: (n) => `${n} شاشة تشغيلية`,
+    openLiveSystem: "🌐 فتح النظام المباشر",
+    viewSystemDetails: "👁️ تفاصيل المنظومة",
     close: "إغلاق",
     tryLive: (name) => `هل ترغب في تجربة منظومة ${name} مباشرة؟`,
     demoOffer: "يمكننا تجهيز نسخة تجريبية حية (Live Demo) وعرض كافة الشاشات والتقارير عبر اجتماع أونلاين أو زيارة عمل.",
@@ -44,6 +46,8 @@ const UI = {
     viewSetup: "👁️ Tap to view the system's setup and details",
     viewShots: (n) => `👁️ Tap to view ${n} real screens`,
     operationalScreens: (n) => `${n} operational screens`,
+    openLiveSystem: "🌐 Open Live System",
+    viewSystemDetails: "👁️ System Details",
     close: "Close",
     tryLive: (name) => `Want to try the ${name} system live?`,
     demoOffer: "We can set up a live demo and walk you through every screen and report over an online meeting or an on-site visit.",
@@ -920,6 +924,25 @@ export default function PortfolioGallery({ projects = [], lang = "ar" }) {
                       </span>
                     ))}
                   </div>
+
+                  <div className="pf-spotlight-actions">
+                    <a
+                      href={`https://${p.slug}.openappo.com`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pf-spotlight-btn"
+                    >
+                      <span>{t.openLiveSystem}</span>
+                      <span className="pf-btn-arrow">{lang === "en" ? "→" : "←"}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlug(p.slug)}
+                      className="pf-spotlight-sub-btn"
+                    >
+                      <span>{hasShots ? t.viewShots(p.shots.length) : t.viewSetup}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -954,9 +977,21 @@ export default function PortfolioGallery({ projects = [], lang = "ar" }) {
                   {count ? ` · ${t.operationalScreens(count)}` : ""}
                 </div>
               </div>
-              <button className="pf-modal-close" onClick={close} aria-label={t.close}>
-                ✕
-              </button>
+              <div className="pf-modal-actions-top">
+                <a
+                  href={`https://${activeProject.slug}.openappo.com`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pf-modal-open-btn"
+                  title={t.openLiveSystem}
+                >
+                  <span>🌐</span>
+                  <span>{t.openLiveSystem}</span>
+                </a>
+                <button className="pf-modal-close" onClick={close} aria-label={t.close}>
+                  ✕
+                </button>
+              </div>
             </div>
             </div>
 
