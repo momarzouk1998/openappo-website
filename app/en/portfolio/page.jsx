@@ -12,7 +12,8 @@ const MANIFEST_URL =
   process.env.PORTFOLIO_MANIFEST_URL ||
   "https://admin.openappo.com/api/public/portfolio";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   metadataBase: new URL(SITE),
@@ -53,7 +54,7 @@ export const metadata = {
 
 async function getProjects() {
   try {
-    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    const res = await fetch(MANIFEST_URL, { cache: "no-store" });
     if (!res.ok) return FALLBACK_PROJECTS_EN;
     const data = await res.json();
     if (Array.isArray(data?.projects) && data.projects.length > 0) {

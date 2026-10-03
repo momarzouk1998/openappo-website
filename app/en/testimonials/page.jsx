@@ -12,7 +12,8 @@ const TESTIMONIALS_URL =
   process.env.TESTIMONIALS_URL ||
   "https://admin.openappo.com/api/public/testimonials";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   metadataBase: new URL(SITE),
@@ -47,7 +48,7 @@ export const metadata = {
 
 async function getClients() {
   try {
-    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    const res = await fetch(MANIFEST_URL, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return (data?.projects || []).map((p) => ({
@@ -63,7 +64,7 @@ async function getClients() {
 
 async function getTestimonials() {
   try {
-    const res = await fetch(TESTIMONIALS_URL, { next: { revalidate: 60 } });
+    const res = await fetch(TESTIMONIALS_URL, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data?.testimonials) ? data.testimonials : [];

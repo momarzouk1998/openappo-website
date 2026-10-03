@@ -480,9 +480,12 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
         <Bubbles />
         <span className="tm-kicker">{t.kicker}</span>
         <h1 className="tm-title">
-          {t.titleParts.map(([text, tag], i) =>
-            tag === "em" ? <em key={i}>{text}</em> : <span key={i}>{text}</span>
-          )}
+          {t.titleParts.map(([text, tag], i) => (
+            <span key={i}>
+              {i > 0 ? " " : ""}
+              {tag === "em" ? <em>{text}</em> : text}
+            </span>
+          ))}
         </h1>
         <p className="tm-sub">{t.sub}</p>
       </header>
