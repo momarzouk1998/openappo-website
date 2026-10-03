@@ -924,25 +924,6 @@ export default function PortfolioGallery({ projects = [], lang = "ar" }) {
                       </span>
                     ))}
                   </div>
-
-                  <div className="pf-spotlight-actions">
-                    <a
-                      href={`https://${p.slug}.openappo.com`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pf-spotlight-btn"
-                    >
-                      <span>{t.openLiveSystem}</span>
-                      <span className="pf-btn-arrow">{lang === "en" ? "→" : "←"}</span>
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => setActiveSlug(p.slug)}
-                      className="pf-spotlight-sub-btn"
-                    >
-                      <span>{hasShots ? t.viewShots(p.shots.length) : t.viewSetup}</span>
-                    </button>
-                  </div>
                 </div>
               </div>
             );
@@ -977,21 +958,9 @@ export default function PortfolioGallery({ projects = [], lang = "ar" }) {
                   {count ? ` · ${t.operationalScreens(count)}` : ""}
                 </div>
               </div>
-              <div className="pf-modal-actions-top">
-                <a
-                  href={`https://${activeProject.slug}.openappo.com`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pf-modal-open-btn"
-                  title={t.openLiveSystem}
-                >
-                  <span>🌐</span>
-                  <span>{t.openLiveSystem}</span>
-                </a>
-                <button className="pf-modal-close" onClick={close} aria-label={t.close}>
-                  ✕
-                </button>
-              </div>
+              <button className="pf-modal-close" onClick={close} aria-label={t.close}>
+                ✕
+              </button>
             </div>
             </div>
 
