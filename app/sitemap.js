@@ -6,6 +6,7 @@ export default function sitemap() {
   const staticPages = [
     { url: `${SITE}/`, priority: 1 },
     { url: `${SITE}/portfolio`, priority: 0.9 },
+    { url: `${SITE}/how-it-works`, priority: 0.8 },
     { url: `${SITE}/testimonials`, priority: 0.7 },
     { url: `${SITE}/contact`, priority: 0.6 },
     { url: `${SITE}/blog`, priority: 0.8 },

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
   { href: "/", labelAr: "الرئيسية", labelEn: "Home", icon: "⌂" },
+  { href: "/how-it-works", labelAr: "إزاي بنشتغل", labelEn: "How it works", icon: "⚙", arOnly: true },   // no /en version yet
   { href: "/portfolio", labelAr: "سابقة الأعمال", labelEn: "Portfolio", icon: "🏆" },
   { href: "/blog", labelAr: "المدونة", labelEn: "Blog", icon: "📝" },
   { href: "/testimonials", labelAr: "آراء العملاء", labelEn: "Testimonials", icon: "★" },
@@ -102,7 +103,7 @@ export default function SiteNav({ current = "", lang = "ar" }) {
 
         <nav className={`site-nav-panel${open ? " is-open" : ""}`}>
           <ul>
-            {LINKS.map((l) => (
+            {LINKS.filter((l) => !(isEn && l.arOnly)).map((l) => (
               <li key={l.href}>
                 <a
                   href={localize(l.href)}
