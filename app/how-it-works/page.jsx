@@ -2,10 +2,19 @@ import SiteNav from "../SiteNav";
 import ContactWidget from "../ContactWidget";
 import TechBackground from "../portfolio/TechBackground";
 import HowItWorks from "./HowItWorks";
-import { STEPS, FAQ } from "./content";
+import { STEPS, FAQ, LOGOS } from "./content";
 import "./how.css";
 
 const SITE = "https://openappo.com";
+
+// Same source as /portfolio: whatever is published in the admin panel, in the
+// order set there. Adding or reordering a project updates this strip too.
+const MANIFEST_URL =
+  process.env.PORTFOLIO_MANIFEST_URL ||
+  "https://admin.openappo.com/api/public/portfolio";
+
+// Re-check the admin at most once a minute ("changes go live within a minute").
+export const revalidate = 60;
 
 export const metadata = {
   metadataBase: new URL(SITE),
@@ -21,6 +30,29 @@ export const metadata = {
     type: "website",
   },
 };
+
+// Static list kept only as a safety net for when the admin is unreachable, so
+// the section never renders empty. It is not the source of truth.
+const FALLBACK_LOGOS = LOGOS.map((slug) => ({
+  slug,
+  name: "",
+  src: `/logos/${slug}.png`,
+}));
+
+async function getLogos() {
+  try {
+    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return FALLBACK_LOGOS;
+    const data = await res.json();
+    const seen = new Set();
+    const logos = (Array.isArray(data?.projects) ? data.projects : [])
+      .filter((p) => p?.logo && !seen.has(p.slug) && seen.add(p.slug))
+      .map((p) => ({ slug: p.slug, name: p.name || "", src: p.logo }));
+    return logos.length ? logos : FALLBACK_LOGOS;
+  } catch {
+    return FALLBACK_LOGOS;
+  }
+}
 
 function jsonLd() {
   return {
@@ -44,14 +76,16 @@ function jsonLd() {
   };
 }
 
-export default function HowItWorksPage() {
+export default async function HowItWorksPage() {
+  const logos = await getLogos();
+
   return (
     <main className="pf-page hw-page">
       <TechBackground />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
       <SiteNav current="/how-it-works" />
       <ContactWidget standalone />
-      <HowItWorks />
+      <HowItWorks logos={logos} />
     </main>
   );
 }

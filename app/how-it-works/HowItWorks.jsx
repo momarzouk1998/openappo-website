@@ -6,7 +6,7 @@ import {
   PhoneCall, ScanSearch, PenTool, Cog, DatabaseZap, Rocket, MessageCircle, FileSpreadsheet, NotebookPen,
   ShieldCheck, CloudCheck, LayoutDashboard, CalendarCheck, ChevronDown, ArrowLeft, Clock, Headset, GripVertical,
 } from "lucide-react";
-import { STEPS, STATS, LOGOS, FAQ, WA_LINK } from "./content";
+import { STEPS, STATS, FAQ, WA_LINK } from "./content";
 
 const ICONS = { PhoneCall, ScanSearch, PenTool, Cog, DatabaseZap, Rocket, ShieldCheck, CloudCheck, LayoutDashboard, CalendarCheck };
 
@@ -224,7 +224,7 @@ function Counter({ st }) {
   );
 }
 
-function Stats() {
+function Stats({ logos = [] }) {
   return (
     <section className="hw-section">
       <div className="hw-stats">{STATS.map((s) => <Counter key={s.label} st={s} />)}</div>
@@ -232,9 +232,9 @@ function Stats() {
         شركات <em>بتشتغل على أنظمتها معانا</em>
       </motion.h2>
       <div className="hw-logos">
-        {LOGOS.map((l, i) => (
-          <motion.span key={l} className="hw-logo" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.5}>
-            <img src={`/logos/${l}.png`} alt="" loading="lazy" />
+        {logos.map((l, i) => (
+          <motion.span key={l.slug} className="hw-logo" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.5}>
+            <img src={l.src} alt={l.name} title={l.name || undefined} loading="lazy" />
           </motion.span>
         ))}
       </div>
@@ -286,13 +286,13 @@ function FinalCta() {
   );
 }
 
-export default function HowItWorks() {
+export default function HowItWorks({ logos = [] }) {
   return (
     <div className="hw">
       <Hero />
       <Timeline />
       <BeforeAfter />
-      <Stats />
+      <Stats logos={logos} />
       <Faq />
       <FinalCta />
     </div>
