@@ -1,4 +1,5 @@
-FROM node:20-alpine AS base
+# Same official image, pulled from the public ECR mirror — Docker Hub rate limits (429/504) broke CI on 2026-10-10.
+FROM public.ecr.aws/docker/library/node:20-alpine AS base
 
 FROM base AS deps
 WORKDIR /app
