@@ -3488,9 +3488,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* The page is RTL, so the first child would land on the right. Reversed so
-     the wordmark stays on the left exactly where the home page keeps it. */
-  flex-direction: row-reverse;
+  /* Always keep logo on the left and hamburger on the right consistently across all pages and languages */
+  direction: ltr !important;
+  flex-direction: row !important;
   gap: 12px;
   padding: 14px 20px;
   pointer-events: none;
@@ -3584,6 +3584,15 @@ body {
   transform-origin: top right;
   transition: opacity 0.22s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
               visibility 0.22s;
+}
+[dir="rtl"] .site-nav-panel {
+  direction: rtl;
+  text-align: right;
+}
+[dir="ltr"] .site-nav-panel,
+.lang-en .site-nav-panel {
+  direction: ltr;
+  text-align: left;
 }
 .site-nav-panel.is-open {
   opacity: 1;
