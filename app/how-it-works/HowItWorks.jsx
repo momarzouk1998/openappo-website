@@ -286,13 +286,14 @@ function FinalCta() {
   );
 }
 
-export default function HowItWorks({ logos = [] }) {
+export default function HowItWorks({ logos = [], proof = null }) {
   return (
     <div className="hw">
       <Hero />
       <Timeline />
       <BeforeAfter />
       <Stats logos={logos} />
+      {proof}
       <Faq />
       <FinalCta />
     </div>

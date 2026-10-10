@@ -2,6 +2,10 @@ import SiteNav from "../SiteNav";
 import ContactWidget from "../ContactWidget";
 import TechBackground from "../portfolio/TechBackground";
 import HowItWorks from "./HowItWorks";
+import PortfolioGallery from "../portfolio/PortfolioGallery";
+import TestimonialsClient from "../testimonials/TestimonialsClient";
+import { FALLBACK_PROJECTS_AR } from "../portfolio/fallbackProjects";
+import "../testimonials/testimonials.css";
 import { STEPS, FAQ, LOGOS } from "./content";
 import "./how.css";
 
@@ -30,6 +34,46 @@ export const metadata = {
     type: "website",
   },
 };
+
+const TESTIMONIALS_URL =
+  process.env.TESTIMONIALS_URL ||
+  "https://admin.openappo.com/api/public/testimonials";
+
+// The landing page proves itself below the steps: the same portfolio gallery
+// and client reviews as /portfolio and /testimonials, fed by the same admin
+// manifests, so a project or review published there shows up here too.
+async function getManifest() {
+  try {
+    const res = await fetch(MANIFEST_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+function toProjects(data) {
+  if (!Array.isArray(data?.projects) || data.projects.length === 0) return FALLBACK_PROJECTS_AR;
+  return data.projects.map((p) => {
+    const fallback = FALLBACK_PROJECTS_AR.find((f) => f.slug === p.slug);
+    return { ...(fallback || {}), ...p, logo: p.logo || fallback?.logo || `/logos/${p.slug}.png` };
+  });
+}
+
+function toClients(data) {
+  return (data?.projects || []).map((p) => ({ slug: p.slug, name: p.name, subtitle: p.subtitle, logo: p.logoUrl || "" }));
+}
+
+async function getTestimonials() {
+  try {
+    const res = await fetch(TESTIMONIALS_URL, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.testimonials) ? data.testimonials : [];
+  } catch {
+    return [];
+  }
+}
 
 // Static list kept only as a safety net for when the admin is unreachable, so
 // the section never renders empty. It is not the source of truth.
@@ -77,7 +121,21 @@ function jsonLd() {
 }
 
 export default async function HowItWorksPage() {
-  const logos = await getLogos();
+  const [logos, manifest, testimonials] = await Promise.all([getLogos(), getManifest(), getTestimonials()]);
+  const projects = toProjects(manifest);
+
+  const proof = (
+    <>
+      <section id="work" className="hw-section hw-proof">
+        <h2 className="hw-h2">أنظمة <em>شغالة فعلاً</em> عند عملائنا</h2>
+        <p className="hw-sub">شاشات حقيقية من أنظمة بنيناها — دوس على أي نظام وشوفه من جوه 👇</p>
+        <PortfolioGallery projects={projects} />
+      </section>
+      <section id="reviews" className="hw-proof hw-reviews">
+        <TestimonialsClient clients={toClients(manifest)} testimonials={testimonials} embedded />
+      </section>
+    </>
+  );
 
   return (
     <main className="pf-page hw-page">
@@ -85,7 +143,7 @@ export default async function HowItWorksPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
       <SiteNav current="/how-it-works" />
       <ContactWidget standalone />
-      <HowItWorks logos={logos} />
+      <HowItWorks logos={logos} proof={proof} />
     </main>
   );
 }

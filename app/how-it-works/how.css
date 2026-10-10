@@ -451,3 +451,8 @@
 @media (prefers-reduced-motion: reduce) {
   .hw-card, .hw-dot, .hw-logo { transition: none; }
 }
+
+/* ---------- proof: portfolio + reviews (landing page) ---------- */
+.hw-proof { position: relative; }
+.hw-reviews { padding-top: 40px; overflow-x: clip; }
+.hw-reviews .tm-hero { padding-top: 30px; }

@@ -385,7 +385,8 @@ function Bubbles() {
   );
 }
 
-export default function TestimonialsClient({ clients = [], testimonials = [], lang = "ar" }) {
+export default function TestimonialsClient({ clients = [], testimonials = [], lang = "ar", embedded = false }) {
+  const Title = embedded ? "h2" : "h1";
   const isEn = lang === "en";
   const real = testimonials.length > 0;
   const t = STR[lang] || STR.ar;
@@ -479,14 +480,14 @@ export default function TestimonialsClient({ clients = [], testimonials = [], la
       <header className="tm-hero">
         <Bubbles />
         <span className="tm-kicker">{t.kicker}</span>
-        <h1 className="tm-title">
+        <Title className="tm-title">
           {t.titleParts.map(([text, tag], i) => (
             <span key={i}>
               {i > 0 ? " " : ""}
               {tag === "em" ? <em>{text}</em> : text}
             </span>
           ))}
-        </h1>
+        </Title>
         <p className="tm-sub">{t.sub}</p>
       </header>
 
