@@ -55,7 +55,7 @@ async function getClients() {
       slug: p.slug,
       name: p.name,
       subtitle: p.subtitle,
-      logo: p.logoUrl || "",
+      logo: p.logo || p.logoUrl || "",
     }));
   } catch {
     return [];

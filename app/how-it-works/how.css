@@ -456,3 +456,25 @@
 .hw-proof { position: relative; }
 .hw-reviews { padding-top: 40px; overflow-x: clip; }
 .hw-reviews .tm-hero { padding-top: 30px; }
+
+
+/* ---------- English (LTR) ----------
+   The page is built RTL with physical left/right values. /en pages sit in a
+   dir="ltr" subtree (see app/en/layout.jsx): grid columns flip by themselves,
+   but the margins that open a gap toward the centre rail, the rail and dot on
+   mobile, and a few text alignments do not, so they are mirrored here. */
+/* .pf-page forces direction: rtl for every inner page, which would keep the
+   English text and the timeline flowing right-to-left inside the LTR subtree. */
+.lang-en .hw-page { direction: ltr; }
+.lang-en .hw-step .hw-card { margin-left: 0; margin-right: 46px; }
+.lang-en .hw-step--alt .hw-card { margin-right: 0; margin-left: 46px; }
+.lang-en .hw-q button { text-align: left; }
+.lang-en .hw-sheet-bar { direction: ltr; }
+
+@media (max-width: 820px) {
+  .lang-en .hw-rail { left: 14px; right: auto; }
+  .lang-en .hw-step .hw-card,
+  .lang-en .hw-step--alt .hw-card { margin: 0 0 0 40px; }
+  .lang-en .hw-dot { left: 15px; right: auto; transform: translate(-50%, -50%); }
+  .lang-en .hw-after img { object-position: left top; }
+}

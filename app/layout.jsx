@@ -75,6 +75,19 @@ function orgJsonLd() {
         logo: `${SITE}/icon.png`,
         description:
           "تصميم وتطوير أنظمة إدارة الأعمال وتخطيط الموارد (ERP) السحابية المخصصة للشركات.",
+        // What the company is an authority on, stated as plain topics so an AI
+        // assistant or knowledge graph can place it. Only things Openappo
+        // actually builds; no invented credentials or profiles.
+        knowsAbout: [
+          "Enterprise resource planning (ERP)",
+          "Cloud business management systems",
+          "Inventory and warehouse management",
+          "Point of sale systems",
+          "Sales and distribution management",
+          "Manufacturing and production management",
+          "أنظمة إدارة الأعمال السحابية",
+          "أنظمة تخطيط موارد المؤسسات (ERP)",
+        ],
         contactPoint: {
           "@type": "ContactPoint",
           telephone: "+201558282760",
@@ -88,7 +101,7 @@ function orgJsonLd() {
         "@id": `${SITE}/#website`,
         url: SITE,
         name: "Openappo",
-        inLanguage: "ar",
+        inLanguage: ["ar", "en"],
         publisher: { "@id": `${SITE}/#org` },
       },
     ],
@@ -122,6 +135,10 @@ export default function RootLayout({ children }) {
         )}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`(function(c,l,a,r,i,t,y){
+              // Record real visitors only: localhost, previews and staging
+              // would otherwise show up as sessions in the Clarity project.
+              var h=l.location.hostname;
+              if(h!=="openappo.com"&&h.slice(-13)!==".openappo.com")return;
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);

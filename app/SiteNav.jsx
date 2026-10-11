@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
   { href: "/", labelAr: "الرئيسية", labelEn: "Home", icon: "⌂" },
-  { href: "/how-it-works", labelAr: "كيف نعمل", labelEn: "How it works", icon: "⚙", arOnly: true },   // no /en version yet
+  { href: "/how-it-works", labelAr: "كيف نعمل", labelEn: "How it works", icon: "⚙" },
   { href: "/portfolio", labelAr: "سابقة الأعمال", labelEn: "Portfolio", icon: "🏆" },
   { href: "/blog", labelAr: "المدونة", labelEn: "Blog", icon: "📝" },
   { href: "/testimonials", labelAr: "آراء العملاء", labelEn: "Testimonials", icon: "★" },

@@ -5,6 +5,7 @@ import SiteNav from "../../SiteNav";
 import ContactWidget from "../../ContactWidget";
 
 import { FALLBACK_PROJECTS_EN } from "../../portfolio/fallbackProjects";
+import { withEnglishText } from "../../portfolio/enText";
 
 const SITE = "https://openappo.com";
 
@@ -60,11 +61,13 @@ async function getProjects() {
     if (Array.isArray(data?.projects) && data.projects.length > 0) {
       return data.projects.map((p) => {
         const fallback = FALLBACK_PROJECTS_EN.find((f) => f.slug === p.slug);
-        return {
+        // The admin stores Arabic text only; English name/subtitle/description
+        // come from enText.js so this page never shows Arabic paragraphs.
+        return withEnglishText({
           ...(fallback || {}),
           ...p,
           logo: p.logo || fallback?.logo || `/logos/${p.slug}.png`,
-        };
+        });
       });
     }
     return FALLBACK_PROJECTS_EN;

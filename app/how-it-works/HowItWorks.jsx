@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useInView, useReducedMotion, animate, AnimatePresence } from "framer-motion";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { motion, useScroll, useSpring, useInView, useReducedMotion, animate } from "framer-motion";
 import {
   PhoneCall, ScanSearch, PenTool, Cog, DatabaseZap, Rocket, MessageCircle, FileSpreadsheet, NotebookPen,
-  ShieldCheck, CloudCheck, LayoutDashboard, CalendarCheck, ChevronDown, ArrowLeft, Clock, Headset, GripVertical,
+  ShieldCheck, CloudCheck, LayoutDashboard, CalendarCheck, ChevronDown, ArrowLeft, ArrowRight, Clock, Headset, GripVertical,
 } from "lucide-react";
-import { STEPS, STATS, FAQ, WA_LINK } from "./content";
+import { CONTENT, PHONE_DISPLAY, waLink } from "./content";
 
 const ICONS = { PhoneCall, ScanSearch, PenTool, Cog, DatabaseZap, Rocket, ShieldCheck, CloudCheck, LayoutDashboard, CalendarCheck };
+
+// The page renders the same components in Arabic (RTL) and English (LTR); every
+// string comes from CONTENT[lang] through this context rather than being passed
+// down through each component.
+const LangCtx = createContext("ar");
+const useLang = () => useContext(LangCtx);
+const useT = () => CONTENT[useLang()];
 
 // One small, characteristic loop per step icon (phone rings, cog turns, rocket lifts...).
 const ICON_LOOP = {
@@ -28,7 +35,10 @@ const fadeUp = {
 /* ------------------------------------------------------------------ hero */
 function Hero() {
   const reduce = useReducedMotion();
+  const lang = useLang();
+  const { ui } = useT();
   const nodes = [[60, 70], [190, 30], [320, 80], [450, 40], [560, 95]];
+  const facts = [Clock, CloudCheck, Headset];
   return (
     <section className="hw-hero">
       <svg className="hw-hero-net" viewBox="0 0 620 130" aria-hidden="true">
@@ -42,24 +52,25 @@ function Hero() {
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 + i * 0.25, type: "spring", stiffness: 260 }} />
         ))}
       </svg>
-      <motion.span className="hw-chip" variants={fadeUp} initial="hidden" animate="show">كيف نعمل</motion.span>
+      <motion.span className="hw-chip" variants={fadeUp} initial="hidden" animate="show">{ui.chip}</motion.span>
       <motion.h1 variants={fadeUp} initial="hidden" animate="show" custom={1}>
-        من أول مكالمة..
-        <span>لحد ما شركتك تشتغل على نظامها</span>
+        {ui.h1a}
+        <span>{ui.h1b}</span>
       </motion.h1>
       <motion.p variants={fadeUp} initial="hidden" animate="show" custom={2}>
-        مش بنبيعلك برنامج جاهز — بنبني نظامك إنت، على مقاس شغلك، وبتشوفه بعينك في كل خطوة.
+        {ui.heroP}
       </motion.p>
       <motion.ul className="hw-hero-facts" variants={fadeUp} initial="hidden" animate="show" custom={3}>
-        <li><Clock size={18} /> من أسبوعين لشهر</li>
-        <li><CloudCheck size={18} /> سحابي على الكمبيوتر والموبايل</li>
-        <li><Headset size={18} /> معاك بعد التسليم</li>
+        {ui.facts.map((f, i) => {
+          const Icon = facts[i];
+          return <li key={f}><Icon size={18} /> {f}</li>;
+        })}
       </motion.ul>
       <motion.div className="hw-hero-cta" variants={fadeUp} initial="hidden" animate="show" custom={4}>
-        <a className="hw-btn hw-btn--main" href={WA_LINK} target="_blank" rel="noopener noreferrer">
-          <MessageCircle size={20} /> احكيلنا عن شغلك
+        <a className="hw-btn hw-btn--main" href={waLink(lang)} target="_blank" rel="noopener noreferrer">
+          <MessageCircle size={20} /> {ui.ctaMain}
         </a>
-        <a className="hw-btn hw-btn--ghost" href="#steps">شوف الخطوات <ChevronDown size={18} /></a>
+        <a className="hw-btn hw-btn--ghost" href="#steps">{ui.ctaGhost} <ChevronDown size={18} /></a>
       </motion.div>
     </section>
   );
@@ -77,15 +88,17 @@ function StepIcon({ name }) {
 }
 
 function Shots() {
+  const { ui } = useT();
   return (
-    <div className="hw-shots" aria-label="شاشات حقيقية من نظام أحد عملائنا">
-      <div className="hw-shot-laptop"><img src="/how/dashboard-desktop.webp" alt="شاشة الرئيسية من نظام سحابي على الكمبيوتر" loading="lazy" /></div>
-      <div className="hw-shot-phone"><img src="/how/dashboard-mobile.webp" alt="نفس النظام على الموبايل" loading="lazy" /></div>
+    <div className="hw-shots" aria-label={ui.shotsAria}>
+      <div className="hw-shot-laptop"><img src="/how/dashboard-desktop.webp" alt={ui.shotDesktopAlt} loading="lazy" /></div>
+      <div className="hw-shot-phone"><img src="/how/dashboard-mobile.webp" alt={ui.shotMobileAlt} loading="lazy" /></div>
     </div>
   );
 }
 
 function Step({ s, i }) {
+  const { ui } = useT();
   const ref = useRef(null);
   const on = useInView(ref, { margin: "-35% 0px -45% 0px" });
   return (
@@ -95,14 +108,14 @@ function Step({ s, i }) {
         <div className="hw-card-head">
           <StepIcon name={s.icon} />
           <div>
-            <span className="hw-num">الخطوة {i + 1} <span aria-hidden="true">{s.emoji}</span></span>
+            <span className="hw-num">{ui.step} {i + 1} <span aria-hidden="true">{s.emoji}</span></span>
             <h3>{s.title}</h3>
           </div>
         </div>
         <p className="hw-lead">{s.lead}</p>
         <dl>
-          <div><dt>إنت بتعمل</dt><dd>{s.you}</dd></div>
-          <div className="hw-get"><dt>بتاخد</dt><dd>{s.get}</dd></div>
+          <div><dt>{ui.you}</dt><dd>{s.you}</dd></div>
+          <div className="hw-get"><dt>{ui.get}</dt><dd>{s.get}</dd></div>
         </dl>
         {s.shot && <Shots />}
       </motion.article>
@@ -111,17 +124,18 @@ function Step({ s, i }) {
 }
 
 function Timeline() {
+  const { ui, steps } = useT();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 55%"] });
   const grow = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
   return (
     <section id="steps" className="hw-section">
       <motion.h2 className="hw-h2" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        رحلة نظامك في <em>6 خطوات</em>
+        {ui.timelineA} <em>{ui.timelineEm}</em>
       </motion.h2>
       <div ref={ref} className="hw-timeline">
         <div className="hw-rail" aria-hidden="true"><motion.span style={{ scaleY: grow }} /></div>
-        <ol>{STEPS.map((s, i) => <Step key={s.title} s={s} i={i} />)}</ol>
+        <ol>{steps.map((s, i) => <Step key={s.title} s={s} i={i} />)}</ol>
       </div>
     </section>
   );
@@ -129,10 +143,11 @@ function Timeline() {
 
 /* --------------------------------------------------------- before/after */
 function BeforePanel() {
+  const { ui } = useT();
   return (
     <div className="hw-before" aria-hidden="true">
       <div className="hw-sheet">
-        <div className="hw-sheet-bar"><FileSpreadsheet size={16} /> حسابات_نهائي_٣ (٢).xlsx</div>
+        <div className="hw-sheet-bar"><FileSpreadsheet size={16} /> {ui.sheetName}</div>
         <div className="hw-grid">
           {Array.from({ length: 28 }).map((_, i) => (
             <span key={i} className={[3, 9, 16, 22].includes(i) ? "bad" : i % 5 === 0 ? "dim" : ""}>
@@ -141,18 +156,19 @@ function BeforePanel() {
           ))}
         </div>
       </div>
-      <div className="hw-note"><NotebookPen size={18} /> الحاج محمود: ٤٢٠٠ — متحصّلش؟ 🤔</div>
+      <div className="hw-note"><NotebookPen size={18} /> {ui.note}</div>
       <div className="hw-wa">
-        <p>الفاتورة دي اتحصّلت ولا لأ؟</p>
-        <p className="me">مين خرّج البضاعة امبارح؟</p>
-        <p>المخزن بيقول الرصيد غير الإكسل 😩</p>
+        <p>{ui.wa1}</p>
+        <p className="me">{ui.wa2}</p>
+        <p>{ui.wa3}</p>
       </div>
-      <span className="hw-tag hw-tag--before">قبل</span>
+      <span className="hw-tag hw-tag--before">{ui.before}</span>
     </div>
   );
 }
 
 function BeforeAfter() {
+  const { ui } = useT();
   const box = useRef(null);
   const inView = useInView(box, { once: true, margin: "-25%" });
   const reduce = useReducedMotion();
@@ -176,9 +192,9 @@ function BeforeAfter() {
   return (
     <section className="hw-section">
       <motion.h2 className="hw-h2" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        من <em className="coral">الفوضى</em> لـ <em>نظام واحد</em>
+        {ui.baA} <em className="coral">{ui.baChaos}</em> {ui.baB} <em>{ui.baOne}</em>
       </motion.h2>
-      <p className="hw-sub">اسحب الخط وشوف الفرق بنفسك 👇</p>
+      <p className="hw-sub">{ui.baSub}</p>
       <div
         ref={box}
         className="hw-ba"
@@ -189,14 +205,14 @@ function BeforeAfter() {
       >
         <div className="hw-after">
           <div className="hw-browser"><i /><i /><i /></div>
-          <img src="/how/dashboard-desktop.webp" alt="لوحة تحكم واحدة فيها المبيعات والمخزون والتحصيل" draggable="false" />
-          <span className="hw-tag hw-tag--after">بعد</span>
+          <img src="/how/dashboard-desktop.webp" alt={ui.baAfterAlt} draggable="false" />
+          <span className="hw-tag hw-tag--after">{ui.after}</span>
         </div>
         <div className="hw-before-clip" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}><BeforePanel /></div>
         <div className="hw-handle" style={{ left: `${pos}%` }} aria-hidden="true"><span><GripVertical size={18} /></span></div>
         <input
           className="hw-range" type="range" min="0" max="100" value={Math.round(pos)}
-          onChange={(e) => setPos(+e.target.value)} aria-label="قارن قبل وبعد"
+          onChange={(e) => setPos(+e.target.value)} aria-label={ui.baAria}
         />
       </div>
     </section>
@@ -207,7 +223,7 @@ function BeforeAfter() {
 function Counter({ st }) {
   const ref = useRef(null);
   const on = useInView(ref, { once: true });
-  const [v, setV] = useState(st.from ? 0 : 0);
+  const [v, setV] = useState(0);
   useEffect(() => {
     if (!on) return;
     const c = animate(0, st.to, { duration: 1.4, ease: "easeOut", onUpdate: (x) => setV(Math.round(x)) });
@@ -225,11 +241,12 @@ function Counter({ st }) {
 }
 
 function Stats({ logos = [] }) {
+  const { ui, stats } = useT();
   return (
     <section className="hw-section">
-      <div className="hw-stats">{STATS.map((s) => <Counter key={s.label} st={s} />)}</div>
+      <div className="hw-stats">{stats.map((s) => <Counter key={s.label} st={s} />)}</div>
       <motion.h2 className="hw-h2 hw-h2--sm" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        شركات <em>بتشتغل على أنظمتها معانا</em>
+        {ui.logosA} <em>{ui.logosEm}</em>
       </motion.h2>
       <div className="hw-logos">
         {logos.map((l, i) => (
@@ -243,28 +260,36 @@ function Stats({ logos = [] }) {
 }
 
 /* ------------------------------------------------------------------ faq */
+// Every answer is rendered into the HTML — collapsed with height 0 rather than
+// not mounted. Search engines and AI assistants read the markup, not the open
+// accordion item, so an answer that only exists once clicked is invisible to
+// them (and would not match the FAQPage data published with the page).
 function Faq() {
+  const { ui, faq } = useT();
   const [open, setOpen] = useState(0);
   return (
-    <section className="hw-section">
+    <section className="hw-section" id="faq">
       <motion.h2 className="hw-h2" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-        أسئلة <em>بتيجي في بالك</em> 💬
+        {ui.faqA} <em>{ui.faqEm}</em> 💬
       </motion.h2>
       <div className="hw-faq">
-        {FAQ.map((f, i) => (
+        {faq.map((f, i) => (
           <div key={f.q} className={`hw-q ${open === i ? "is-open" : ""}`}>
-            <button type="button" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}>
+            <button type="button" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i} aria-controls={`hw-a-${i}`}>
               <span>{f.q}</span>
               <ChevronDown size={20} />
             </button>
-            <AnimatePresence initial={false}>
-              {open === i && (
-                <motion.div className="hw-a" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-                  <p>{f.a}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <motion.div
+              id={`hw-a-${i}`}
+              className="hw-a"
+              role="region"
+              initial={false}
+              animate={open === i ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ overflow: "hidden" }}
+            >
+              <p>{f.a}</p>
+            </motion.div>
           </div>
         ))}
       </div>
@@ -274,28 +299,33 @@ function Faq() {
 
 /* ------------------------------------------------------------ final cta */
 function FinalCta() {
+  const lang = useLang();
+  const { ui } = useT();
+  const Arrow = lang === "en" ? ArrowRight : ArrowLeft;
   return (
     <motion.section className="hw-final" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-      <h2>خلينا <em>نسمعك</em> 👋</h2>
-      <p>احكيلنا عن شغلك في رسالة واحدة، ونرجعلك بتصور واضح لنظامك.</p>
-      <a className="hw-btn hw-btn--main" href={WA_LINK} target="_blank" rel="noopener noreferrer">
-        <MessageCircle size={20} /> كلمنا واتساب <ArrowLeft size={18} />
+      <h2>{ui.finalA} <em>{ui.finalEm}</em> 👋</h2>
+      <p>{ui.finalP}</p>
+      <a className="hw-btn hw-btn--main" href={waLink(lang)} target="_blank" rel="noopener noreferrer">
+        <MessageCircle size={20} /> {ui.finalBtn} <Arrow size={18} />
       </a>
-      <span className="hw-final-phone">01558282760</span>
+      <span className="hw-final-phone">{PHONE_DISPLAY[lang]}</span>
     </motion.section>
   );
 }
 
-export default function HowItWorks({ logos = [], proof = null }) {
+export default function HowItWorks({ logos = [], proof = null, lang = "ar" }) {
   return (
-    <div className="hw">
-      <Hero />
-      <Timeline />
-      <BeforeAfter />
-      <Stats logos={logos} />
-      {proof}
-      <Faq />
-      <FinalCta />
-    </div>
+    <LangCtx.Provider value={lang}>
+      <div className="hw">
+        <Hero />
+        <Timeline />
+        <BeforeAfter />
+        <Stats logos={logos} />
+        {proof}
+        <Faq />
+        <FinalCta />
+      </div>
+    </LangCtx.Provider>
   );
 }
