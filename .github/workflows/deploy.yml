@@ -59,6 +59,6 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:latest
             docker stop openappo-website || true
             docker rm openappo-website || true
-            docker run -d --name openappo-website --restart unless-stopped -p 3050:3050 -e PORT=3050 ghcr.io/${{ github.repository }}:latest
+            docker run -d --name openappo-website --restart unless-stopped --memory 600m --memory-swap 900m -e NODE_OPTIONS=--max-old-space-size=384 -p 3050:3050 -e PORT=3050 ghcr.io/${{ github.repository }}:latest
             nginx -t && systemctl reload nginx
 
