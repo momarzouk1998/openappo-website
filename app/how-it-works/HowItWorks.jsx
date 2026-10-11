@@ -42,7 +42,7 @@ function Hero() {
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 + i * 0.25, type: "spring", stiffness: 260 }} />
         ))}
       </svg>
-      <motion.span className="hw-chip" variants={fadeUp} initial="hidden" animate="show">إزاي بنشتغل</motion.span>
+      <motion.span className="hw-chip" variants={fadeUp} initial="hidden" animate="show">كيف نعمل</motion.span>
       <motion.h1 variants={fadeUp} initial="hidden" animate="show" custom={1}>
         من أول مكالمة..
         <span>لحد ما شركتك تشتغل على نظامها</span>

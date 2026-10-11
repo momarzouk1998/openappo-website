@@ -22,12 +22,12 @@ export const revalidate = 60;
 
 export const metadata = {
   metadataBase: new URL(SITE),
-  title: "إزاي بنشتغل — Openappo",
+  title: "كيف نعمل — Openappo",
   description:
     "من أول مكالمة لحد ما شركتك تشتغل على نظامها: نسمعك، نحلل شغلك، تشوف الشكل الأول، نبني على مراحل، ننقل بياناتك، ونشغّل وندرّب. التسليم من أسبوعين لشهر.",
   alternates: { canonical: "/how-it-works" },
   openGraph: {
-    title: "إزاي بنشتغل — Openappo",
+    title: "كيف نعمل — Openappo",
     description: "رحلة بناء نظامك في 6 خطوات واضحة، والتسليم من أسبوعين لشهر.",
     url: `${SITE}/how-it-works`,
     locale: "ar_EG",

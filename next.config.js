@@ -6,13 +6,18 @@
 // admin panel's own domain, decided per-project in the admin, not known here.
 // googletagmanager.com/google-analytics.com are allowed unconditionally so
 // GA4 works the moment NEXT_PUBLIC_GA_ID is set, without another deploy.
+// Microsoft Clarity (project yvdtbr9sq1, injected in app/layout.jsx) needs
+// *.clarity.ms for the tag + its clarity.js bundle (script-src) and for the
+// collect endpoints (connect-src), plus c.bing.com for its cookie sync. Without
+// these the tag is injected but the browser silently refuses to run it, so no
+// sessions are ever recorded.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.googletagmanager.com",
+  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.googletagmanager.com https://*.clarity.ms",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https:",
-  "connect-src 'self' https://admin.openappo.com https://www.google-analytics.com https://www.googletagmanager.com https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
+  "connect-src 'self' https://admin.openappo.com https://www.google-analytics.com https://www.googletagmanager.com https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io https://*.clarity.ms https://c.bing.com",
   "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
